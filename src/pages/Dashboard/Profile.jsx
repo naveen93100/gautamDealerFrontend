@@ -88,20 +88,22 @@ const Profile = () => {
         setImagePreview(user?.profileImg)
     }, [showEditProfileModal]);
 
-
-
-
-
-
-
     return (
         <>
             <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 lg:p-8 mb-6 8 border border-gray-300 shadow-gray-400">
                 <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
                     <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 w-full sm:w-auto">
-                        <div className="w-20 h-24 sm:w-28 rounded-2xl bg-linear-to-br from-white to-gray-500   flex items-center justify-center overflow-hidden shrink-0">
+                        {/* <div className="w-20 h-24 sm:w-28 rounded-2xl bg-linear-to-br from-white to-gray-500   flex items-center justify-center overflow-hidden shrink-0">
                             <img src={user?.profileImg} alt="Logo" className=' w-full object-contain' />
+                        </div> */}
+                        <div className="w-20 h-24 sm:w-28 sm:h-32 rounded-2xl bg-linear-to-br from-white to-gray-200  flex items-center justify-center overflow-hidden shrink-0">
+                            <img
+                                src={user?.profileImg}
+                                alt="Logo"
+                                className="w-full h-full object-contain p-2"
+                            />
                         </div>
+
                         <div className="text-center sm:text-left">
                             <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2 capitalize">{user?.name}</h2>
                             <p className="text-base sm:text-lg text-red-600 font-semibold mb-2 capitalize">{user?.companyName}</p>

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Plus, Download, Calendar, DollarSign, Zap, TrendingUp, Sun, Loader2Icon } from 'lucide-react';
+import { Plus, Download, Calendar, DollarSign, Zap, TrendingUp, Sun, Loader2Icon, MapPin, Mail, Phone } from 'lucide-react';
 import Profile from './Profile';
 import CreateProposalModal from '../../components/Ui/CreateProposalModal';
 import { apiCall } from '../../services/api';
@@ -110,7 +110,7 @@ const SolarDealerDashboard = () => {
                 <div className="flex flex-col gap-4">
                   <div className="flex-1">
                     <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3">
-                      <Sun className="w-5 h-5 text-red-600 flex-shrink-0" />
+                      <Sun className="w-5 h-5 text-red-600 flex shrink-0" />
                       <h4 className="text-base sm:text-lg font-semibold text-gray-800 capitalize">
                         {proposal?.name}
                       </h4>
@@ -118,32 +118,32 @@ const SolarDealerDashboard = () => {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 mb-3">
                       <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Zap className="w-4 h-4 text-red-600 flex-shrink-0" />
+                        <Zap className="w-4 h-4 text-red-600 flex shrink-0" />
                         <span className="font-medium">System:</span>
                         <span>{proposal?.proposalsData[0]?.orderCapacity} watts</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Calendar className="w-4 h-4 text-red-600 flex-shrink-0" />
+                        <Calendar className="w-4 h-4 text-red-600 flex shrink-0" />
                         <span className="font-medium">Date:</span>
                         <span>{new Date(proposal?.proposalsData[0]?.proposalDate).toDateString()}</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <DollarSign className="w-4 h-4 text-red-600 flex-shrink-0" />
+                        <DollarSign className="w-4 h-4 text-red-600 flex shrink-0" />
                         <span className="font-medium">Total Price:</span>
                         <span>{proposal?.proposalsData[0]?.finalPrice}</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <DollarSign className="w-4 h-4 text-red-600 flex-shrink-0" />
+                        <MapPin  className="w-4 h-4 text-red-600 flex shrink-0" />
                         <span className="font-medium">Address:</span>
                         <span>{proposal?.address}</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <DollarSign className="w-4 h-4 text-red-600 flex-shrink-0" />
+                        <Mail  className="w-4 h-4 text-red-600 flex shrink-0" />
                         <span className="font-medium">Email:</span>
                         <span>{proposal?.email}</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <DollarSign className="w-4 h-4 text-red-600 flex-shrink-0" />
+                        <Phone  className="w-4 h-4 text-red-600 flex shrink-0" />
                         <span className="font-medium">Contact Number:</span>
                         <span>{proposal?.phone}</span>
                       </div>
