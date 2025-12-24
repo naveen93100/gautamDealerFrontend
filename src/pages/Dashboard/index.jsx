@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Plus, Download, Calendar, DollarSign, Zap, TrendingUp, Sun } from 'lucide-react';
-import { X, User, Mail, Phone, MapPin, Package } from 'lucide-react';
+import { Plus, Download, Calendar, DollarSign, Zap, TrendingUp, Sun, Loader2Icon } from 'lucide-react';
 import Profile from './Profile';
 import CreateProposalModal from '../../components/Ui/CreateProposalModal';
 import { apiCall } from '../../services/api';
 import { useAuth } from '../../Context/AuthContext';
-import axios from 'axios';
+
 import toast from 'react-hot-toast';
 
 const SolarDealerDashboard = () => {
@@ -15,58 +14,50 @@ const SolarDealerDashboard = () => {
   const { user } = useAuth()
 
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [loading, setLoading] = useState(false)
+  const [select, setSelect] = useState(null);
 
-  // const handleDownload = async (id) => {
-  //   try {
-  //     const response = await apiCall("get", `/api/dealer/downloadPropsoal`, {
-  //       responseType: "blob",
-  //     });
-  //     const url = window.URL.createObjectURL(
-  //       new Blob([response.data], { type: "application/pdf" })
-  //     );
 
-  //     const link = document.createElement("a");
-  //     link.href = url;
-  //     link.setAttribute("download", "Solar_Proposal.pdf");
-  //     document.body.appendChild(link);
-  //     link.click();
-
-  //     link.remove();
-  //     window.URL.revokeObjectURL(url);
-  //   } catch (error) {
-  //     console.log("error : ", error)
-  //   }
-  // }
-
-  const handleDownload = async () => {
+  const handleDownload = async (e,id,name) => {
+    e.stopPropagation();
     try {
+      setLoading(true);
       const response = await apiCall(
-        "get",
-        "/api/dealer/downloadPropsoal",
+        "GET",
+        `/api/dealer/downloadPropsoal/${id}`,
+        null,
         {
           responseType: "blob",
         }
       );
 
-      console.log(response.headers["content-type"]);
-      console.log("response : ", response)
 
       const blob = new Blob([response.data], {
         type: "application/pdf",
       });
 
-      const url = window.URL.createObjectURL(blob);
+
+      const url = URL.createObjectURL(blob);
+      
+      // window.open(url, "_blank");
+
 
       const link = document.createElement("a");
+
       link.href = url;
-      link.download = "Solar_Proposal.pdf";
+      link.setAttribute('download', `Solar_Proposal-${name}.pdf`)
+
       document.body.appendChild(link);
       link.click();
+       link.remove();
 
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      // document.body.removeChild(link);
+      // window.URL.revokeObjectURL(url);
+      setLoading(false);
     } catch (error) {
       console.error("Download failed:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -75,7 +66,6 @@ const SolarDealerDashboard = () => {
     const fetchProposal = async () => {
       try {
         let res = await apiCall('GET', `/api/dealer/get-proposal/${user?.id}`);
-        console.log(res);
         if (res?.data?.success) {
           setProposals(res?.data?.customersProposal);
         }
@@ -163,12 +153,23 @@ const SolarDealerDashboard = () => {
                   </div>
 
                   <button
-                    // onClick={() => handleDownload(proposal?.proposalsData[0]?._id)}
-                    onClick={handleDownload}
-                    className="flex items-center justify-center gap-2 px-4 py-2 text-red-600 border border-red-600 hover:bg-red-50 rounded-lg transition-colors w-full sm:w-auto sm:self-end"
+                    onClick={(e) => {
+                      setSelect(proposal?.proposalsData[0]?._id)
+                      handleDownload(e,proposal?.proposalsData[0]?._id,proposal?.name)
+                    }
+                    }
+                    className={`flex items-center justify-center gap-2 px-4 py-2 text-red-600 border border-red-600 hover:bg-red-50 rounded-lg transition-colors w-full sm:w-auto sm:self-end ${loading ? "cursor-not-allowed text-red-300" : ""}`}
                   >
-                    <Download className="w-4 h-4" />
-                    Download Proposal
+                    {loading
+                      && select === proposal?.proposalsData[0]?._id
+                      ?
+                      <Loader2Icon className='animate-spin' />
+                      :
+                      <span className='flex items-center gap-2'>
+                        <Download className="w-4 h-4" />
+                        Download Proposal
+                      </span>
+                    }
                   </button>
                 </div>
               </div>

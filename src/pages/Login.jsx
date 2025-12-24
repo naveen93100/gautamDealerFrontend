@@ -136,7 +136,7 @@ const Login = () => {
       {/* Subtle bottom disclaimer */}
       <div className="fixed bottom-6 text-center w-full">
         <p className="text-gray-400 text-[10px] uppercase tracking-[0.2em]">
-          © 2024 Gautam Solar Private Limited
+          © { new Date().getFullYear()} Gautam Solar Private Limited
         </p>
       </div>
     </div>

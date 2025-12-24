@@ -88,7 +88,7 @@ const CreatePassword = () => {
                 <button
                     onClick={handleCreatePassword}
                     disabled={!password || isMismatch}
-                    className={`w-full cursor-pointer py-2 px-4 rounded-lg text-white font-semibold ${!password || isMismatch ? "bg-gray-400 cursor-not-allowed" : "bg-bg-[#a20000] hover:bg-[#a20000d2]"
+                    className={`w-full cursor-pointer py-2 px-4 rounded-lg bg-[#a20000d2] text-white font-semibold ${!password || isMismatch ? "bg-[#a20000d2] cursor-not-allowed" : " hover:bg-[#790000e7]"
                         }`}
                 >
                     Create Password

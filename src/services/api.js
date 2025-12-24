@@ -4,10 +4,11 @@ const axiosInstance = axios.create({
   baseURL: "http://localhost:1008",
 });
 
-export const apiCall = (method, url, data) => {
+export const apiCall = (method, url, data,config={}) => {
   return axiosInstance({
     method,
     url,
     data,
+    ...config
   });
 };
