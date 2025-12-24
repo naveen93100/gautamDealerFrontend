@@ -23,9 +23,7 @@ const Login = () => {
 
       if (res?.data?.success) {
         setLoading(false)
-        // localStorage.setItem('token', res?.data?.token);
-        // localStorage.setItem('userData', JSON.stringify(res?.data?.data));
-        toast.success(`Welcome,${res?.data?.data?.firstName}`)
+        toast.success(`Welcome,${(res?.data?.data?.firstName.charAt(0).toUpperCase()+res?.data?.data?.firstName.slice(1))}`)
         login(res?.data?.data, res?.data?.token)
         navigate('/dashboard')
       }
@@ -42,7 +40,7 @@ const Login = () => {
   return (
 
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4 font-sans">
-      <div className="bg-white p-8 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] w-full max-w-md border border-gray-100">
+      <div className="bg-white p-8 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] w-full shadow-gray-400 max-w-md border border-gray-300">
 
         {/* Brand Logo Section */}
         <div className="flex flex-col items-center mb-8">
