@@ -6,7 +6,7 @@ import { apiCall } from '../../services/api';
 
 const CreateProposalModal = ({ setClose }) => {
 
-    const {user}=useAuth();
+    const {user,token}=useAuth();
 
     const {
         register,
@@ -27,8 +27,12 @@ const CreateProposalModal = ({ setClose }) => {
       
          try {
             d.dealerId=user?.id;    
-            console.log(d)
-            let res=await apiCall('POST','/api/dealer/create-propsal',d);
+            let res=await apiCall('POST','/api/dealer/create-propsal',d,{
+                headers:{
+                    authorization:`Bearer ${token}`
+                }
+            });
+
             console.log(res);
             
          } catch (er) {

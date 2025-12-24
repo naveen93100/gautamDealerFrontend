@@ -6,6 +6,8 @@ import toast from "react-hot-toast";
 import { useAuth } from "../Context/AuthContext";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import axios from "axios";
+
 
 const Login = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -17,17 +19,19 @@ const Login = () => {
     try {
       toast.dismiss()
       setLoading(true)
-      let res = await apiCall('POST', '/api/dealer/login', data);
+      let res = await axios.post('http://localhost:1008/api/dealer/login', data);
 
       if (res?.data?.success) {
         setLoading(false)
+        // localStorage.setItem('token', res?.data?.token);
+        // localStorage.setItem('userData', JSON.stringify(res?.data?.data));
         toast.success(`Welcome,${res?.data?.data?.firstName}`)
         login(res?.data?.data, res?.data?.token)
         navigate('/dashboard')
       }
 
     } catch (er) {
-      toast.error(er?.response?.data?.message);
+      // toast.error(er?.response?.data?.message);
       console.log(er);
     }
     finally {

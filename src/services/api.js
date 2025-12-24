@@ -1,14 +1,47 @@
 import axios from "axios";
+import { redirectLogin } from "../utils/Navigate";
+import toast from "react-hot-toast";
 
 const axiosInstance = axios.create({
   baseURL: "http://localhost:1008",
 });
 
-export const apiCall = (method, url, data,config={}) => {
+export const apiCall = (method, url, data, config = {}) => {
   return axiosInstance({
     method,
     url,
     data,
-    ...config
+    ...config,
   });
 };
+
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token")||null;
+    if (token) {
+      config.headers = {
+        ...config.headers,
+        Authorization: `Bearer ${token}`,
+      };
+    }
+
+    return config;
+  },
+  (er) => Promise.reject(er)
+);
+
+axiosInstance.interceptors.response.use(
+  (res) => {
+    return res;
+  },
+  (er) => {
+    if (er.response?.status === 401) {
+      localStorage.removeItem("userData");
+      localStorage.removeItem("token");
+      toast.error(er?.response?.data?.message||'Session expired!! please login again');
+      // redirectLogin();`
+       window.location.href = "/login"
+    }
+    return Promise.reject(er);
+  }
+);
