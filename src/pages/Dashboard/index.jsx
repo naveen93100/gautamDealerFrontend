@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Plus, Download, Calendar, DollarSign, Zap, TrendingUp, Sun, Loader2Icon, MapPin, Mail, Phone } from 'lucide-react';
+import { Plus, Download, Calendar, DollarSign, Zap, TrendingUp, Sun, Loader2Icon, MapPin, Mail, Phone, IndianRupee } from 'lucide-react';
 import Profile from './Profile';
 import CreateProposalModal from '../../components/Ui/CreateProposalModal';
 import { apiCall } from '../../services/api';
 import { useAuth } from '../../Context/AuthContext';
 
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const SolarDealerDashboard = () => {
 
@@ -19,8 +20,7 @@ const SolarDealerDashboard = () => {
   const navigate = useNavigate();
 
 
-  const handleDownload = async (e, id, name) => {
-    e.stopPropagation();
+  const handleDownload = async (e, id) => {
     try {
       setLoading(true);
       const response = await apiCall(
@@ -31,17 +31,11 @@ const SolarDealerDashboard = () => {
           responseType: "blob",
         }
       );
-
-
       const blob = new Blob([response.data], {
         type: "application/pdf",
       });
-
-
       const url = URL.createObjectURL(blob);
-
       window.open(url, "_blank");
-
       setLoading(false);
     } catch (er) {
       console.log(er)
@@ -119,22 +113,22 @@ const SolarDealerDashboard = () => {
                         <span>{new Date(proposal?.proposalsData[0]?.proposalDate).toDateString()}</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <DollarSign className="w-4 h-4 text-red-600 flex shrink-0" />
+                        <IndianRupee className="w-4 h-4 text-red-600 flex shrink-0" />
                         <span className="font-medium">Total Price:</span>
                         <span>{proposal?.proposalsData[0]?.finalPrice}</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <MapPin  className="w-4 h-4 text-red-600 flex shrink-0" />
+                        <MapPin className="w-4 h-4 text-red-600 flex shrink-0" />
                         <span className="font-medium">Address:</span>
                         <span>{proposal?.address}</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Mail  className="w-4 h-4 text-red-600 flex shrink-0" />
+                        <Mail className="w-4 h-4 text-red-600 flex shrink-0" />
                         <span className="font-medium">Email:</span>
                         <span>{proposal?.email}</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Phone  className="w-4 h-4 text-red-600 flex shrink-0" />
+                        <Phone className="w-4 h-4 text-red-600 flex shrink-0" />
                         <span className="font-medium">Contact Number:</span>
                         <span>{proposal?.phone}</span>
                       </div>
