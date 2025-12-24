@@ -49,7 +49,7 @@ const Profile = () => {
             if (res?.data?.success) {
                 setLoadig(false);
                 toast.success(res?.data?.message);
-                localStorage.setItem('userData',JSON.stringify(res?.data?.data));
+                localStorage.setItem('userData', JSON.stringify(res?.data?.data));
                 setUser(res?.data?.data);
                 setEditProfileModal(false);
             }
@@ -89,13 +89,18 @@ const Profile = () => {
     }, [showEditProfileModal]);
 
 
+
+
+
+
+
     return (
         <>
-            <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 lg:p-8 mb-6">
+            <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 lg:p-8 mb-6 8 border border-gray-300 shadow-gray-400">
                 <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
                     <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 w-full sm:w-auto">
                         <div className="w-20 h-24 sm:w-28 rounded-2xl bg-linear-to-br from-white to-gray-500   flex items-center justify-center overflow-hidden shrink-0">
-                            <img src={user?.profileImg} alt="Logo" className=' w-full object-contain'/>
+                            <img src={user?.profileImg} alt="Logo" className=' w-full object-contain' />
                         </div>
                         <div className="text-center sm:text-left">
                             <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2 capitalize">{user?.name}</h2>
@@ -105,7 +110,7 @@ const Profile = () => {
                                 <span className="hidden sm:inline">•</span>
                                 <span>{user?.contactNumber}</span>
                                 <span className="hidden sm:inline">•</span>
-                                <span>{user?.address}</span>
+                                <span className='capitalize'>{user?.address}</span>
                             </div>
                         </div>
                     </div>
@@ -142,7 +147,7 @@ const Profile = () => {
                                         <input
                                             type="text"
                                             {...register('firstName', { required: 'First name is required' })}
-                                            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                                            className="w-full pl-10 pr-4 py-3 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                                             placeholder="John"
                                         />
                                     </div>
@@ -161,7 +166,7 @@ const Profile = () => {
                                         <input
                                             type="text"
                                             {...register('lastName', { required: 'Last name is required' })}
-                                            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                                            className="w-full pl-10 pr-4 py-3 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                                             placeholder="Doe"
                                         />
                                     </div>
@@ -186,7 +191,7 @@ const Profile = () => {
                                                     message: 'Invalid email address'
                                                 }
                                             })}
-                                            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                                            className="w-full pl-10 pr-4 py-3 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                                             placeholder="john@example.com"
                                         />
                                     </div>
@@ -211,7 +216,7 @@ const Profile = () => {
                                                     message: 'Invalid GSTIN format'
                                                 }
                                             })}
-                                            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                                            className="w-full pl-10 pr-4 py-3 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                                             placeholder="22AAAAA0000A1Z5"
                                         />
                                     </div>
@@ -230,7 +235,7 @@ const Profile = () => {
                                         <input
                                             type="text"
                                             {...register('companyName', { required: 'Company name is required' })}
-                                            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                                            className="w-full pl-10 pr-4 py-3 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                                             placeholder="Global Traders Inc."
                                         />
                                     </div>
@@ -255,7 +260,7 @@ const Profile = () => {
                                                     message: 'Please enter a valid 10-digit number'
                                                 }
                                             })}
-                                            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                                            className="w-full pl-10 pr-4 py-3 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                                             placeholder="9876543210"
                                         />
                                     </div>
@@ -274,7 +279,7 @@ const Profile = () => {
                                 <textarea
                                     {...register('address', { required: 'Business address is required' })}
                                     rows={4}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+                                    className="w-full px-4 py-3 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
                                     placeholder="Enter full street address, City, State, Zip..."
                                 />
                                 {errors.address && (
@@ -287,7 +292,7 @@ const Profile = () => {
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
                                     COMPANY LOGO
                                 </label>
-                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors">
+                                <div className="border-2 border-dashed border-gray-400 rounded-lg p-8 text-center hover:border-blue-500 transition-colors">
 
                                     <>
                                         <label className="cursor-pointer flex flex-col items-center">
@@ -321,7 +326,7 @@ const Profile = () => {
                                 <button
                                     type="button"
                                     onClick={handleReset}
-                                    className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+                                    className="px-6 py-3 border border-gray-400 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors"
                                 >
                                     Cancel
                                 </button>

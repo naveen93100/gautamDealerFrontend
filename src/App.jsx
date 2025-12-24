@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import Registration from './pages/Registration'
 import Login from './pages/Login';
 import CreatePassword from './pages/CreatePassword';
@@ -12,6 +12,7 @@ const App = () => {
 
    return (
       <Routes>
+         <Route path='/' element={<Navigate to={"/login"} />} />
          <Route element={<PublicRoute />}>
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Registration />} />

@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Plus, Download, Calendar, DollarSign, Zap, TrendingUp, Sun, Loader2Icon } from 'lucide-react';
 import Profile from './Profile';
 import CreateProposalModal from '../../components/Ui/CreateProposalModal';
 import { apiCall } from '../../services/api';
 import { useAuth } from '../../Context/AuthContext';
-
-import toast from 'react-hot-toast';
 
 const SolarDealerDashboard = () => {
 
@@ -18,7 +16,7 @@ const SolarDealerDashboard = () => {
   const [select, setSelect] = useState(null);
 
 
-  const handleDownload = async (e,id,name) => {
+  const handleDownload = async (e, id, name) => {
     e.stopPropagation();
     try {
       setLoading(true);
@@ -38,7 +36,7 @@ const SolarDealerDashboard = () => {
 
 
       const url = URL.createObjectURL(blob);
-      
+
       // window.open(url, "_blank");
 
 
@@ -49,7 +47,7 @@ const SolarDealerDashboard = () => {
 
       document.body.appendChild(link);
       link.click();
-       link.remove();
+      link.remove();
 
       // document.body.removeChild(link);
       // window.URL.revokeObjectURL(url);
@@ -61,25 +59,25 @@ const SolarDealerDashboard = () => {
     }
   };
 
+  const fetchProposal = useCallback(async () => {
+    try {
+      let res = await apiCall('GET', `/api/dealer/get-proposal/${user?.id}`);
+      if (res?.data?.success) {
+        setProposals(res?.data?.customersProposal);
+      }
+
+    } catch (er) {
+      console.log(er);
+    }
+  }, [showCreateModal])
 
   useEffect(() => {
-    const fetchProposal = async () => {
-      try {
-        let res = await apiCall('GET', `/api/dealer/get-proposal/${user?.id}`);
-        if (res?.data?.success) {
-          setProposals(res?.data?.customersProposal);
-        }
-
-      } catch (er) {
-        console.log(er);
-      }
-    }
     fetchProposal();
   }, []);
 
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-linear-to-br from-red-50 via-orange-50 to-white">
       {/* Header */}
 
 
@@ -88,15 +86,15 @@ const SolarDealerDashboard = () => {
         <Profile />
 
         {/* Proposals Section */}
-        <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 lg:p-8">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+        <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 lg:p-8 border border-gray-300 shadow-gray-400">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 ">
             <h3 className="text-xl sm:text-2xl flex items-center justify-center gap-2 font-bold text-gray-800">Solar Proposals
 
               {/* <p className="text-2xl font-bold text-gray-800">({stats.totalProposals})</p> */}
             </h3>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors w-full sm:w-auto shadow-md"
+              className="flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors w-full sm:w-auto shadow-md "
             >
               <Plus className="w-5 h-5" />
               Create Proposal
@@ -107,7 +105,7 @@ const SolarDealerDashboard = () => {
             {proposals.length > 0 && proposals.map((proposal) => (
               <div
                 key={proposal?._id}
-                className="border-2 border-gray-100 rounded-xl p-4 sm:p-6 hover:shadow-lg hover:border-red-200 transition-all"
+                className="border-2 border-gray-300  rounded-xl p-4 sm:p-6 shadow-lg hover:border-red-300 transition-all shadow-red-200"
               >
                 <div className="flex flex-col gap-4">
                   <div className="flex-1">
@@ -155,7 +153,7 @@ const SolarDealerDashboard = () => {
                   <button
                     onClick={(e) => {
                       setSelect(proposal?.proposalsData[0]?._id)
-                      handleDownload(e,proposal?.proposalsData[0]?._id,proposal?.name)
+                      handleDownload(e, proposal?.proposalsData[0]?._id, proposal?.name)
                     }
                     }
                     className={`flex items-center justify-center gap-2 px-4 py-2 text-red-600 border border-red-600 hover:bg-red-50 rounded-lg transition-colors w-full sm:w-auto sm:self-end ${loading ? "cursor-not-allowed text-red-300" : ""}`}
@@ -188,7 +186,7 @@ const SolarDealerDashboard = () => {
 
       {/* Create Proposal Modal */}
       {showCreateModal && (
-        <CreateProposalModal setClose={setShowCreateModal} />
+        <CreateProposalModal setClose={setShowCreateModal} proposalData={fetchProposal} />
       )}
 
 

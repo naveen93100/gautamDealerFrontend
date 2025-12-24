@@ -3,10 +3,11 @@ import { useForm } from 'react-hook-form';
 import { X, Sun, User, Mail, Phone, MapPin, Zap, DollarSign, Calendar, MessageCircle } from "lucide-react"
 import { useAuth } from '../../Context/AuthContext';
 import { apiCall } from '../../services/api';
+import toast from 'react-hot-toast';
 
-const CreateProposalModal = ({ setClose }) => {
+const CreateProposalModal = ({ setClose, proposalData }) => {
 
-    const {user}=useAuth();
+    const { user } = useAuth();
 
     const {
         register,
@@ -23,18 +24,24 @@ const CreateProposalModal = ({ setClose }) => {
         },
     })
 
-    const handleCreateProposal = async(d) => {
-      
-         try {
-            d.dealerId=user?.id;    
-            console.log(d)
-            let res=await apiCall('POST','/api/dealer/create-propsal',d);
-            console.log(res);
-            
-         } catch (er) {
+    const handleCreateProposal = async (d) => {
+        toast.dismiss();
+        try {
+            d.dealerId = user?.id;
+            // console.log(d)
+            let res = await apiCall('POST', '/api/dealer/create-propsal', d);
+            // console.log(res);
+            toast.success(res.data?.message)
+            if (res?.data.success) {
+                await proposalData();
+                setClose(false)
+
+            }
+
+        } catch (er) {
             console.log(er);
-         }
-        setClose(false)
+            toast.error(er.response?.data?.message)
+        }
     };
 
     return (
@@ -180,7 +187,7 @@ const CreateProposalModal = ({ setClose }) => {
                             </div>
                         </section>
 
-                       {/* message */}
+                        {/* message */}
                         <section className="mb-6">
                             <div className="flex items-center gap-2 mb-4">
                                 <MessageCircle className="w-5 h-5 text-red-600" />
