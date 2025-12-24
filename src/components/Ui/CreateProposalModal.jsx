@@ -1,6 +1,5 @@
-import React from 'react'
 import { useForm } from 'react-hook-form';
-import { X, Sun, User, Mail, Phone, MapPin, Zap, DollarSign, Calendar, MessageCircle } from "lucide-react"
+import { X, Sun, User, Mail, Phone, MapPin, Zap, DollarSign, MessageCircle } from "lucide-react"
 import { useAuth } from '../../Context/AuthContext';
 import { apiCall } from '../../services/api';
 import toast from 'react-hot-toast';
@@ -31,8 +30,8 @@ const CreateProposalModal = ({ setClose, proposalData }) => {
             // console.log(d)
             let res = await apiCall('POST', '/api/dealer/create-propsal', d);
             // console.log(res);
-            toast.success(res.data?.message)
             if (res?.data.success) {
+                toast.success(res.data?.message)
                 await proposalData();
                 setClose(false)
 
