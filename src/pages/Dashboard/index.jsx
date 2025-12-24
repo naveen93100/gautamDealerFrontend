@@ -5,15 +5,18 @@ import CreateProposalModal from '../../components/Ui/CreateProposalModal';
 import { apiCall } from '../../services/api';
 import { useAuth } from '../../Context/AuthContext';
 
+import { useNavigate } from 'react-router-dom';
+
 const SolarDealerDashboard = () => {
 
   const [proposals, setProposals] = useState([]);
 
-  const { user } = useAuth()
+  const { user, token } = useAuth()
 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [loading, setLoading] = useState(false)
   const [select, setSelect] = useState(null);
+  const navigate = useNavigate();
 
 
   const handleDownload = async (e, id, name) => {
@@ -37,23 +40,11 @@ const SolarDealerDashboard = () => {
 
       const url = URL.createObjectURL(blob);
 
-      // window.open(url, "_blank");
+      window.open(url, "_blank");
 
-
-      const link = document.createElement("a");
-
-      link.href = url;
-      link.setAttribute('download', `Solar_Proposal-${name}.pdf`)
-
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-
-      // document.body.removeChild(link);
-      // window.URL.revokeObjectURL(url);
       setLoading(false);
-    } catch (error) {
-      console.error("Download failed:", error);
+    } catch (er) {
+      console.log(er)
     } finally {
       setLoading(false);
     }

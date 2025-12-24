@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 
 const CreateProposalModal = ({ setClose, proposalData }) => {
 
-    const { user } = useAuth();
+    const { user,token } = useAuth();
 
     const {
         register,
