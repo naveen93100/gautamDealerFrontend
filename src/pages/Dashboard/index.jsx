@@ -120,7 +120,7 @@ const SolarDealerDashboard = () => {
                       <div className="flex items-center gap-2 text-sm text-gray-600">
                         <Zap className="w-4 h-4 text-red-600 flex-shrink-0" />
                         <span className="font-medium">System:</span>
-                        <span>{proposal?.proposalsData[0]?.orderCapacity}kwh</span>
+                        <span>{proposal?.proposalsData[0]?.orderCapacity} watts</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-gray-600">
                         <Calendar className="w-4 h-4 text-red-600 flex-shrink-0" />
