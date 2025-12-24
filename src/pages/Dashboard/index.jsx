@@ -51,14 +51,16 @@ const SolarDealerDashboard = () => {
         setProposals(res?.data?.customersProposal);
       }
 
+      console.log(1);
+
     } catch (er) {
       console.log(er);
     }
-  }, [showCreateModal])
+  }, [user?.id])
 
   useEffect(() => {
     fetchProposal();
-  }, []);
+  }, [fetchProposal]);
 
 
   return (
