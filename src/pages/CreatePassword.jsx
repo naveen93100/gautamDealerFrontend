@@ -28,6 +28,7 @@ const CreatePassword = () => {
             }
 
         } catch (er) {
+            toast.error(er?.response?.data?.message);
             console.log(er);
         }
         finally{
@@ -36,8 +37,9 @@ const CreatePassword = () => {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4 ">
+        <div className="min-h-screen flex items-center justify-center bg-gray-300 p-4 ">
             <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
+              <div className="w-16 h-1 bg-gradient-to-r from-red-600 to-rose-500 rounded-full mb-6"></div>
                 <h2 className="text-2xl font-semibold mb-2 text-gray-800">Create Password</h2>
                 <p className="text-gray-500 mb-6 text-sm">
                     Your password must be at least 8 characters long.

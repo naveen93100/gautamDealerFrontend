@@ -51,8 +51,6 @@ const SolarDealerDashboard = () => {
         setProposals(res?.data?.customersProposal);
       }
 
-      console.log(1);
-
     } catch (er) {
       console.log(er);
     }
