@@ -168,7 +168,6 @@ const SolarDealerDashboard = () => {
           </div>
         </div>
       </div>
-
       {/* Create Proposal Modal */}
       {showCreateModal && (
         <CreateProposalModal setClose={setShowCreateModal} proposalData={fetchProposal} />
