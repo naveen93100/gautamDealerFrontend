@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { FiUser, FiMail, FiFileText, FiHome, FiPhone, FiImage, FiMapPin, FiUploadCloud } from "react-icons/fi";
+import { FiUser, FiMail, FiFileText, FiHome, FiPhone, FiMapPin, FiUploadCloud } from "react-icons/fi";
 import { apiCall } from "../services/api";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";

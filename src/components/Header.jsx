@@ -116,7 +116,7 @@ const Header = () => {
             </div>
 
             {/* Bottom accent line */}
-            <div className="h-1 bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400"></div>
+            <div className="h-1 bg-linear-to-r from-yellow-400 via-orange-400 to-red-400"></div>
         </header>
     )
 }

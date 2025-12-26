@@ -1,7 +1,6 @@
 import { useForm } from "react-hook-form";
 import { FiMail, FiLock, FiArrowRight } from "react-icons/fi"
 import { Link, useNavigate } from "react-router-dom";
-import { apiCall } from "../services/api";
 import toast from "react-hot-toast";
 import { useAuth } from "../Context/AuthContext";
 import { useState } from "react";
@@ -19,7 +18,7 @@ const Login = () => {
     try {
       toast.dismiss()
       setLoading(true)
-      let res = await axios.post('http://localhost:1008/api/dealer/login', data);
+      let res = await axios.post('https://gautamsolar.us/api/dealer/login', data);
 
       if (res?.data?.success) {
         setLoading(false)

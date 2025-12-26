@@ -2,7 +2,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:1008",
+  baseURL: "https://gautamsolar.us",
 });
 
 export const apiCall = (method, url, data, config = {}) => {

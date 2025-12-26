@@ -27,9 +27,7 @@ const CreateProposalModal = ({ setClose, proposalData }) => {
         toast.dismiss();
         try {
             d.dealerId = user?.id;
-            // console.log(d)
             let res = await apiCall('POST', '/api/dealer/create-propsal', d);
-            // console.log(res);
             if (res?.data.success) {
                 toast.success(res.data?.message)
                 await proposalData();
