@@ -29,7 +29,7 @@ const Login = () => {
 
     } catch (er) {
       toast.error(er?.response?.data?.message);
-      console.log(er);
+      console.log("error ",er);
     }
     finally {
       setLoading(false);
