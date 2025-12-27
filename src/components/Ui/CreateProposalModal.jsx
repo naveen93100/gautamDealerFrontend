@@ -3,15 +3,17 @@ import { X, Sun, User, Mail, Phone, MapPin, Zap, DollarSign, MessageCircle } fro
 import { useAuth } from '../../Context/AuthContext';
 import { apiCall } from '../../services/api';
 import toast from 'react-hot-toast';
+import { useEffect } from 'react';
 
-const CreateProposalModal = ({ setClose, proposalData }) => {
+const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
 
-    const { user,token } = useAuth();
+    const { user, token } = useAuth();
 
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, dirtyFields },
+        setValue
     } = useForm({
         defaultValues: {
             customerName: "",
@@ -25,21 +27,79 @@ const CreateProposalModal = ({ setClose, proposalData }) => {
 
     const handleCreateProposal = async (d) => {
         toast.dismiss();
-        try {
-            d.dealerId = user?.id;
-            let res = await apiCall('POST', '/api/dealer/create-propsal', d);
-            if (res?.data.success) {
-                toast.success(res.data?.message)
-                await proposalData();
-                setClose(false)
-
+        // edit
+        if (data) {
+            if (Object.keys(dirtyFields).length === 0) {
+                toast.error('No field changes detected.');
+                return;
             }
 
-        } catch (er) {
-            console.log(er);
-            toast.error(er.response?.data?.message)
+            let formData = {};
+            formData.propId = data?.proposalsData[0]?._id
+
+
+            Object.keys(dirtyFields).forEach((k) => {
+                console.log(k);
+                if (k === 'rate' || k === 'orderCapacity' || k === 'termAndConditions') {
+                    formData[k] = d?.[k]
+                }
+                else {
+                    if (k === 'customerName') {
+                        formData.name = d['customerName'];
+                    }
+                    else {
+                        formData[k] = d[k];
+                    }
+                }
+            })
+
+            try {
+                let res = await apiCall('PATCH', '/api/dealer/edit-proposal', formData);
+                if (res?.data?.success) {
+                    toast.success(res?.data?.message);
+                    setClose(false);
+                    setTimeout(() =>
+                        window.location.reload()
+                        , 1000)
+                }
+            } catch (er) {
+                toast.error(er?.response?.data?.message);
+                console.log(er);
+            }
+        }
+        // create
+        else {
+            try {
+                d.dealerId = user?.id;
+                let res = await apiCall('POST', '/api/dealer/create-propsal', d);
+                if (res?.data.success) {
+                    toast.success(res.data?.message)
+                    await proposalData();
+                    setClose(false)
+                }
+
+            } catch (er) {
+                console.log(er);
+                toast.error(er.response?.data?.message)
+            }
+
         }
     };
+
+    useEffect(() => {
+        if (!data) return;
+        setValue('customerName', data?.name);
+        setValue('email', data?.email);
+        setValue('phone', data?.phone);
+        setValue('address', data?.address);
+        setValue('orderCapacity', data?.proposalsData[0]?.orderCapacity / 1000);
+        setValue('rate', data?.proposalsData[0]?.rate);
+        setValue('termsAndConditions', data?.proposalsData[0]?.termsAndConditions);
+
+    }, [data]);
+
+
+
 
     return (
 
@@ -49,7 +109,11 @@ const CreateProposalModal = ({ setClose, proposalData }) => {
                 {/* Header */}
                 <div className="bg-linear-to-r from-red-600 to-orange-600 p-4 text-white relative">
                     <button
-                        onClick={() => setClose(false)}
+                        onClick={() => {
+                            setData(null)
+                            setClose(false)
+                        }
+                        }
                         className="absolute top-4 right-4 p-2 hover:bg-white/20 rounded-full transition-all"
                     >
                         <X className="w-5 h-5" />
@@ -157,9 +221,10 @@ const CreateProposalModal = ({ setClose, proposalData }) => {
                             </div>
 
                             <input
-                                {...register("orderCapacity", { required: "Capacity is required" })}
+                                type='number'
                                 className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-red-500"
                                 placeholder="Order Capacity (kW)"
+                                {...register("orderCapacity", { required: "orderCapacity is required" })}
                             />
                             {errors.rooftopCapacity && (
                                 <p className="text-red-500 text-sm mt-1">{errors.rooftopCapacity.message}</p>
@@ -194,7 +259,7 @@ const CreateProposalModal = ({ setClose, proposalData }) => {
                             <textarea
                                 {...register("termsAndConditions")}
                                 rows={4}
-                                className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-red-500 resize-none"
+                                className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-red-500 resize-y"
                                 placeholder="Add any terms, conditions, or messages to include in the proposal PDF"
                             />
                         </section>
@@ -203,7 +268,10 @@ const CreateProposalModal = ({ setClose, proposalData }) => {
                         <div className="  items-center justify-center bg-gray-50 flex gap-3 mt-5">
                             <button
                                 type="button"
-                                onClick={() => setClose(false)}
+                                onClick={() => {
+                                    setData(null)
+                                    setClose(false)
+                                }}
                                 className="sm:flex-1 p-3 border rounded-xl text-sm cursor-pointer"
                             >
                                 Cancel

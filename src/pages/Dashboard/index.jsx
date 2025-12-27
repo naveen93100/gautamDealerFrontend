@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Plus, Download, Calendar, DollarSign, Zap, TrendingUp, Sun, Loader2Icon, MapPin, Mail, Phone, IndianRupee } from 'lucide-react';
+import { Plus, Download, Calendar, DollarSign, Zap, TrendingUp, Sun, Loader2Icon, MapPin, Mail, Phone, IndianRupee, Edit } from 'lucide-react';
 import Profile from './Profile';
 import CreateProposalModal from '../../components/Ui/CreateProposalModal';
 import { apiCall } from '../../services/api';
@@ -18,6 +18,7 @@ const SolarDealerDashboard = () => {
   const [loading, setLoading] = useState(false)
   const [select, setSelect] = useState(null);
   const navigate = useNavigate();
+
 
 
   const handleDownload = async (e, id) => {
@@ -75,7 +76,6 @@ const SolarDealerDashboard = () => {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 ">
             <h3 className="text-xl sm:text-2xl flex items-center justify-center gap-2 font-bold text-gray-800">Solar Proposals
 
-              {/* <p className="text-2xl font-bold text-gray-800">({stats.totalProposals})</p> */}
             </h3>
             <button
               onClick={() => setShowCreateModal(true)}
@@ -117,7 +117,7 @@ const SolarDealerDashboard = () => {
                         <span className="font-medium">Total Price:</span>
                         <span>{proposal?.proposalsData[0]?.finalPrice}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <div className="flex  items-center gap-2 text-sm text-gray-600 ">
                         <MapPin className="w-4 h-4 text-red-600 flex shrink-0" />
                         <span className="font-medium">Address:</span>
                         <span>{proposal?.address}</span>
@@ -134,17 +134,32 @@ const SolarDealerDashboard = () => {
                       </div>
                     </div>
                   </div>
-
+               
+               {/* edit  */}
                   <button
                     onClick={(e) => {
-                      setSelect(proposal?.proposalsData[0]?._id)
+                      setSelect(proposal)
+                      setShowCreateModal(true);
+                    }
+                    }
+                    className={`flex items-center justify-center gap-2 px-4 py-2 text-red-600 border border-red-600 hover:bg-red-50 rounded-lg transition-colors w-full sm:w-auto sm:self-end ${loading ? "cursor-not-allowed text-red-300" : ""}`}
+                  >                   
+                      <span className='flex items-center gap-2'>
+                        <Edit className="w-4 h-4" />
+                        Edit Proposal
+                      </span>
+                  </button>
+             {/* download */}
+                  <button
+                    onClick={(e) => {
+                      setSelect(proposal?.proposalsData[0])
                       handleDownload(e, proposal?.proposalsData[0]?._id, proposal?.name)
                     }
                     }
                     className={`flex items-center justify-center gap-2 px-4 py-2 text-red-600 border border-red-600 hover:bg-red-50 rounded-lg transition-colors w-full sm:w-auto sm:self-end ${loading ? "cursor-not-allowed text-red-300" : ""}`}
                   >
                     {loading
-                      && select === proposal?.proposalsData[0]?._id
+                      && select?._id === proposal?.proposalsData[0]?._id
                       ?
                       <Loader2Icon className='animate-spin' />
                       :
@@ -170,7 +185,7 @@ const SolarDealerDashboard = () => {
       </div>
       {/* Create Proposal Modal */}
       {showCreateModal && (
-        <CreateProposalModal setClose={setShowCreateModal} proposalData={fetchProposal} />
+        <CreateProposalModal setClose={setShowCreateModal} proposalData={fetchProposal}  data={select} setData={setSelect}/>
       )}
 
 

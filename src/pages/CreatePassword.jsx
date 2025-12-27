@@ -21,6 +21,7 @@ const CreatePassword = () => {
             setLoading(true)
 
             let res = await axios.post(`https://gautamsolar.us/api/dealer/create-password/${token}`,{password});
+            // let res = await axios.post(`http://localhost:1008/api/dealer/create-password/${token}`,{password});
 
             if(res?.data?.success){
                 setLoading(false)
