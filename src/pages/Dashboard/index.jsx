@@ -152,7 +152,7 @@ const SolarDealerDashboard = () => {
              {/* download */}
                   <button
                     onClick={(e) => {
-                      setSelect(proposal?.proposalsData[0])
+                      // setSelect(proposal?.proposalsData[0])
                       handleDownload(e, proposal?.proposalsData[0]?._id, proposal?.name)
                     }
                     }

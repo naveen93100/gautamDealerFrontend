@@ -107,7 +107,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
             <div className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full min-h-[90vh] overflow-hidden">
 
                 {/* Header */}
-                <div className="bg-linear-to-r from-red-600 to-orange-600 p-4 text-white relative">
+                <div className="bg-[#d40202] p-4 text-white relative">
                     <button
                         onClick={() => {
                             setData(null)
@@ -279,7 +279,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
 
                             <button
                                 type="submit"
-                                className=" p-3 sm:flex-1 cursor-pointer bg-linear-to-r from-red-600 to-orange-600 text-white rounded-xl"
+                                className=" p-3 sm:flex-1 cursor-pointer bg-linear-to-r from-red-600 to-red-600 text-white rounded-xl"
                             >
                                 Create Proposal
                             </button>

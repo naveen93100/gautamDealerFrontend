@@ -46,10 +46,8 @@ const Header = () => {
                                     src="/logo.png"
                                     alt="Gautam Solar"
                                     className="h-8 lg:h-10 w-auto object-contain"
-                                    onError={(e) => {
-                                        e.target.style.display = 'none';
-                                        e.target.nextSibling.style.display = 'block';
-                                    }}
+                                    
+                                    loading='lazy'
                                 />
                                 <span className="hidden text-sm  font-bold text-gray-800 whitespace-nowrap">
                                     GAUTAM SOLAR
