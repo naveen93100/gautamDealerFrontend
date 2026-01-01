@@ -8,17 +8,18 @@ import ProtectedRoute from './components/common/ProtectedRoute';
 import PublicRoute from './components/common/PublicRoute';
 import { useEffect } from 'react';
 import { setNavigate } from './utils/Navigate';
+import MainPage from './components/common/MainPage';
 
 const App = () => {
-    const navigate=useNavigate();
+   const navigate = useNavigate();
 
-    useEffect(()=>{
-     setNavigate(navigate);
-    },[]);
+   useEffect(() => {
+      setNavigate(navigate);
+   }, []);
 
    return (
       <Routes>
-         <Route path='/' element={<Navigate to='/login'/>}/>
+         <Route path='/' element={<Navigate to='/login' />} />
          <Route element={<PublicRoute />}>
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Registration />} />
@@ -30,6 +31,7 @@ const App = () => {
                <Layout />
             </ProtectedRoute>
          } />
+         <Route path='/preview-proposal' element={<MainPage />} />
 
       </Routes>
    )

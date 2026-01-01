@@ -1,0 +1,33 @@
+@page {
+  size: A4;
+  margin: 0;
+}
+
+.print-this{
+    display: none;
+    visibility: hidden;
+}
+
+@media print {
+    body {
+        margin: 0;
+        padding: 0;
+        background: white;
+    }
+
+    /* hide everything else */
+    .dont-print {
+        display: none !important;
+        visibility:hidden;
+    }
+
+    /* each section becomes a PDF page */
+    .print-this {
+        display:block;
+        visibility: visible;
+        margin: 0;
+        padding: 0;
+        /* page-break-after: always; */
+        /* break-after: page; */
+    }
+}

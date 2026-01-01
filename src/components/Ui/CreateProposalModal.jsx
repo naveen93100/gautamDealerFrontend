@@ -1,19 +1,81 @@
-import { useForm } from 'react-hook-form';
+import { useFieldArray, useForm } from 'react-hook-form';
 import { X, Sun, User, Mail, Phone, MapPin, Zap, DollarSign, MessageCircle } from "lucide-react"
 import { useAuth } from '../../Context/AuthContext';
 import { apiCall } from '../../services/api';
 import toast from 'react-hot-toast';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { BiRupee } from 'react-icons/bi';
+import JoditEditor from 'jodit-react';
 
 const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
 
     const { user, token } = useAuth();
+    const joditConfig = {
+        readonly: false,
+        height: 400,
+        resize: true,
+        uploader: {
+            insertImageAsBase64URI: true,
+        },
+        toolbarAdaptive: false,
+        buttons: "bold,italic,underline,|,ul,ol,|,table,link,image,|,align,left,center,right,justify,|,brush,eraser,|,paragraph,fontsize,|,undo,redo",
+        allowHTML: true,
+        useClasses: true,
+    }
+
+    const [Body, setBody] = useState(`
+       <h3><strong>Payment Terms</strong></h3>
+            <ul>
+            <li><strong>20% advance</strong> at the time of order confirmation.</li>
+            <li><strong>75% payment</strong> upon delivery of material at site.</li>
+            <li><strong>5% balance</strong> after completion of net metering.</li>
+            <li>Net metering licensing and documentation will be handled by our team.</li>
+            <li>Any applicable net metering charges will be charged separately.</li>
+            </ul>
+
+            <h3><strong>Mode of Payments</strong></h3>
+            <p>
+            Kindly transfer the advance amount through any of the following modes: <br>
+            <strong>Bank Transfer:</strong> [Bank Account Number] <br>
+            <strong>UPI:</strong> [UPI ID]
+            </p>
+
+            <br>
+
+            <h3 style="background-color:#a20000; color:#fff; display:inline-block;">
+            <strong>Terms and Conditions:</strong>
+            </h3>
+
+            <p><strong>A) Scope &amp; Design Basis:</strong></p>
+            <p>
+            The proposal is prepared based on a standard system/design configuration. Any changes or deviations in scope, layout, specifications, or quantities may result in additional costs.
+            </p>
+
+            <p><strong>B) Validity of Quotation:</strong></p>
+            <p>
+            This quotation is valid for <strong>7 days</strong> from the date of issue.
+            </p>
+
+            <p><strong>C) WARRANTY:</strong></p>
+            <p>
+            <strong>5 Year warranty</strong> on Solar System.
+            </p>
+
+            <p style="font-size: 14px; color: #555;">
+            <em>
+                The above warranties cover manufacturing defects, premature material degradation, and equipment failures.
+            </em>
+            </p>
+`)
+
 
     const {
         register,
         handleSubmit,
         formState: { errors, dirtyFields },
-        setValue
+        setValue,
+        watch,
+        getValues
     } = useForm({
         defaultValues: {
             customerName: "",
@@ -22,15 +84,28 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
             address: "",
             orderCapacity: "",
             rate: "",
+            components: []
         },
     })
 
+
+    let selectedMaterial = watch('components')
+
     const handleCreateProposal = async (d) => {
         toast.dismiss();
+        // console.log(d);
         // edit
         if (data) {
-            if (Object.keys(dirtyFields).length === 0) {
-                toast.error('No field changes detected.');
+            console.log(d);
+            // console.log(selectedMaterial);
+
+            // if (Object.keys(dirtyFields).length === 0) {
+            //     toast.error('No field changes detected.');
+            //     return;
+            // }
+
+            if (selectedMaterial.length < 5) {
+                toast.error('Please Select At least 5 Components')
                 return;
             }
 
@@ -38,22 +113,28 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
             formData.propId = data?.proposalsData[0]?._id
 
 
-            Object.keys(dirtyFields).forEach((k) => {
-                console.log(k);
-                if (k === 'rate' || k === 'orderCapacity' || k === 'termAndConditions') {
-                    formData[k] = d?.[k]
-                }
-                else {
-                    if (k === 'customerName') {
-                        formData.name = d['customerName'];
+            if (Object.keys(dirtyFields).length >= 1) {
+                Object.keys(dirtyFields).forEach((k) => {
+                    if (k === 'rate' || k === 'orderCapacity' || k === 'termsAndConditions') {
+                        // if (k === 'rate' || k === 'orderCapacity') {
+                        formData[k] = d?.[k]
                     }
                     else {
-                        formData[k] = d[k];
+                        if (k === 'customerName') {
+                            formData.name = d['customerName'];
+                        }
+                        else {
+                            formData[k] = d[k];
+                        }
                     }
-                }
-            })
+                })
+            }
+
 
             try {
+                formData.termsAndConditions = Body;
+                formData.components = d?.components
+
                 let res = await apiCall('PATCH', '/api/dealer/edit-proposal', formData);
                 if (res?.data?.success) {
                     toast.success(res?.data?.message);
@@ -67,10 +148,15 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                 console.log(er);
             }
         }
-        // create
+        // // create
         else {
             try {
+                if (selectedMaterial.length < 5) {
+                    toast.error('Please Select At least 5 Components')
+                    return;
+                }
                 d.dealerId = user?.id;
+                d.termsAndConditions = Body;
                 let res = await apiCall('POST', '/api/dealer/create-propsal', d);
                 if (res?.data.success) {
                     toast.success(res.data?.message)
@@ -86,6 +172,28 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
         }
     };
 
+    const handleSelect = (qty, item) => {
+        let updated = [...selectedMaterial];
+
+        if (qty === 0) {
+            updated = updated.filter(v => v.name !== item);
+        }
+        else {
+            let find = updated.findIndex(v => v.name === item);
+
+            if (find === -1) {
+                updated.push({ name: item, qty });
+            }
+            else {
+                updated[find].qty = qty
+            }
+
+        }
+        setValue('components', updated);
+
+
+    }
+
     useEffect(() => {
         if (!data) return;
         setValue('customerName', data?.name);
@@ -94,12 +202,15 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
         setValue('address', data?.address);
         setValue('orderCapacity', data?.proposalsData[0]?.orderCapacity / 1000);
         setValue('rate', data?.proposalsData[0]?.rate);
-        setValue('termsAndConditions', data?.proposalsData[0]?.termsAndConditions);
 
+         setBody(data?.proposalsData[0]?.termsAndConditions);
+        // setValue('termsAndConditions', data?.proposalsData[0]?.termsAndConditions);
+        let names = data?.proposalsData[0]?.material.map(item => ({ name: item?.materialData?.name, qty: item?.quantity }));
+        setValue('components', names);
     }, [data]);
 
-
-
+    // console.log(data);
+    // console.log(selectedMaterial);
 
     return (
 
@@ -124,7 +235,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                             <Sun className="w-8 h-8 text-white" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-bold">New Solar Proposal</h2>
+                            <h2 className="text-xl font-bold">New Solar Power Plant</h2>
                             <p className="text-red-100 text-sm mt-1">
                                 Create a detailed proposal for your customer
                             </p>
@@ -217,7 +328,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                         <section className="mb-6">
                             <div className="flex items-center gap-2 mb-4">
                                 <Zap className="w-5 h-5 text-red-600" />
-                                <h3 className="text-lg font-semibold">System Details</h3>
+                                <h3 className="text-lg font-semibold">Power Plant Capacity</h3>
                             </div>
 
                             <input
@@ -234,8 +345,8 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                         {/* Pricing */}
                         <section>
                             <div className="flex items-center gap-2 mb-4">
-                                <DollarSign className="w-5 h-5 text-red-600" />
-                                <h3 className="text-lg font-semibold">Pricing Information</h3>
+                                <BiRupee className="w-5 h-5 text-red-600" />
+                                <h3 className="text-lg font-semibold">Rate/Watt</h3>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -250,19 +361,79 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                         </section>
 
                         {/* message */}
-                        <section className="mb-6">
+                        {data &&
+                            <section className="mb-6">
+                                <div className="flex items-center gap-2 mb-4">
+                                    <MessageCircle className="w-5 h-5 text-red-600" />
+                                    <h3 className="text-lg font-semibold">Terms & Conditions / Message</h3>
+                                </div>
+
+                                {/* <textarea
+                                    {...register("termsAndConditions")}
+                                    rows={4}
+                                    className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-red-500 resize-y min-h-60"
+                                    placeholder="Add any terms, conditions, or messages to include in the proposal PDF"
+                                /> */}
+                                <JoditEditor
+                                    config={joditConfig}
+                                    value={Body}
+                                    onBlur={(c)=>setBody(c)}
+                                />
+                            </section>
+                        }
+                        {/* Components Included */}
+                        <section className="mb-6 mt-5">
                             <div className="flex items-center gap-2 mb-4">
-                                <MessageCircle className="w-5 h-5 text-red-600" />
-                                <h3 className="text-lg font-semibold">Terms & Conditions / Message</h3>
+                                <Zap className="w-5 h-5 text-red-600" />
+                                <h3 className="text-lg font-semibold">Components Included</h3>
                             </div>
 
-                            <textarea
-                                {...register("termsAndConditions")}
-                                rows={4}
-                                className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-red-500 resize-y"
-                                placeholder="Add any terms, conditions, or messages to include in the proposal PDF"
-                            />
+                            <div className='space-y-3'>
+                                {[
+                                    "Inverter",
+                                    "ACDB",
+                                    "DCDB",
+                                    "Wiring Cables",
+                                    "Lightning Arrester",
+                                    "Earthing",
+                                    "PVC Cable",
+                                ].map((item) => {
+
+                                    // let isSelected = selectedMaterial.find(v => v.name === item  {check:true,qty:v.qty}:{check:false,qty:0});
+                                    let match = selectedMaterial.find(v => v.name === item);
+                                    let isSelected = match ? { check: true, qty: match?.qty } : { check: false, qty: 0 }
+
+
+                                    return (
+
+                                        <div key={item} className='p-2 border rounded-2xl flex justify-between'>
+                                            <label key={item} className="flex items-center gap-2 ">
+                                                <input
+                                                    onChange={(e) => {
+                                                        if (!e.target.checked) {
+                                                            handleSelect(0, item);
+                                                        }
+                                                        else {
+                                                            handleSelect(1, item);
+                                                        }
+                                                    }}
+                                                    type="checkbox"
+                                                    checked={isSelected?.check}
+                                                    value={item}
+                                                    className="w-4 h-4"
+                                                />
+                                                {item}
+                                            </label>
+
+                                            {isSelected &&
+                                                <input value={isSelected?.qty} onChange={(e) => handleSelect(Number(e.target.value), item)} type="number" placeholder='Quantity' className='border border-dotted w-48 p-1 rounded-sm mr-5' />
+                                            }
+                                        </div>
+                                    )
+                                })}
+                            </div>
                         </section>
+
 
                         {/* Footer */}
                         <div className="  items-center justify-center bg-gray-50 flex gap-3 mt-5">
@@ -281,11 +452,14 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                                 type="submit"
                                 className=" p-3 sm:flex-1 cursor-pointer bg-linear-to-r from-red-600 to-red-600 text-white rounded-xl"
                             >
-                                Create Proposal
+                                {data ? 'Update Proposal' : 'Create Proposal'}
+
                             </button>
                         </div>
                     </div>
+
                 </form>
+
             </div>
         </div>
 

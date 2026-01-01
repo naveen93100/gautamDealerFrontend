@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiUser, FiMail, FiFileText, FiHome, FiPhone, FiMapPin, FiUploadCloud } from "react-icons/fi";
 import { apiCall } from "../services/api";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { LoaderCircle } from "lucide-react";
 
@@ -230,6 +230,11 @@ const Registration = () => {
                             }
                             <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                         </button>
+                        <div className="text-center text-sm text-gray-600 mt-2">Already Have Account? {''}
+                             <Link to='/login' className="text-[#a20000] font-semibold hover:underline">
+                              Login Here
+                             </Link>
+                        </div>
 
                     </div>
 

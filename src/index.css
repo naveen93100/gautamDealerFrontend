@@ -1,1 +1,49 @@
 @import "tailwindcss";
+/* 📄 Ensure each page prints as a full A4 sheet */
+@page {
+  size: A4;
+  margin: 0; 
+  /* remove browser default margins */
+}
+
+@media print {
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Every .pdf-page SHOULD become one printed page */
+  .pdf-page {
+    page-break-after: always;
+    width: 210mm !important;
+    height: 297mm !important;
+    overflow: hidden !important;
+    position: relative;
+  }
+
+  .pdf-page:last-child {
+  page-break-after: avoid;
+  break-after: avoid-page;
+}
+
+  @media print {
+  /* ❌ Remove forced break on last page */
+  .pdf-page:last-child {
+    page-break-after: avoid;
+    break-after: avoid-page;
+  }
+}
+
+  /* Make sure images scale properly */
+  .pdf-page img {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: cover !important; /* or contain if you prefer full image */
+  }
+
+  /* Avoid content cutting across pages */
+  .pdf-page * {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}
