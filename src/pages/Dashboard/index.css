@@ -3,10 +3,10 @@
   margin: 0;
 }
 
-.print-this{
+/* .print-this{
     display: none;
     visibility: hidden;
-}
+} */
 
 @media print {
     body {

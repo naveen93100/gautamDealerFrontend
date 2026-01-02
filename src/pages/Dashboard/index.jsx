@@ -19,6 +19,7 @@ const SolarDealerDashboard = () => {
   const [loading, setLoading] = useState(false)
   const [select, setSelect] = useState(null);
   const [printP, setPrintP] = useState(false)
+  const [proposalsImages,setProposalsImages]=useState([]);
 
   const [proposalData, setProposalData] = useState(null);
 
@@ -27,6 +28,8 @@ const SolarDealerDashboard = () => {
     try {
       let res = await apiCall('GET', `/api/dealer/get-proposal/${user?.id}`);
       if (res?.data?.success) {
+        // console.log(res?.data?.images)
+        setProposalsImages(res?.data?.images);
         setProposals(res?.data?.customersProposal);
       }
 
@@ -200,8 +203,8 @@ const SolarDealerDashboard = () => {
 
       </div>
       {proposalData &&
-        <div id='PrintData' className='print-this'>
-          <MainPage proposalDatas={proposalData} printP={printP} />
+        <div id='PrintData' className='print-this hidden'>
+          <MainPage proposalsImages={proposalsImages} proposalDatas={proposalData} printP={printP} />
         </div>
       }
     </>

@@ -4,22 +4,36 @@ import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../Context/AuthContext';
 
 
+// const pages = [
+//     "https://testportal.galosolar.com/uploads/problemImageAttachment/1767097088483_1.png",
+//     "https://testportal.galosolar.com/uploads/problemImageAttachment/1767097088483_1.png",
+//     "https://testportal.galosolar.com/uploads/problemImageAttachment/1767097088483_1.png",
+//     "https://testportal.galosolar.com/uploads/problemImageAttachment/1767097088483_1.png",
+//     "https://testportal.galosolar.com/uploads/problemImageAttachment/1767097088483_1.png",
+//     "https://testportal.galosolar.com/uploads/problemImageAttachment/1767097088483_1.png",
+//     "https://testportal.galosolar.com/uploads/problemImageAttachment/1767097088483_1.png",
+//     "https://testportal.galosolar.com/uploads/problemImageAttachment/1767097088483_1.png",
+//     "https://testportal.galosolar.com/uploads/problemImageAttachment/1767097088483_1.png",
+//     "https://testportal.galosolar.com/uploads/problemImageAttachment/1767097088483_1.png",
+//     "https://testportal.galosolar.com/uploads/problemImageAttachment/1767097088483_1.png",
+//     "https://testportal.galosolar.com/uploads/problemImageAttachment/1767097088483_1.png",
+// ];
 const pages = [
-    "j1.jpg",
-    "j2.jpg",
-    "j3.jpg",
-    "j4.jpg",
-    "j5.jpg",
-    "j6.jpg",
-    "j7.jpg",
-    "j8.jpg",
-    "j9.jpg",
-    "j10.jpg",
+  'https://gautamsolar.us/proposal_images/j1.jpg',
+  'https://gautamsolar.us/proposal_images/j2.jpg',
+  'https://gautamsolar.us/proposal_images/j3.jpg',
+  'https://gautamsolar.us/proposal_images/j4.jpg',
+  'https://gautamsolar.us/proposal_images/j5.jpg',
+  'https://gautamsolar.us/proposal_images/j6.jpg',
+  'https://gautamsolar.us/proposal_images/j7.jpg',
+  'https://gautamsolar.us/proposal_images/j8.jpg',
+  'https://gautamsolar.us/proposal_images/j9.jpg',
+  'https://gautamsolar.us/proposal_images/j10.jpg',
 ];
 
 
 
-const MainPage = ({ proposalDatas, printP }) => {
+const MainPage = ({proposalDatas, printP }) => {
     const { state } = useLocation();
     const { user } = useAuth()
 
@@ -62,7 +76,6 @@ const MainPage = ({ proposalDatas, printP }) => {
 
         <>
             <div className="flex flex-col gap-6 bg-gray-200 ">
-
 
                 <PdfComp bg={pages[0]}>
                     <div className="absolute text-red-500 scale-150 top-[15mm] left-[30mm]">

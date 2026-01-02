@@ -158,7 +158,9 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                 let res = await apiCall('POST', '/api/dealer/create-propsal', d);
                 if (res?.data.success) {
                     toast.success(res.data?.message)
-                    await proposalData();
+                    setTimeout(() =>
+                        window.location.reload()
+                        , 1000)
                     setClose(false)
                 }
 
@@ -201,7 +203,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
         setValue('orderCapacity', data?.proposalsData[0]?.orderCapacity / 1000);
         setValue('rate', data?.proposalsData[0]?.rate);
 
-         setBody(data?.proposalsData[0]?.termsAndConditions);
+        setBody(data?.proposalsData[0]?.termsAndConditions);
         // setValue('termsAndConditions', data?.proposalsData[0]?.termsAndConditions);
         let names = data?.proposalsData[0]?.material.map(item => ({ name: item?.materialData?.name, qty: item?.quantity }));
         setValue('components', names);
@@ -373,7 +375,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                                 <JoditEditor
                                     config={joditConfig}
                                     value={Body}
-                                    onBlur={(c)=>setBody(c)}
+                                    onBlur={(c) => setBody(c)}
                                 />
                             </section>
                         }
