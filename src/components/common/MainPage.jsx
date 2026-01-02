@@ -1,10 +1,7 @@
 
-import React, { useCallback, useEffect } from 'react'
 import PdfComp from './PdfComp'
-import { Navigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../Context/AuthContext';
-import { RxDownload } from "react-icons/rx";
-import { printScreen } from './printScreen';
 
 
 const pages = [
@@ -41,12 +38,7 @@ const MainPage = ({ proposalDatas, printP }) => {
         address: user?.address,
     }
 
-    // const customerData = {
-    //     name: state?.name,
-    //     email: state?.email,
-    //     phone: state?.phone,
-    //     address: state?.address,
-    // }
+
     const customerData = {
         name: proposalDatas?.name,
         email: proposalDatas?.email,
@@ -64,27 +56,13 @@ const MainPage = ({ proposalDatas, printP }) => {
         gstAmt: proposalDatas?.proposalsData[0]?.gstAmt,
         material: proposalDatas?.proposalsData[0]?.material
     }
-    // const proposalsData = {
-    //     rate: state?.proposalsData[0]?.rate,
-    //     orderCapacity: state?.proposalsData[0]?.orderCapacity,
-    //     termsAndConditions: state?.proposalsData[0]?.termsAndConditions,
-    //     proposalDate: state?.proposalsData[0]?.proposalDate,
-    //     price: state?.proposalsData[0]?.price,
-    //     finalPrice: state?.proposalsData[0]?.finalPrice,
-    //     gstAmt: state?.proposalsData[0]?.gstAmt,
-    //     material: state?.proposalsData[0]?.material
-    // }
 
-    // const material = state?.proposalsData[0]?.material)
 
-console.log("jsdgfgjs ",proposalDatas)
     return (
 
         <>
-            <div  className="flex flex-col gap-6 bg-gray-200 ">
-                {/* <button onClick={() => window.print()} className='fixed left-8 top-10 bg-gray-300 rounded-full p-1 text-red-800 cursor-pointer'>
-                <RxDownload size={50} />
-            </button> */}
+            <div className="flex flex-col gap-6 bg-gray-200 ">
+
 
                 <PdfComp bg={pages[0]}>
                     <div className="absolute text-red-500 scale-150 top-[15mm] left-[30mm]">

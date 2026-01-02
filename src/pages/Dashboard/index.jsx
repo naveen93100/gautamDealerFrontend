@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Plus, Download, Calendar, DollarSign, Zap, TrendingUp, Sun, Loader2Icon, MapPin, Mail, Phone, IndianRupee, Edit } from 'lucide-react';
+import { Plus, Download, Calendar, DollarSign, Zap, TrendingUp, Sun, Loader2Icon, MapPin, Mail, Phone, IndianRupee, Edit, User } from 'lucide-react';
 import Profile from './Profile';
 import CreateProposalModal from '../../components/Ui/CreateProposalModal';
 import { apiCall } from '../../services/api';
 import { useAuth } from '../../Context/AuthContext';
 
 import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
 import MainPage from '../../components/common/MainPage';
 
 import "./index.css";
@@ -20,36 +19,10 @@ const SolarDealerDashboard = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [loading, setLoading] = useState(false)
   const [select, setSelect] = useState(null);
-  const navigate = useNavigate();
-  const [printP,setPrintP]=useState(false)
+  const [printP, setPrintP] = useState(false)
 
   const [proposalData, setProposalData] = useState(null);
 
-
-  const handleDownload = async (e, data) => {
-    navigate('/preview-proposal', { state: data })
-    // try {
-    //   setLoading(true);
-    //   const response = await apiCall(
-    //     "GET",
-    //     `/api/dealer/downloadPropsoal/${id}`,
-    //     null,
-    //     {
-    //       responseType: "blob",
-    //     }
-    //   );
-    //   const blob = new Blob([response.data], {
-    //     type: "application/pdf",
-    //   });
-    //   const url = URL.createObjectURL(blob);
-    //   window.open(url, "_blank");
-    //   setLoading(false);
-    // } catch (er) {
-    //   console.log(er)
-    // } finally {
-    //   setLoading(false);
-    // }
-  };
 
   const fetchProposal = useCallback(async () => {
     try {
@@ -67,16 +40,20 @@ const SolarDealerDashboard = () => {
     fetchProposal();
   }, [fetchProposal]);
 
-  console.log(proposalData)
-
-  const customFunc=(proposal)=>{
+  const customFunc = (proposal) => {
 
     setProposalData(proposal)
 
-    requestAnimationFrame(()=>{
-      requestAnimationFrame(()=>{
-        window.print();
+    const originalTitle = document.title;
+    document.title = `${proposal?.name}_Proposal`;
 
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        window.print();
+        setTimeout(() => {
+          document.title = originalTitle;
+        }, 500);
       })
     });
   }
@@ -115,7 +92,7 @@ const SolarDealerDashboard = () => {
                   <div className="flex flex-col gap-4">
                     <div className="flex-1">
                       <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3">
-                        <Sun className="w-5 h-5 text-red-600 flex shrink-0" />
+                        <User className="w-5 h-5 text-red-600 flex shrink-0" />
                         <h4 className="text-base sm:text-lg font-semibold text-gray-800 capitalize">
                           {proposal?.name}
                         </h4>
@@ -171,23 +148,23 @@ const SolarDealerDashboard = () => {
                     </button>
                     {/* download */}
                     <button
-                      onClick={ ()=>customFunc(proposal)
-                      //   (e) => {
-                      //   // setSelect(proposal?.proposalsData[0])
-                      //   // navigate('/ui');
-                      //   // handleDownload(e, proposal?.proposalsData[0]?._id, proposal?.name)
-                      //   setProposalData(proposal)
-                      //   setPrintP(true);
-                      //   setTimeout(
-                      //     ()=>window.print(),
-                      //   1000);
-                        
-                      //   // setTimeout(() => {
-                      //   //   handlePrint();
-                      //   // }, 1000);
+                      onClick={() => customFunc(proposal)
+                        //   (e) => {
+                        //   // setSelect(proposal?.proposalsData[0])
+                        //   // navigate('/ui');
+                        //   // handleDownload(e, proposal?.proposalsData[0]?._id, proposal?.name)
+                        //   setProposalData(proposal)
+                        //   setPrintP(true);
+                        //   setTimeout(
+                        //     ()=>window.print(),
+                        //   1000);
 
-                      //   // handleDownload(e, proposal)
-                      // }
+                        //   // setTimeout(() => {
+                        //   //   handlePrint();
+                        //   // }, 1000);
+
+                        //   // handleDownload(e, proposal)
+                        // }
                       }
                       className={`flex items-center justify-center gap-2 px-4 py-2 text-red-600 border border-red-600 hover:bg-red-50 rounded-lg transition-colors w-full sm:w-auto sm:self-end ${loading ? "cursor-not-allowed text-red-300" : ""}`}
                     >
@@ -223,11 +200,11 @@ const SolarDealerDashboard = () => {
         )}
 
       </div>
-        {proposalData &&
-          <div id='PrintData' className='print-this'>
-            <MainPage proposalDatas={proposalData} printP={printP} />
-          </div>
-        }
+      {proposalData &&
+        <div id='PrintData' className='print-this'>
+          <MainPage proposalDatas={proposalData} printP={printP} />
+        </div>
+      }
     </>
   );
 };

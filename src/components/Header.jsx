@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { useAuth } from '../Context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import '../pages/Dashboard/index.css'
 
 const Header = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -17,7 +18,7 @@ const Header = () => {
     }
 
     return (
-        <header className="bg-linear-to-br from-red-600 via-red-700 to-orange-600 text-white shadow-2xl relative overflow-hidden">
+        <header className="dont-print bg-linear-to-br from-red-600 via-red-700 to-orange-600 text-white shadow-2xl relative overflow-hidden">
             {/* Decorative background elements */}
 
             <div className="relative max-w-7xl mx-auto px-4 ">

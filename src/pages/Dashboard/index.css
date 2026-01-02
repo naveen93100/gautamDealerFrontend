@@ -17,6 +17,7 @@
 
     /* hide everything else */
     .dont-print {
+        
         display: none !important;
         visibility:hidden;
     }

@@ -5,7 +5,7 @@ import Dashboard from '../../Dashboard'
 const Layout = () => {
   return (
     <>
-    {/* <Header/> */}
+    <Header/>
     <Dashboard/>
     {/* <Outlet/> */}
     </>

@@ -31,7 +31,6 @@ const App = () => {
                <Layout />
             </ProtectedRoute>
          } />
-         <Route path='/preview-proposal' element={<MainPage />} />
 
       </Routes>
    )
