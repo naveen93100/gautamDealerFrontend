@@ -8,7 +8,6 @@ import ProtectedRoute from './components/common/ProtectedRoute';
 import PublicRoute from './components/common/PublicRoute';
 import { useEffect } from 'react';
 import { setNavigate } from './utils/Navigate';
-import MainPage from './components/common/MainPage';
 
 const App = () => {
    const navigate = useNavigate();

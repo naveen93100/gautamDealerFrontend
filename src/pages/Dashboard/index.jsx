@@ -5,7 +5,6 @@ import CreateProposalModal from '../../components/Ui/CreateProposalModal';
 import { apiCall } from '../../services/api';
 import { useAuth } from '../../Context/AuthContext';
 
-import { useNavigate } from 'react-router-dom';
 import MainPage from '../../components/common/MainPage';
 
 import "./index.css";

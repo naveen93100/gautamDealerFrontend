@@ -93,10 +93,8 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
 
     const handleCreateProposal = async (d) => {
         toast.dismiss();
-        // console.log(d);
         // edit
         if (data) {
-            console.log(d);
             // console.log(selectedMaterial);
 
             // if (Object.keys(dirtyFields).length === 0) {
@@ -209,8 +207,6 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
         setValue('components', names);
     }, [data]);
 
-    // console.log(data);
-    // console.log(selectedMaterial);
 
     return (
 
