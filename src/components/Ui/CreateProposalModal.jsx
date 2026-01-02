@@ -84,7 +84,8 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
             address: "",
             orderCapacity: "",
             rate: "",
-            components: []
+            components: [],
+            tax: 8.9
         },
     })
 
@@ -101,6 +102,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
             //     toast.error('No field changes detected.');
             //     return;
             // }
+            // console.log(d);
 
             if (selectedMaterial.length < 5) {
                 toast.error('Please Select At least 5 Components')
@@ -108,30 +110,40 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
             }
 
             let formData = {};
-            formData.propId = data?.proposalsData[0]?._id
+
+                formData.name = d?.customerName,
+                formData.email = d?.email,
+                formData.phone = d?.phone,
+                formData.address = d?.address,
+                formData.rate = d?.rate,
+                formData.orderCapacity =  d?.orderCapacity,
+                formData.tax = d?.tax,
+                formData.propId = data?.proposalsData[0]?._id
 
 
-            if (Object.keys(dirtyFields).length >= 1) {
-                Object.keys(dirtyFields).forEach((k) => {
-                    if (k === 'rate' || k === 'orderCapacity' || k === 'termsAndConditions') {
-                        // if (k === 'rate' || k === 'orderCapacity') {
-                        formData[k] = d?.[k]
-                    }
-                    else {
-                        if (k === 'customerName') {
-                            formData.name = d['customerName'];
-                        }
-                        else {
-                            formData[k] = d[k];
-                        }
-                    }
-                })
-            }
+
+            // if (Object.keys(dirtyFields).length >= 1) {
+            //     Object.keys(dirtyFields).forEach((k) => {
+            //         if (k === 'rate' || k === 'orderCapacity' || k === 'termsAndConditions') {
+            //             // if (k === 'rate' || k === 'orderCapacity') {
+            //             formData[k] = d?.[k]
+            //         }
+            //         else {
+            //             if (k === 'customerName') {
+            //                 formData.name = d['customerName'];
+            //             }
+            //             else {
+            //                 formData[k] = d[k];
+            //             }
+            //         }
+            //     })
+            // }
 
 
             try {
                 formData.termsAndConditions = Body;
                 formData.components = d?.components
+                console.log(formData);
 
                 let res = await apiCall('PATCH', '/api/dealer/edit-proposal', formData);
                 if (res?.data?.success) {
@@ -153,6 +165,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                     toast.error('Please Select At least 5 Components')
                     return;
                 }
+                console.log(d)
                 d.dealerId = user?.id;
                 d.termsAndConditions = Body;
                 let res = await apiCall('POST', '/api/dealer/create-propsal', d);
@@ -195,19 +208,43 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
     }
 
     useEffect(() => {
+        const MATERIALS = ["Inverter",
+            "ACDB",
+            "DCDB",
+            "Wiring Cables",
+            "Lightning Arrester",
+            "Earthing",
+            "PVC Cable",]
+
+
+        const defaultMaterials = MATERIALS.map(item => ({
+            name: item,
+            qty: 1, // default quantity (change if needed)
+        }));
+
+        setValue("components", defaultMaterials);
+    }, []);
+
+
+
+    useEffect(() => {
         if (!data) return;
+        console.log(data)
         setValue('customerName', data?.name);
         setValue('email', data?.email);
         setValue('phone', data?.phone);
         setValue('address', data?.address);
-        setValue('orderCapacity', data?.proposalsData[0]?.orderCapacity / 1000);
+        setValue('orderCapacity', (data?.proposalsData[0]?.orderCapacity) / 1000);
         setValue('rate', data?.proposalsData[0]?.rate);
+        setValue('tax', data?.proposalsData[0]?.tax);
 
         setBody(data?.proposalsData[0]?.termsAndConditions);
         // setValue('termsAndConditions', data?.proposalsData[0]?.termsAndConditions);
         let names = data?.proposalsData[0]?.material.map(item => ({ name: item?.materialData?.name, qty: item?.quantity }));
         setValue('components', names);
     }, [data]);
+
+
 
 
     return (
@@ -326,7 +363,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                         <section className="mb-6">
                             <div className="flex items-center gap-2 mb-4">
                                 <Zap className="w-5 h-5 text-red-600" />
-                                <h3 className="text-lg font-semibold">Power Plant Capacity</h3>
+                                <h3 className="text-lg font-semibold">Power Plant Capacity (kW)</h3>
                             </div>
 
                             <input
@@ -341,10 +378,12 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                         </section>
 
                         {/* Pricing */}
-                        <section>
+                        {/* <section className='flex items-center justify-between border mx-auto'>
+                            <div className='w-full'>
+
                             <div className="flex items-center gap-2 mb-4">
                                 <BiRupee className="w-5 h-5 text-red-600" />
-                                <h3 className="text-lg font-semibold">Rate/Watt</h3>
+                                <h3 className="text-lg font-semibold">Rate/Watt (Rs)</h3>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -356,7 +395,63 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                                 />
 
                             </div>
+                            </div>
+                           
+                           <div className='w-full'>
+                              <div className="flex items-center gap-2 mb-4">
+                                <BiRupee className="w-5 h-5 text-red-600" />
+                                <h3 className="text-lg font-semibold">Rate/Watt (Rs)</h3>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <input
+                                    type="number"
+                                    {...register("rate", { required: "Rate is required" })}
+                                    className="px-4 py-3 border rounded-xl"
+                                    placeholder="Rate ₹"
+                                />
+
+                            </div>
+                           </div>
+
+                        </section> */}
+                        <section className="max-w-5xl mx-auto border rounded-2xl p-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                                {/* Left */}
+                                <div className="w-full">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <BiRupee className="w-5 h-5 text-red-600" />
+                                        <h3 className="text-lg font-semibold">Rate / Watt (Rs)</h3>
+                                    </div>
+
+                                    <input
+                                        type="number"
+                                        {...register("rate", { required: "Rate is required" })}
+                                        className="w-full px-4 py-3 border rounded-xl"
+                                        placeholder="Rate ₹"
+                                    />
+                                </div>
+
+                                {/* Right */}
+                                <div className="w-full">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <BiRupee className="w-5 h-5 text-red-600" />
+                                        <h3 className="text-lg font-semibold">GST (%)</h3>
+                                    </div>
+
+                                    <input
+                                        type="text"
+                                        {...register("tax")}
+                                        className="w-full px-4 py-3 border rounded-xl"
+                                        placeholder="Rate ₹"
+                                    />
+                                </div>
+
+                            </div>
                         </section>
+
+
 
                         {/* message */}
                         {data &&
@@ -381,9 +476,12 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                         }
                         {/* Components Included */}
                         <section className="mb-6 mt-5">
-                            <div className="flex items-center gap-2 mb-4">
-                                <Zap className="w-5 h-5 text-red-600" />
-                                <h3 className="text-lg font-semibold">Components Included</h3>
+                            <div className="flex items-center justify-between  gap-2 mb-4">
+                                <div className='flex items-center'>
+                                    <Zap className="w-5 h-5 text-red-600" />
+                                    <h3 className="text-lg font-semibold">Components Included</h3>
+                                </div>
+                                <h3 className="text-lg font-semibold">Quantity/Units</h3>
                             </div>
 
                             <div className='space-y-3'>
@@ -397,10 +495,8 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                                     "PVC Cable",
                                 ].map((item) => {
 
-                                    // let isSelected = selectedMaterial.find(v => v.name === item  {check:true,qty:v.qty}:{check:false,qty:0});
                                     let match = selectedMaterial.find(v => v.name === item);
                                     let isSelected = match ? { check: true, qty: match?.qty } : { check: false, qty: 0 }
-
 
                                     return (
 
@@ -415,6 +511,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                                                             handleSelect(1, item);
                                                         }
                                                     }}
+
                                                     type="checkbox"
                                                     checked={isSelected?.check}
                                                     value={item}
@@ -424,7 +521,9 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                                             </label>
 
                                             {isSelected &&
-                                                <input value={isSelected?.qty} onChange={(e) => handleSelect(Number(e.target.value), item)} type="number" placeholder='Quantity' className='border border-dotted w-48 p-1 rounded-sm mr-5' />
+                                                <>
+                                                    <input value={isSelected?.qty} onChange={(e) => handleSelect(Number(e.target.value), item)} type="number" placeholder='Quantity' className='border border-dotted w-48 p-1 rounded-sm mr-5' />
+                                                </>
                                             }
                                         </div>
                                     )

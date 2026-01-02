@@ -2,44 +2,43 @@
 import PdfComp from './PdfComp'
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../Context/AuthContext';
+import { useEffect, useState } from 'react';
+import { Download } from 'lucide-react';
 
-
-// const pages = [
-//     "https://testportal.galosolar.com/uploads/problemImageAttachment/1767097088483_1.png",
-//     "https://testportal.galosolar.com/uploads/problemImageAttachment/1767097088483_1.png",
-//     "https://testportal.galosolar.com/uploads/problemImageAttachment/1767097088483_1.png",
-//     "https://testportal.galosolar.com/uploads/problemImageAttachment/1767097088483_1.png",
-//     "https://testportal.galosolar.com/uploads/problemImageAttachment/1767097088483_1.png",
-//     "https://testportal.galosolar.com/uploads/problemImageAttachment/1767097088483_1.png",
-//     "https://testportal.galosolar.com/uploads/problemImageAttachment/1767097088483_1.png",
-//     "https://testportal.galosolar.com/uploads/problemImageAttachment/1767097088483_1.png",
-//     "https://testportal.galosolar.com/uploads/problemImageAttachment/1767097088483_1.png",
-//     "https://testportal.galosolar.com/uploads/problemImageAttachment/1767097088483_1.png",
-//     "https://testportal.galosolar.com/uploads/problemImageAttachment/1767097088483_1.png",
-//     "https://testportal.galosolar.com/uploads/problemImageAttachment/1767097088483_1.png",
-// ];
 const pages = [
-  'https://gautamsolar.us/proposal_images/j1.jpg',
-  'https://gautamsolar.us/proposal_images/j2.jpg',
-  'https://gautamsolar.us/proposal_images/j3.jpg',
-  'https://gautamsolar.us/proposal_images/j4.jpg',
-  'https://gautamsolar.us/proposal_images/j5.jpg',
-  'https://gautamsolar.us/proposal_images/j6.jpg',
-  'https://gautamsolar.us/proposal_images/j7.jpg',
-  'https://gautamsolar.us/proposal_images/j8.jpg',
-  'https://gautamsolar.us/proposal_images/j9.jpg',
-  'https://gautamsolar.us/proposal_images/j10.jpg',
+    '/j1.png',
+    '/j2.png',
+    '/j3.png',
+    '/j4.png',
+    '/j5.png',
+    '/j6.png',
+    '/j7.png',
+    '/j8.png',
+    '/j9.png',
+    '/j10.png',
 ];
 
+// const pages = [
+//     'https://gautamsolar.us/proposal_images/j1.jpg',
+//     'https://gautamsolar.us/proposal_images/j2.jpg',
+//     'https://gautamsolar.us/proposal_images/j3.jpg',
+//     'https://gautamsolar.us/proposal_images/j4.jpg',
+//     'https://gautamsolar.us/proposal_images/j5.jpg',
+//     'https://gautamsolar.us/proposal_images/j6.jpg',
+//     'https://gautamsolar.us/proposal_images/j7.jpg',
+//     'https://gautamsolar.us/proposal_images/j8.jpg',
+//     'https://gautamsolar.us/proposal_images/j9.jpg',
+//     'https://gautamsolar.us/proposal_images/j10.jpg',
+// ];
 
 
-const MainPage = ({proposalDatas, printP }) => {
+
+
+const MainPage = ({ printP }) => {
     const { state } = useLocation();
     const { user } = useAuth()
-
-    // if (state === null) {
-    //     return <Navigate to='/dashboard' />
-    // }
+    console.log(state);
+    const proposalDatas = state
 
     const data = {
         firstName: user?.firstName,
@@ -68,7 +67,8 @@ const MainPage = ({proposalDatas, printP }) => {
         price: proposalDatas?.proposalsData[0]?.price,
         finalPrice: proposalDatas?.proposalsData[0]?.finalPrice,
         gstAmt: proposalDatas?.proposalsData[0]?.gstAmt,
-        material: proposalDatas?.proposalsData[0]?.material
+        material: proposalDatas?.proposalsData[0]?.material,
+        tax: proposalDatas?.proposalsData[0]?.tax
     }
 
 
@@ -76,10 +76,26 @@ const MainPage = ({proposalDatas, printP }) => {
 
         <>
             <div className="flex flex-col gap-6 bg-gray-200 ">
+                <button
+                    onClick={() => window.print()}
+                    className="
+    fixed bottom-6 right-6 z-50
+    flex items-center gap-2
+    bg-red-600 hover:bg-red-700
+    text-white font-medium
+    px-5 py-3 rounded-full
+    shadow-lg hover:shadow-xl
+    transition-all duration-200
+    print:hidden
+  "
+                >
+                    <Download className="w-5 h-5" />
+                    Download
+                </button>
 
                 <PdfComp bg={pages[0]}>
                     <div className="absolute text-red-500 scale-150 top-[15mm] left-[30mm]">
-                        <img src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
+                        <img loading='lazy' src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
                     </div>
 
                     <div className="absolute top-[5mm] right-[3mm]  text-end">
@@ -141,43 +157,43 @@ const MainPage = ({proposalDatas, printP }) => {
 
                 <PdfComp bg={pages[1]}>
                     <div className="absolute text-red-500 scale-150 top-[12mm] right-[20mm]">
-                        <img src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
+                        <img loading='lazy' src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
                     </div>
                 </PdfComp>
 
                 <PdfComp bg={pages[2]}>
                     <div className="absolute text-red-500 scale-150 top-[12mm] right-[20mm]">
-                        <img src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
+                        <img loading='lazy' src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
                     </div>
                 </PdfComp>
 
                 <PdfComp bg={pages[3]}>
                     <div className="absolute text-red-500 scale-150 top-[12mm] right-[20mm]">
-                        <img src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
+                        <img loading='lazy' src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
                     </div>
                 </PdfComp>
 
                 <PdfComp bg={pages[4]}>
                     <div className="absolute text-red-500 scale-150 top-[12mm] right-[20mm]">
-                        <img src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
+                        <img loading='lazy' src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
                     </div>
                 </PdfComp>
 
                 <PdfComp bg={pages[5]}>
                     <div className="absolute text-red-500 scale-150 top-[12mm] right-[20mm]">
-                        <img src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
+                        <img loading='lazy' src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
                     </div>
                 </PdfComp>
 
                 <PdfComp bg={pages[6]}>
                     <div className="absolute text-red-500 scale-150 top-[12mm] right-[20mm]">
-                        <img src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
+                        <img loading='lazy' src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
                     </div>
                 </PdfComp>
 
                 <PdfComp bg={pages[7]}>
                     <div className="absolute text-red-500 scale-150 top-[12mm] right-[20mm]">
-                        <img src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
+                        <img loading='lazy' src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
                     </div>
 
                     <div className='absolute top-[75mm] px-4'>
@@ -225,7 +241,7 @@ const MainPage = ({proposalDatas, printP }) => {
 
                 <PdfComp bg={pages[8]}>
                     <div className="absolute  scale-150 top-[12mm] right-[20mm]">
-                        {/* <img src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' /> */}
+                        {/* <img loading='lazy' src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' /> */}
                     </div>
 
                     <div className="max-w-4xl absolute top-[30mm] mx-auto p-6 space-y-6 text-sm">
@@ -263,7 +279,7 @@ const MainPage = ({proposalDatas, printP }) => {
 
                                     <tr>
                                         <td colSpan="3" className="border border-gray-300 p-2 font-semibold text-right">
-                                            Tax
+                                            Tax( {`${proposalsData?.tax}%`})
                                         </td>
                                         <td className="border border-gray-300 p-2">
                                             {`${proposalsData?.gstAmt?.toLocaleString()}`}
@@ -295,7 +311,7 @@ const MainPage = ({proposalDatas, printP }) => {
 
                 <PdfComp bg={pages[9]}>
                     <div className="absolute text-red-500 scale-150 top-[15mm] left-[20mm]">
-                        <img src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
+                        <img loading='lazy' src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
                     </div>
 
                     <div className="absolute top-[5mm] right-[3mm]  text-end">

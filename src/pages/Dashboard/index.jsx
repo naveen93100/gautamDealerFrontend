@@ -8,6 +8,7 @@ import { useAuth } from '../../Context/AuthContext';
 import MainPage from '../../components/common/MainPage';
 
 import "./index.css";
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const SolarDealerDashboard = () => {
 
@@ -19,9 +20,10 @@ const SolarDealerDashboard = () => {
   const [loading, setLoading] = useState(false)
   const [select, setSelect] = useState(null);
   const [printP, setPrintP] = useState(false)
-  const [proposalsImages,setProposalsImages]=useState([]);
+  const [proposalsImages, setProposalsImages] = useState([]);
 
   const [proposalData, setProposalData] = useState(null);
+  const navigate=useNavigate();
 
 
   const fetchProposal = useCallback(async () => {
@@ -59,6 +61,8 @@ const SolarDealerDashboard = () => {
       })
     });
   }
+
+
 
   return (
     <>
@@ -150,7 +154,7 @@ const SolarDealerDashboard = () => {
                     </button>
                     {/* download */}
                     <button
-                      onClick={() => customFunc(proposal)
+                      onClick={() =>{
                         //   (e) => {
                         //   // setSelect(proposal?.proposalsData[0])
                         //   // navigate('/ui');
@@ -164,9 +168,9 @@ const SolarDealerDashboard = () => {
                         //   // setTimeout(() => {
                         //   //   handlePrint();
                         //   // }, 1000);
-
-                        //   // handleDownload(e, proposal)
-                        // }
+                          navigate('/preview-proposal',{state:proposal})
+                          //  handleDownload(proposal)
+                        }
                       }
                       className={`flex items-center justify-center gap-2 px-4 py-2 text-red-600 border border-red-600 hover:bg-red-50 rounded-lg transition-colors w-full sm:w-auto sm:self-end ${loading ? "cursor-not-allowed text-red-300" : ""}`}
                     >
@@ -203,7 +207,7 @@ const SolarDealerDashboard = () => {
 
       </div>
       {proposalData &&
-        <div id='PrintData' className='print-this hidden'>
+        <div id='PrintData' className='print-this hidden print:block'>
           <MainPage proposalsImages={proposalsImages} proposalDatas={proposalData} printP={printP} />
         </div>
       }

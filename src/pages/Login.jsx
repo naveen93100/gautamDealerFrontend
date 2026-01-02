@@ -18,12 +18,12 @@ const Login = () => {
     try {
       toast.dismiss()
       setLoading(true)
-      let res = await axios.post('https://gautamsolar.us/api/dealer/login', data);
-      // let res = await axios.post('http://localhost:1008/api/dealer/login', data);
+      // let res = await axios.post('https://gautamsolar.us/api/dealer/login', data);
+      let res = await axios.post('http://localhost:1008/api/dealer/login', data);
 
       if (res?.data?.success) {
         setLoading(false)
-        toast.success(`Welcome,${(res?.data?.data?.firstName.charAt(0).toUpperCase()+res?.data?.data?.firstName.slice(1))}`)
+        // toast.success(`Welcome,${(res?.data?.data?.firstName.charAt(0).toUpperCase()+res?.data?.data?.firstName.slice(1))}`,{duration:100})
         login(res?.data?.data, res?.data?.token)
         navigate('/dashboard')
       }
@@ -48,6 +48,7 @@ const Login = () => {
             src="/logo.png"
             alt="Gautam Solar Logo"
             className="h-16 mb-4 object-contain"
+            loading="lazy"
           />
           <div className="h-1 w-12 bg-[#a20000] rounded-full mb-6"></div>
           <h2 className="text-2xl font-extrabold text-gray-900 tracking-tight">

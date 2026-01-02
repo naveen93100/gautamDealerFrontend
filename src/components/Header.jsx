@@ -18,7 +18,7 @@ const Header = () => {
     }
 
     return (
-        <header className="dont-print bg-linear-to-br from-red-600 via-red-700 to-orange-600 text-white shadow-2xl relative overflow-hidden">
+        <header className="dont-print bg-linear-to-br from-red-600 via-red-700 to-red-600 text-white shadow-2xl relative overflow-hidden">
             {/* Decorative background elements */}
 
             <div className="relative max-w-7xl mx-auto px-4 ">
@@ -115,7 +115,7 @@ const Header = () => {
             </div>
 
             {/* Bottom accent line */}
-            <div className="h-1 bg-linear-to-r from-yellow-400 via-orange-400 to-red-400"></div>
+            {/* <div className="h-1 bg-linear-to-r from-yellow-400 via-orange-400 to-red-400"></div> */}
         </header>
     )
 }
