@@ -2,7 +2,6 @@
 import PdfComp from './PdfComp'
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../Context/AuthContext';
-import { useEffect, useState } from 'react';
 import { Download } from 'lucide-react';
 
 const pages = [
@@ -155,44 +154,44 @@ const MainPage = ({ printP }) => {
                 </PdfComp>
 
                 <PdfComp bg={pages[1]}>
-                    <div className="absolute text-red-500 scale-150 top-[12mm] right-[20mm]">
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
+                    <div className="absolute text-red-500 scale-150 top-[5mm] right-[30mm]  w-20 h-18 flex items-center justify-center">
+                        <img loading='lazy' src={data?.companyLogo} alt="" className=' h-auto object-contain' />
                     </div>
                 </PdfComp>
 
                 <PdfComp bg={pages[2]}>
-                    <div className="absolute text-red-500 scale-150 top-[12mm] right-[20mm]">
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
+                    <div className="absolute text-red-500 scale-150 top-[5mm] right-[30mm]  w-20 h-18 flex items-center justify-center">
+                        <img loading='lazy' src={data?.companyLogo} alt="" className=' h-auto  object-contain' />
                     </div>
                 </PdfComp>
 
                 <PdfComp bg={pages[3]}>
-                    <div className="absolute text-red-500 scale-150 top-[12mm] right-[20mm]">
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
+                    <div className="absolute text-red-500 scale-150 top-[5mm] right-[30mm]  w-20 h-18 flex items-center justify-center">
+                        <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto  object-contain' />
                     </div>
                 </PdfComp>
 
                 <PdfComp bg={pages[4]}>
-                    <div className="absolute text-red-500 scale-150 top-[12mm] right-[20mm]">
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
+                    <div className="absolute text-red-500 scale-150 top-[5mm] right-[30mm]  w-20 h-18 flex items-center justify-center">
+                        <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto  object-contain' />
                     </div>
                 </PdfComp>
 
                 <PdfComp bg={pages[5]}>
-                    <div className="absolute text-red-500 scale-150 top-[12mm] right-[20mm]">
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
+                    <div className="absolute text-red-500 scale-150 top-[5mm] right-[30mm]  w-20 h-18 flex items-center justify-center ">
+                        <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto  object-contain' />
                     </div>
                 </PdfComp>
 
                 <PdfComp bg={pages[6]}>
-                    <div className="absolute text-red-500 scale-150 top-[12mm] right-[20mm]">
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
+                    <div className="absolute text-red-500 scale-150 top-[5mm] right-[30mm]  w-20 h-18 flex items-center justify-center">
+                        <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto  object-contain' />
                     </div>
                 </PdfComp>
 
                 <PdfComp bg={pages[7]}>
-                    <div className="absolute text-red-500 scale-150 top-[12mm] right-[20mm]">
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
+                    <div className="absolute text-red-500 scale-150 top-[5mm] right-[30mm]  w-20 h-18 flex items-center justify-center">
+                        <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto  object-contain' />
                     </div>
 
                     <div className='absolute top-[75mm] px-4'>
@@ -253,7 +252,9 @@ const MainPage = ({ printP }) => {
                                         <th className="border border-gray-300 p-2 w-16">S.No</th>
                                         <th className="border border-gray-300 p-2">ITEM</th>
                                         <th className="border border-gray-300 p-2 w-32">Unit Price</th>
-                                        <th className="border border-gray-300 p-2 w-32">Total Price</th>
+                                        <th className="border border-gray-300 p-2 w-32">Total Price 
+                                            (Rs)
+                                        </th>
                                     </tr>
                                 </thead>
 
@@ -272,7 +273,7 @@ const MainPage = ({ printP }) => {
                                             ₹ {`${proposalsData?.rate}`}/watts
                                         </td>
                                         <td className="border border-gray-300 p-2">
-                                            {`${proposalsData?.price?.toLocaleString()}`}
+                                            ₹{`${proposalsData?.price?.toLocaleString()}`}
                                         </td>
                                     </tr>
 
@@ -281,7 +282,7 @@ const MainPage = ({ printP }) => {
                                             Tax( {`${proposalsData?.tax}%`})
                                         </td>
                                         <td className="border border-gray-300 p-2">
-                                            {`${proposalsData?.gstAmt?.toLocaleString()}`}
+                                            ₹{`${proposalsData?.gstAmt?.toLocaleString()}`}
                                         </td>
                                     </tr>
 
@@ -290,7 +291,7 @@ const MainPage = ({ printP }) => {
                                             Total Amount
                                         </td>
                                         <td className="border border-gray-300 p-2">
-                                            {`${proposalsData?.finalPrice?.toLocaleString()}`}
+                                            ₹{`${proposalsData?.finalPrice?.toLocaleString()}`}
                                         </td>
                                     </tr>
                                 </tbody>
