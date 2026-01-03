@@ -48,7 +48,7 @@ const Profile = () => {
 
             if (res?.data?.success) {
                 setLoadig(false);
-                toast.success(res?.data?.message);
+                toast.success(res?.data?.message,{duration:1000});
                 localStorage.setItem('userData', JSON.stringify(res?.data?.data));
                 setUser(res?.data?.data);
                 setEditProfileModal(false);
