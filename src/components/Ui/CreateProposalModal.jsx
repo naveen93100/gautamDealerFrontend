@@ -8,6 +8,7 @@ import { BiRupee } from 'react-icons/bi';
 import JoditEditor from 'jodit-react';
 
 const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
+    const [loading, setLoading] = useState(false);
 
     const { user, token } = useAuth();
     const joditConfig = {
@@ -141,9 +142,12 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
 
 
             try {
+                setLoading(true);
                 formData.termsAndConditions = Body;
                 formData.components = d?.components
                 console.log(formData);
+
+                
 
                 let res = await apiCall('PATCH', '/api/dealer/edit-proposal', formData);
                 if (res?.data?.success) {
@@ -156,11 +160,14 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
             } catch (er) {
                 toast.error(er?.response?.data?.message);
                 console.log(er);
+            } finally {
+                setLoading(false);
             }
         }
         // // create
         else {
             try {
+                setLoading(true);
                 if (selectedMaterial.length < 5) {
                     toast.error('Please Select At least 5 Components')
                     return;
@@ -168,6 +175,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                 console.log(d)
                 d.dealerId = user?.id;
                 d.termsAndConditions = Body;
+             
                 let res = await apiCall('POST', '/api/dealer/create-propsal', d);
                 if (res?.data.success) {
                     toast.success(res.data?.message)
@@ -180,6 +188,8 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
             } catch (er) {
                 console.log(er);
                 toast.error(er.response?.data?.message)
+            } finally {
+                setLoading(false);
             }
 
         }
@@ -549,7 +559,8 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
 
                             <button
                                 type="submit"
-                                className=" p-3 sm:flex-1 cursor-pointer bg-linear-to-r from-red-600 to-red-600 text-white rounded-xl"
+                                // onClick={() => setLoading(true)}
+                                className={` p-3 sm:flex-1  bg-linear-to-r from-red-600 to-red-600 text-white rounded-xl ${loading ? "cursor-not-allowed" : "cursor-pointer"}`}
                             >
                                 {data ? 'Update Proposal' : 'Create Proposal'}
 

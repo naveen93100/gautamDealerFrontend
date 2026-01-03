@@ -1,8 +1,8 @@
 
 import PdfComp from './PdfComp'
-import { useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../Context/AuthContext';
-import { Download } from 'lucide-react';
+import { ArrowLeft, Download } from 'lucide-react';
 
 const pages = [
     '/j1.png',
@@ -75,6 +75,14 @@ const MainPage = ({ printP }) => {
         <>
             <div className="flex flex-col gap-6 bg-gray-200 ">
                 <button
+                    onClick={() => window.history.back()}
+                    className=" fixed bottom-6 left-18 z-50 flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white font-medium px-5 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200
+    print:hidden
+  "
+                >
+                    <ArrowLeft/> Go Back
+                </button>
+                <button
                     onClick={() => window.print()}
                     className="
     fixed bottom-6 right-6 z-50
@@ -92,7 +100,7 @@ const MainPage = ({ printP }) => {
                 </button>
 
                 <PdfComp bg={pages[0]}>
-                    <div className="absolute text-red-500 scale-150 top-[15mm] left-[30mm]  w-20 h-18 flex items-center justify-center">
+                    <div className="absolute text-red-500 scale-150 top-[18mm] left-[22mm]   max-w-40 max-h-18 flex items-center justify-center">
                         <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto object-contain' />
                     </div>
 
@@ -154,43 +162,43 @@ const MainPage = ({ printP }) => {
                 </PdfComp>
 
                 <PdfComp bg={pages[1]}>
-                    <div className="absolute text-red-500 scale-150 top-[5mm] right-[30mm]  w-20 h-18 flex items-center justify-center">
+                    <div className="absolute text-red-500 scale-150 top-[7mm] right-[20mm]  max-w-27 h-15 flex items-center justify-center">
                         <img loading='lazy' src={data?.companyLogo} alt="" className=' h-auto object-contain' />
                     </div>
                 </PdfComp>
 
                 <PdfComp bg={pages[2]}>
-                    <div className="absolute text-red-500 scale-150 top-[5mm] right-[30mm]  w-20 h-18 flex items-center justify-center">
+                    <div className="absolute text-red-500 scale-150 top-[7mm] right-[20mm]  max-w-27 h-15 flex items-center justify-center">
                         <img loading='lazy' src={data?.companyLogo} alt="" className=' h-auto  object-contain' />
                     </div>
                 </PdfComp>
 
                 <PdfComp bg={pages[3]}>
-                    <div className="absolute text-red-500 scale-150 top-[5mm] right-[30mm]  w-20 h-18 flex items-center justify-center">
+                    <div className="absolute text-red-500 scale-150 top-[7mm] right-[20mm]  max-w-27 h-15 flex items-center justify-center">
                         <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto  object-contain' />
                     </div>
                 </PdfComp>
 
                 <PdfComp bg={pages[4]}>
-                    <div className="absolute text-red-500 scale-150 top-[5mm] right-[30mm]  w-20 h-18 flex items-center justify-center">
+                    <div className="absolute text-red-500 scale-150 top-[7mm] right-[20mm]  max-w-27 h-15 flex items-center justify-center">
                         <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto  object-contain' />
                     </div>
                 </PdfComp>
 
                 <PdfComp bg={pages[5]}>
-                    <div className="absolute text-red-500 scale-150 top-[5mm] right-[30mm]  w-20 h-18 flex items-center justify-center ">
+                    <div className="absolute text-red-500 scale-150 top-[7mm] right-[20mm]  max-w-27 h-15 flex items-center justify-center ">
                         <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto  object-contain' />
                     </div>
                 </PdfComp>
 
                 <PdfComp bg={pages[6]}>
-                    <div className="absolute text-red-500 scale-150 top-[5mm] right-[30mm]  w-20 h-18 flex items-center justify-center">
+                    <div className="absolute text-red-500 scale-150 top-[7mm] right-[20mm]  max-w-27 h-15 flex items-center justify-center">
                         <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto  object-contain' />
                     </div>
                 </PdfComp>
 
                 <PdfComp bg={pages[7]}>
-                    <div className="absolute text-red-500 scale-150 top-[5mm] right-[30mm]  w-20 h-18 flex items-center justify-center">
+                    <div className="absolute text-red-500 scale-150 top-[7mm] right-[20mm]  max-w-27 h-15 flex items-center justify-center">
                         <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto  object-contain' />
                     </div>
 
@@ -252,7 +260,7 @@ const MainPage = ({ printP }) => {
                                         <th className="border border-gray-300 p-2 w-16">S.No</th>
                                         <th className="border border-gray-300 p-2">ITEM</th>
                                         <th className="border border-gray-300 p-2 w-32">Unit Price</th>
-                                        <th className="border border-gray-300 p-2 w-32">Total Price 
+                                        <th className="border border-gray-300 p-2 w-32">Total Price
                                             (Rs)
                                         </th>
                                     </tr>
@@ -310,7 +318,7 @@ const MainPage = ({ printP }) => {
                 </PdfComp>
 
                 <PdfComp bg={pages[9]}>
-                    <div className="absolute text-red-500 scale-150 top-[15mm] left-[20mm]  w-20 h-18 flex items-center justify-center">
+                    <div className="absolute text-red-500 scale-150 top-[18mm] left-[22mm]   max-w-40 max-h-18  flex items-center justify-center">
                         <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto object-contain' />
                     </div>
 
