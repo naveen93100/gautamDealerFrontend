@@ -37,7 +37,6 @@ const pages = [
 const MainPage = ({ printP }) => {
     const { state } = useLocation();
     const { user } = useAuth()
-    console.log(state);
     const proposalDatas = state
 
     const data = {

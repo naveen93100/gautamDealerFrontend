@@ -46,7 +46,7 @@ const Header = () => {
                                 <img
                                     src="/logo.png"
                                     alt="Gautam Solar"
-                                    className="h-8 lg:h-10 w-auto object-contain"
+                                    className="h-8 lg:h-12 w-auto object-contain"
                                     
                                     loading='lazy'
                                 />
