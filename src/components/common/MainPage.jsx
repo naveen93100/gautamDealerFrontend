@@ -92,8 +92,8 @@ const MainPage = ({ printP }) => {
                 </button>
 
                 <PdfComp bg={pages[0]}>
-                    <div className="absolute text-red-500 scale-150 top-[15mm] left-[30mm]">
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
+                    <div className="absolute text-red-500 scale-150 top-[15mm] left-[30mm]  w-20 h-18 flex items-center justify-center">
+                        <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto object-contain' />
                     </div>
 
                     <div className="absolute top-[5mm] right-[3mm]  text-end">
@@ -310,8 +310,8 @@ const MainPage = ({ printP }) => {
                 </PdfComp>
 
                 <PdfComp bg={pages[9]}>
-                    <div className="absolute text-red-500 scale-150 top-[15mm] left-[20mm]">
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='w-20 h-20 object-contain' />
+                    <div className="absolute text-red-500 scale-150 top-[15mm] left-[20mm]  w-20 h-18 flex items-center justify-center">
+                        <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto object-contain' />
                     </div>
 
                     <div className="absolute top-[5mm] right-[3mm]  text-end">

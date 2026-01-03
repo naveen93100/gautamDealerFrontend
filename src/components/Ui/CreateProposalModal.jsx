@@ -111,12 +111,12 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
 
             let formData = {};
 
-                formData.name = d?.customerName,
+            formData.name = d?.customerName,
                 formData.email = d?.email,
                 formData.phone = d?.phone,
                 formData.address = d?.address,
                 formData.rate = d?.rate,
-                formData.orderCapacity =  d?.orderCapacity,
+                formData.orderCapacity = d?.orderCapacity,
                 formData.tax = d?.tax,
                 formData.propId = data?.proposalsData[0]?._id
 
@@ -371,6 +371,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                                 className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-red-500"
                                 placeholder="Order Capacity (kW)"
                                 {...register("orderCapacity", { required: "orderCapacity is required" })}
+                                min={0}
                             />
                             {errors.rooftopCapacity && (
                                 <p className="text-red-500 text-sm mt-1">{errors.rooftopCapacity.message}</p>
@@ -430,6 +431,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                                         {...register("rate", { required: "Rate is required" })}
                                         className="w-full px-4 py-3 border rounded-xl"
                                         placeholder="Rate ₹"
+                                        min={0}
                                     />
                                 </div>
 
