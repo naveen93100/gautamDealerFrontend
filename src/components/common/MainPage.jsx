@@ -3,6 +3,7 @@ import PdfComp from './PdfComp'
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../Context/AuthContext';
 import { ArrowLeft, Download } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 const pages = [
     '/j1.png',
@@ -68,6 +69,38 @@ const MainPage = ({ printP }) => {
         material: proposalDatas?.proposalsData[0]?.material,
         tax: proposalDatas?.proposalsData[0]?.tax
     }
+    const [logoStyle, setLogoStyle] = useState({
+        width: '24mm',
+        height: '24mm',
+    });
+
+    useEffect(() => {
+        if (!data?.companyLogo) return;
+
+        const img = new Image();
+        img.src = data.companyLogo;
+
+        img.onload = () => {
+            const { width, height } = img;
+            const ratio = width / height;
+
+            // Decide size rules
+            if (ratio < 1.1) {
+                // circular / square logo
+                setLogoStyle({
+                    width: '24mm',
+                    height: '24mm',
+                });
+            } else {
+                // rectangular logo
+                setLogoStyle({
+                    width: '100mm',
+                    height: '20mm',
+                });
+            }
+        };
+    }, [data?.companyLogo]);
+
 
 
     return (
@@ -80,7 +113,7 @@ const MainPage = ({ printP }) => {
     print:hidden
   "
                 >
-                    <ArrowLeft/> Go Back
+                    <ArrowLeft /> Go Back
                 </button>
                 <button
                     onClick={() => window.print()}
@@ -100,9 +133,17 @@ const MainPage = ({ printP }) => {
                 </button>
 
                 <PdfComp bg={pages[0]}>
-                    <div className="absolute text-red-500 scale-150 top-[18mm] left-[22mm]   max-w-40 max-h-18 flex items-center justify-center">
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto object-contain' />
+                    <div className="absolute text-red-500 scale-150 top-[15mm] left-[22mm]  max-w-40 flex items-center justify-center">
+                            <img
+                                src={data?.companyLogo}
+                                alt="logo"
+                                loading="lazy"
+                                style={logoStyle}
+                                className="object-contain"
+                            />
+
                     </div>
+
 
                     <div className="absolute top-[5mm] right-[3mm]  text-end">
                         <div className='text-white'>
@@ -163,43 +204,92 @@ const MainPage = ({ printP }) => {
 
                 <PdfComp bg={pages[1]}>
                     <div className="absolute text-red-500 scale-150 top-[7mm] right-[20mm]  max-w-27 h-15 flex items-center justify-center">
-                        <img loading='lazy' src={data?.companyLogo} alt="" className=' h-auto object-contain' />
+                        {/* <img loading='lazy' src={data?.companyLogo} alt="" className=' h-auto object-contain' /> */}
+                        <img
+                                src={data?.companyLogo}
+                                alt="logo"
+                                loading="lazy"
+                                style={logoStyle}
+                                className="object-contain"
+                            />
                     </div>
                 </PdfComp>
 
                 <PdfComp bg={pages[2]}>
                     <div className="absolute text-red-500 scale-150 top-[7mm] right-[20mm]  max-w-27 h-15 flex items-center justify-center">
-                        <img loading='lazy' src={data?.companyLogo} alt="" className=' h-auto  object-contain' />
+                        {/* <img loading='lazy' src={data?.companyLogo} alt="" className=' h-auto  object-contain' /> */}
+                         <img
+                                src={data?.companyLogo}
+                                alt="logo"
+                                loading="lazy"
+                                style={logoStyle}
+                                className="object-contain"
+                            />
                     </div>
                 </PdfComp>
 
                 <PdfComp bg={pages[3]}>
                     <div className="absolute text-red-500 scale-150 top-[7mm] right-[20mm]  max-w-27 h-15 flex items-center justify-center">
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto  object-contain' />
+                        {/* <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto  object-contain' /> */}
+                         <img
+                                src={data?.companyLogo}
+                                alt="logo"
+                                loading="lazy"
+                                style={logoStyle}
+                                className="object-contain"
+                            />
                     </div>
                 </PdfComp>
 
                 <PdfComp bg={pages[4]}>
                     <div className="absolute text-red-500 scale-150 top-[7mm] right-[20mm]  max-w-27 h-15 flex items-center justify-center">
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto  object-contain' />
+                        {/* <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto  object-contain' /> */}
+                         <img
+                                src={data?.companyLogo}
+                                alt="logo"
+                                loading="lazy"
+                                style={logoStyle}
+                                className="object-contain"
+                            />
                     </div>
                 </PdfComp>
 
                 <PdfComp bg={pages[5]}>
                     <div className="absolute text-red-500 scale-150 top-[7mm] right-[20mm]  max-w-27 h-15 flex items-center justify-center ">
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto  object-contain' />
+                        {/* <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto  object-contain' /> */}
+                         <img
+                                src={data?.companyLogo}
+                                alt="logo"
+                                loading="lazy"
+                                style={logoStyle}
+                                className="object-contain"
+                            />
                     </div>
                 </PdfComp>
 
                 <PdfComp bg={pages[6]}>
                     <div className="absolute text-red-500 scale-150 top-[7mm] right-[20mm]  max-w-27 h-15 flex items-center justify-center">
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto  object-contain' />
+                        {/* <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto  object-contain' /> */}
+                         <img
+                                src={data?.companyLogo}
+                                alt="logo"
+                                loading="lazy"
+                                style={logoStyle}
+                                className="object-contain"
+                            />
                     </div>
                 </PdfComp>
 
                 <PdfComp bg={pages[7]}>
                     <div className="absolute text-red-500 scale-150 top-[7mm] right-[20mm]  max-w-27 h-15 flex items-center justify-center">
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto  object-contain' />
+                        {/* <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto  object-contain' /> */}
+                         <img
+                                src={data?.companyLogo}
+                                alt="logo"
+                                loading="lazy"
+                                style={logoStyle}
+                                className="object-contain"
+                            />
                     </div>
 
                     <div className='absolute top-[75mm] px-4'>
@@ -318,8 +408,15 @@ const MainPage = ({ printP }) => {
                 </PdfComp>
 
                 <PdfComp bg={pages[9]}>
-                    <div className="absolute text-red-500 scale-150 top-[18mm] left-[22mm]   max-w-40 max-h-18  flex items-center justify-center">
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto object-contain' />
+                    <div className="absolute text-red-500 scale-150  top-[15mm] left-[22mm]   max-w-40   flex items-center justify-center">
+                        {/* <img loading='lazy' src={data?.companyLogo} alt="" className='h-auto object-contain' /> */}
+                        <img
+                                src={data?.companyLogo}
+                                alt="logo"
+                                loading="lazy"
+                                style={logoStyle}
+                                className="object-contain"
+                            />
                     </div>
 
                     <div className="absolute top-[5mm] right-[3mm]  text-end">
