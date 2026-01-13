@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
-import { User, FileText, X, Mail, Building, Phone, MapPin, Upload } from 'lucide-react';
+import { User, FileText, X, Mail, Building, Phone, MapPin, Upload, Loader2 } from 'lucide-react';
 import { useAuth } from '../../Context/AuthContext';
 import toast from 'react-hot-toast';
 import { apiCall } from '../../services/api';
@@ -25,6 +25,7 @@ const Profile = () => {
 
     const handleEditProfile = async (data) => {
         toast.dismiss();
+        
         let changedField = Object.keys(dirtyFields)
         if (changedField.length === 0) {
             toast.error('No Field changes')
@@ -48,6 +49,7 @@ const Profile = () => {
 
             if (res?.data?.success) {
                 setLoadig(false);
+                reset();
                 toast.success(res?.data?.message,{duration:1000});
                 localStorage.setItem('userData', JSON.stringify(res?.data?.data));
                 setUser(res?.data?.data);
@@ -270,6 +272,22 @@ const Profile = () => {
                                         <p className="mt-1 text-sm text-red-600">{errors.contactNumber.message}</p>
                                     )}
                                 </div>
+
+                                {/* Create Password */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Password
+                                    </label>
+                                    <div className="relative">
+                                        <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                                        <input
+                                            type="text"
+                                            {...register('password')}
+                                            className="w-full pl-10 pr-4 py-3 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                                            placeholder="Password"
+                                        />
+                                    </div>
+                                </div>
                             </div>
 
                             {/* Business Address - Full Width */}
@@ -315,9 +333,9 @@ const Profile = () => {
                                                 {...register('image')}
                                             />
                                         </label>
-                                        {errors.image &&
+                                        {/* {errors.image &&
                                             <p className="mt-1 text-sm text-red-600">{errors.image.message}</p>
-                                        }
+                                        } */}
                                     </>
 
                                 </div>
@@ -328,15 +346,16 @@ const Profile = () => {
                                 <button
                                     type="button"
                                     onClick={handleReset}
-                                    className="px-6 py-3 border border-gray-400 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+                                    className="px-6 py-3 border cursor-pointer border-gray-400 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="px-6 py-3 bg-blue-600 text-white cursor-pointer rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                                    className={`px-6 py-3 bg-blue-600 text-white ${loading?'cursor-not-allowed':'cursor-pointer'} rounded-lg font-medium hover:bg-blue-700 transition-colors`}
                                 >
-                                    Save Changes
+                                    {loading?<Loader2 className='animate-spin'/>:'Save Changes'} 
+                                    
                                 </button>
                             </div>
                         </form>

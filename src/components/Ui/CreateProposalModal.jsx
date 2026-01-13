@@ -145,9 +145,6 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                 setLoading(true);
                 formData.termsAndConditions = Body;
                 formData.components = d?.components
-                console.log(formData);
-
-                
 
                 let res = await apiCall('PATCH', '/api/dealer/edit-proposal', formData);
                 if (res?.data?.success) {
@@ -172,10 +169,9 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                     toast.error('Please Select At least 5 Components')
                     return;
                 }
-                console.log(d)
                 d.dealerId = user?.id;
                 d.termsAndConditions = Body;
-             
+
                 let res = await apiCall('POST', '/api/dealer/create-propsal', d);
                 if (res?.data.success) {
                     toast.success(res.data?.message)
@@ -213,23 +209,23 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
 
         }
         setValue('components', updated);
-
-
     }
 
     useEffect(() => {
-        const MATERIALS = ["Inverter",
+        const MATERIALS = [
+            "Inverter",
             "ACDB",
             "DCDB",
             "Wiring Cables",
             "Lightning Arrester",
             "Earthing",
-            "PVC Cable",]
+            "PVC Cable",
+        ]
 
 
         const defaultMaterials = MATERIALS.map(item => ({
             name: item,
-            qty: 1, // default quantity (change if needed)
+            qty: 1,
         }));
 
         setValue("components", defaultMaterials);
@@ -389,43 +385,6 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                         </section>
 
                         {/* Pricing */}
-                        {/* <section className='flex items-center justify-between border mx-auto'>
-                            <div className='w-full'>
-
-                            <div className="flex items-center gap-2 mb-4">
-                                <BiRupee className="w-5 h-5 text-red-600" />
-                                <h3 className="text-lg font-semibold">Rate/Watt (Rs)</h3>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <input
-                                    type="number"
-                                    {...register("rate", { required: "Rate is required" })}
-                                    className="px-4 py-3 border rounded-xl"
-                                    placeholder="Rate ₹"
-                                />
-
-                            </div>
-                            </div>
-                           
-                           <div className='w-full'>
-                              <div className="flex items-center gap-2 mb-4">
-                                <BiRupee className="w-5 h-5 text-red-600" />
-                                <h3 className="text-lg font-semibold">Rate/Watt (Rs)</h3>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <input
-                                    type="number"
-                                    {...register("rate", { required: "Rate is required" })}
-                                    className="px-4 py-3 border rounded-xl"
-                                    placeholder="Rate ₹"
-                                />
-
-                            </div>
-                           </div>
-
-                        </section> */}
                         <section className="max-w-5xl mx-auto border rounded-2xl p-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
@@ -466,26 +425,28 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
 
 
                         {/* message */}
-                        {data &&
-                            <section className="mb-6">
-                                <div className="flex items-center gap-2 mb-4">
-                                    <MessageCircle className="w-5 h-5 text-red-600" />
-                                    <h3 className="text-lg font-semibold">Terms & Conditions / Message</h3>
-                                </div>
+                        {/* {data && */}
 
-                                {/* <textarea
+                        <section className="mb-6">
+                            <div className="flex items-center gap-2 mb-4">
+                                <MessageCircle className="w-5 h-5 text-red-600" />
+                                <h3 className="text-lg font-semibold">Terms & Conditions / Message</h3>
+                            </div>
+
+                            {/* <textarea
                                     {...register("termsAndConditions")}
                                     rows={4}
                                     className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-red-500 resize-y min-h-60"
                                     placeholder="Add any terms, conditions, or messages to include in the proposal PDF"
                                 /> */}
-                                <JoditEditor
-                                    config={joditConfig}
-                                    value={Body}
-                                    onBlur={(c) => setBody(c)}
-                                />
-                            </section>
-                        }
+
+                            <JoditEditor
+                                config={joditConfig}
+                                value={Body}
+                                onBlur={(c) => setBody(c)}
+                            />
+                        </section>
+                        {/*  } */}
                         {/* Components Included */}
                         <section className="mb-6 mt-5">
                             <div className="flex items-center justify-between  gap-2 mb-4">
@@ -545,7 +506,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
 
 
                         {/* Footer */}
-                        <div className="  items-center justify-center bg-gray-50 flex gap-3 mt-5">
+                        <div className="items-center justify-center bg-gray-50 flex gap-3 mt-5">
                             <button
                                 type="button"
                                 onClick={() => {
@@ -559,8 +520,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
 
                             <button
                                 type="submit"
-                                // onClick={() => setLoading(true)}
-                                className={` p-3 sm:flex-1  bg-linear-to-r from-red-600 to-red-600 text-white rounded-xl ${loading ? "cursor-not-allowed" : "cursor-pointer"}`}
+                                className={` p-3 sm:flex-1 bg-linear-to-r from-red-600 to-red-600 text-white rounded-xl ${loading ? "cursor-not-allowed" : "cursor-pointer"}`}
                             >
                                 {data ? 'Update Proposal' : 'Create Proposal'}
 
