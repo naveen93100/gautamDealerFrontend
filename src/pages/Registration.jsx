@@ -210,10 +210,10 @@ const Registration = () => {
                                     type="file"
                                     accept="image/*"
                                     className="absolute inset-0 opacity-0 cursor-pointer"
-                                    {...register("companyLogo", { required: "Logo is required" })}
+                                    {...register("companyLogo")}
                                 />
                             </div>
-                            {errors.companyLogo && <p className="text-[11px] font-semibold text-red-600 ml-1 uppercase text-center lg:text-left">{errors.companyLogo.message}</p>}
+                            {/* {errors.companyLogo && <p className="text-[11px] font-semibold text-red-600 ml-1 uppercase text-center lg:text-left">{errors.companyLogo.message}</p>} */}
                         </div>
                     </div>
 
