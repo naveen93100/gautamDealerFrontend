@@ -10,8 +10,8 @@ const CreatePassword = () => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-    const [loading,setLoading]=useState(false);
-    const navigate=useNavigate();
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const isMismatch = password && confirmPassword && password !== confirmPassword;
 
@@ -20,10 +20,10 @@ const CreatePassword = () => {
         try {
             setLoading(true)
 
-            let res = await axios.post(`https://gautamsolar.us/api/dealer/create-password/${token}`,{password});
-            // let res = await axios.post(`http://localhost:1008/api/dealer/create-password/${token}`,{password});
+            // let res = await axios.post(`https://gautamsolar.us/api/dealer/create-password/${token}`,{password});
+            let res = await axios.post(`http://localhost:1008/api/dealer/create-password/${token}`, { password });
 
-            if(res?.data?.success){
+            if (res?.data?.success) {
                 setLoading(false)
                 toast.success("Account Activated! Login Now");
                 navigate('/login');
@@ -33,7 +33,7 @@ const CreatePassword = () => {
             toast.error(er?.response?.data?.message);
             console.log(er);
         }
-        finally{
+        finally {
             setLoading(false);
         }
     }
@@ -41,7 +41,7 @@ const CreatePassword = () => {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-300 p-4 ">
             <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
-              <div className="w-16 h-1 bg-linear-to-r from-red-600 to-rose-500 rounded-full mb-6"></div>
+                <div className="w-16 h-1 bg-linear-to-r from-red-600 to-rose-500 rounded-full mb-6"></div>
                 <h2 className="text-2xl font-semibold mb-2 text-gray-800">Create Password</h2>
                 <p className="text-gray-500 mb-6 text-sm">
                     Your password must be at least 8 characters long.

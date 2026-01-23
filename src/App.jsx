@@ -13,6 +13,8 @@ import PublicRoute from './components/common/PublicRoute';
 
 import { setNavigate } from './utils/Navigate';
 import MainPage from './components/common/MainPage';
+import TechnologyPanel from './pages/PannelProposal/TechnologyPanel';
+import ConstructivePanel from './pages/PannelProposal/ConstructivePanel';
 
 
 
@@ -40,6 +42,8 @@ const App = () => {
          <Route path='preview-proposal' element={<MainPage />} />
 
          <Route path='test' element={<AdminDashboard />} />
+         <Route path='/panel/technology' element={<TechnologyPanel />} />
+         <Route path='/panel/technology/constructive' element={<ConstructivePanel />} />
 
 
 
