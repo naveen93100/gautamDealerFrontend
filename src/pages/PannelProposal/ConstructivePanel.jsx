@@ -146,11 +146,13 @@ const ConstructivePanel = () => {
                             {technologyName}
                         </h1>
                         <p className="text-sm text-gray-500 mt-1">
-                            Technology configuration details
+                            Technology Consstructive configuration
                         </p>
                     </div>
 
-                    <button onClick={() => naviagate("/panel/technology", { state: { id: panelId, name: panelName } })}
+                    <button
+                        //  onClick={() => naviagate("/panel/technology", { state: { id: panelId, name: panelName } })}
+                        onClick={() => naviagate(-1)}
                         className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium
                        text-red-600 hover:text-gray-900 hover:bg-red-300
                        rounded-lg transition"

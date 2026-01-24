@@ -5,6 +5,7 @@ import { apiCall } from '../../services/api';
 import PanelCard from '../../components/common/panelCard';
 import Input from '../../components/common/Input';
 import { X } from 'lucide-react';
+import { BiLeftArrow } from 'react-icons/bi';
 
 const TechnologyPanel = () => {
     const location = useLocation();
@@ -143,12 +144,22 @@ const TechnologyPanel = () => {
             </div>
 
             <div className="mb-6 bg-white border rounded-xl p-5 shadow-sm">
-                <h1 className="text-xl font-semibold text-gray-800">
-                    {panelName}
-                </h1>
-                <p className="text-sm text-gray-500 mt-1">
-                    Panel configuration details
-                </p>
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h1 className="text-xl font-semibold text-gray-800">
+                            {panelName}
+                        </h1>
+                        <p className="text-sm text-gray-500 mt-1">
+                            Panel technology configuration
+                        </p>
+                    </div>
+                    <button onClick={() => navigate(-1)}
+                        className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-red-600 hover:text-gray-900 hover:bg-red-300 rounded-lg transition"
+                    >
+                        <BiLeftArrow className="text-base" />
+                        Go Back
+                    </button>
+                </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
