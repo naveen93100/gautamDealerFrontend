@@ -15,6 +15,8 @@ import { setNavigate } from './utils/Navigate';
 import MainPage from './components/common/MainPage';
 import TechnologyPanel from './pages/PannelProposal/TechnologyPanel';
 import ConstructivePanel from './pages/PannelProposal/ConstructivePanel';
+import AdminLayout from './pages/Dashboard/Layout/AdminLayout';
+import PannelProposal from './pages/PannelProposal/PannelProposal';
 
 
 
@@ -34,6 +36,14 @@ const App = () => {
             <Route path='/create-password/:token' element={<CreatePassword />} />
          </Route>
 
+         <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path='panel' element={<PannelProposal />} />
+            <Route path='panel/technology' element={<TechnologyPanel />} />
+            <Route path='panel/technology/constructive' element={<ConstructivePanel />} />
+            {/* <Route path="users" element={<AdminUsers />} /> */}
+         </Route>
+
          <Route path='/dashboard' element={
             <ProtectedRoute>
                <Layout />
@@ -41,9 +51,8 @@ const App = () => {
          } />
          <Route path='preview-proposal' element={<MainPage />} />
 
-         <Route path='test' element={<AdminDashboard />} />
-         <Route path='/panel/technology' element={<TechnologyPanel />} />
-         <Route path='/panel/technology/constructive' element={<ConstructivePanel />} />
+         {/* <Route path='test' element={<AdminDashboard />} /> */}
+
 
 
 

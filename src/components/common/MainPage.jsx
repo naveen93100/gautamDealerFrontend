@@ -38,7 +38,7 @@ const MainPage = ({ printP }) => {
     const { user } = useAuth()
     const proposalDatas = state
 
-    if(!proposalDatas) return <Navigate to='/dashboard'/>;
+    if (!proposalDatas) return <Navigate to='/dashboard' />;
 
     const data = {
         firstName: user?.firstName,
@@ -82,7 +82,7 @@ const MainPage = ({ printP }) => {
     print:hidden
   "
                 >
-                    <ArrowLeft/> Go Back
+                    <ArrowLeft /> Go Back
                 </button>
                 <button
                     onClick={() => window.print()}
@@ -103,10 +103,10 @@ const MainPage = ({ printP }) => {
 
                 <PdfComp bg={pages[0]}>
                     <div className="absolute scale-150 top-[8mm] left-[22mm]  w-40 h-25  overflow-hidden flex items-center justify-center">
-                        {data?.companyLogo?
-                        <img loading='lazy' src={data?.companyLogo} alt="" className=' w-2/3 object-cover ' />
-                        :
-                          <h1 className='uppercase'>{data?.companyName}</h1>
+                        {data?.companyLogo ?
+                            <img loading='lazy' src={data?.companyLogo} alt="" className=' w-2/3 object-cover ' />
+                            :
+                            <h1 className='uppercase'>{data?.companyName}</h1>
                         }
                     </div>
 
@@ -170,10 +170,10 @@ const MainPage = ({ printP }) => {
                 <PdfComp bg={pages[1]}>
                     <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
                         {/* <img loading='lazy' src={data?.companyLogo} alt="" className=' object-cover w-22' /> */}
-                         {data?.companyLogo?
-                        <img loading='lazy' src={data?.companyLogo} alt="" className=' object-cover w-22' />
-                        :
-                          <h1 className='uppercase'>{data?.companyName}</h1>
+                        {data?.companyLogo ?
+                            <img loading='lazy' src={data?.companyLogo} alt="" className=' object-cover w-22' />
+                            :
+                            <h1 className='uppercase'>{data?.companyName}</h1>
                         }
                     </div>
                 </PdfComp>
@@ -181,10 +181,10 @@ const MainPage = ({ printP }) => {
                 <PdfComp bg={pages[2]}>
                     <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
                         {/* <img loading='lazy' src={data?.companyLogo} alt="" className=' object-cover w-22' /> */}
-                         {data?.companyLogo?
-                        <img loading='lazy' src={data?.companyLogo} alt="" className=' object-cover w-22' />
-                        :
-                          <h1 className='uppercase'>{data?.companyName}</h1>
+                        {data?.companyLogo ?
+                            <img loading='lazy' src={data?.companyLogo} alt="" className=' object-cover w-22' />
+                            :
+                            <h1 className='uppercase'>{data?.companyName}</h1>
                         }
                     </div>
                 </PdfComp>
@@ -192,10 +192,10 @@ const MainPage = ({ printP }) => {
                 <PdfComp bg={pages[3]}>
                     <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
                         {/* <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' /> */}
-                         {data?.companyLogo?
-                       <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
-                        :
-                          <h1 className='uppercase'>{data?.companyName}</h1>
+                        {data?.companyLogo ?
+                            <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
+                            :
+                            <h1 className='uppercase'>{data?.companyName}</h1>
                         }
                     </div>
                 </PdfComp>
@@ -203,10 +203,10 @@ const MainPage = ({ printP }) => {
                 <PdfComp bg={pages[4]}>
                     <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
                         {/* <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' /> */}
-                         {data?.companyLogo?
-                       <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
-                        :
-                          <h1 className='uppercase'>{data?.companyName}</h1>
+                        {data?.companyLogo ?
+                            <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
+                            :
+                            <h1 className='uppercase'>{data?.companyName}</h1>
                         }
                     </div>
                 </PdfComp>
@@ -214,10 +214,10 @@ const MainPage = ({ printP }) => {
                 <PdfComp bg={pages[5]}>
                     <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center ">
                         {/* <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' /> */}
-                         {data?.companyLogo?
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
-                        :
-                          <h1 className='uppercase'>{data?.companyName}</h1>
+                        {data?.companyLogo ?
+                            <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
+                            :
+                            <h1 className='uppercase'>{data?.companyName}</h1>
                         }
                     </div>
                 </PdfComp>
@@ -225,10 +225,10 @@ const MainPage = ({ printP }) => {
                 <PdfComp bg={pages[6]}>
                     <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
                         {/* <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' /> */}
-                         {data?.companyLogo?
-                         <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
-                        :
-                          <h1 className='uppercase'>{data?.companyName}</h1>
+                        {data?.companyLogo ?
+                            <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
+                            :
+                            <h1 className='uppercase'>{data?.companyName}</h1>
                         }
                     </div>
                 </PdfComp>
@@ -236,10 +236,10 @@ const MainPage = ({ printP }) => {
                 <PdfComp bg={pages[7]}>
                     <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
                         {/* <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' /> */}
-                         {data?.companyLogo?
-                         <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
-                        :
-                          <h1 className='uppercase'>{data?.companyName}</h1>
+                        {data?.companyLogo ?
+                            <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
+                            :
+                            <h1 className='uppercase'>{data?.companyName}</h1>
                         }
                     </div>
 
@@ -361,10 +361,10 @@ const MainPage = ({ printP }) => {
                 <PdfComp bg={pages[9]}>
                     <div className="absolute text-red-500 scale-150 top-[8mm] left-[22mm]  w-40 h-25  overflow-hidden flex items-center justify-center">
                         {/* <img loading='lazy' src={data?.companyLogo} alt="" className='w-2/3 object-cover ' /> */}
-                         {data?.companyLogo?
-                        <img loading='lazy' src={data?.companyLogo} alt="" className=' w-2/3 object-cover ' />
-                        :
-                          <h1 className='uppercase'>{data?.companyName}</h1>
+                        {data?.companyLogo ?
+                            <img loading='lazy' src={data?.companyLogo} alt="" className=' w-2/3 object-cover ' />
+                            :
+                            <h1 className='uppercase'>{data?.companyName}</h1>
                         }
                     </div>
 

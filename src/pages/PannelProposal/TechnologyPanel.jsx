@@ -126,68 +126,70 @@ const TechnologyPanel = () => {
     const handleNavigate = async (e, tech) => {
         e.stopPropagation();
         // console.log("tech",tech)
-        navigate("/panel/technology/constructive", { state: { data: tech, panelName: panelName } })
+        navigate("/admin/panel/technology/constructive", { state: { data: tech, panelName: panelName } })
     }
     return (
         <div className="p-6 space-y-6">
-            <div className="flex items-center justify-between">
-                <h1 className="text-xl font-semibold text-gray-800">
-                    Panel Technology Management
-                </h1>
+            <div className="space-y-6 border p-8 rounded-2xl shadow-md shadow-gray-500 ">
+                <div className="flex items-center justify-between bg-gray-200 p-4 rounded-xl border">
+                    <h1 className="text-xl font-semibold text-gray-800">
+                        Panel Technology Management
+                    </h1>
 
-                <button
-                    onClick={() => setOpen(true)}
-                    className="px-5 py-2.5 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition"
-                >
-                    + Add Technology
-                </button>
-            </div>
-
-            <div className="mb-6 bg-white border rounded-xl p-5 shadow-sm">
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h1 className="text-xl font-semibold text-gray-800">
-                            {panelName}
-                        </h1>
-                        <p className="text-sm text-gray-500 mt-1">
-                            Panel technology configuration
-                        </p>
-                    </div>
-                    <button onClick={() => navigate(-1)}
-                        className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-red-600 hover:text-gray-900 hover:bg-red-300 rounded-lg transition"
+                    <button
+                        onClick={() => setOpen(true)}
+                        className="px-5 py-2.5 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition"
                     >
-                        <BiLeftArrow className="text-base" />
-                        Go Back
+                        + Add Technology
                     </button>
                 </div>
-            </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {technologyPanel?.length === 0 ? (
-                    <div className="col-span-full flex flex-col items-center justify-center p-10 border border-dashed rounded-xl text-gray-500">
-                        <p className="text-sm">No Technology found</p>
-                        <p className="text-xs mt-1">
-                            Click{" "}
-                            <span className="font-medium text-green-600">Add Technolgy</span> to
-                            create one
-                        </p>
+                <div className="mb-6 bg-gray-200 border rounded-xl p-5 shadow-sm">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h1 className="text-xl font-semibold text-gray-800">
+                                {panelName}
+                            </h1>
+                            <p className="text-sm text-gray-500 mt-1">
+                                Panel technology configuration
+                            </p>
+                        </div>
+                        <button onClick={() => navigate(-1)}
+                            className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-red-600 hover:text-gray-900 hover:bg-red-300 rounded-lg transition"
+                        >
+                            <BiLeftArrow className="text-base" />
+                            Go Back
+                        </button>
                     </div>
-                ) : (
-                    technologyPanel?.map((tech) => (
-                        < PanelCard
-                            title={tech?.technologyPanel}
-                            subtitle="Technology Configuration"
-                            key={tech?._id}
-                            panel={tech}
-                            active={tech?.isActive}
-                            onNavigate={(e) => handleNavigate(e, tech)}
-                            onEdit={(e) => handleOpenEdit(e, tech)}
-                            onToggle={(e) => handleToggle(e, tech)}
+                </div>
 
-                        />
-                    ))
-                )
-                }
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {technologyPanel?.length === 0 ? (
+                        <div className="col-span-full flex flex-col items-center justify-center p-10 border border-dashed rounded-xl text-gray-500">
+                            <p className="text-sm">No Technology found</p>
+                            <p className="text-xs mt-1">
+                                Click{" "}
+                                <span className="font-medium text-green-600">Add Technolgy</span> to
+                                create one
+                            </p>
+                        </div>
+                    ) : (
+                        technologyPanel?.map((tech) => (
+                            < PanelCard
+                                title={tech?.technologyPanel}
+                                subtitle="Technology Configuration"
+                                key={tech?._id}
+                                panel={tech}
+                                active={tech?.isActive}
+                                onNavigate={(e) => handleNavigate(e, tech)}
+                                onEdit={(e) => handleOpenEdit(e, tech)}
+                                onToggle={(e) => handleToggle(e, tech)}
+
+                            />
+                        ))
+                    )
+                    }
+                </div>
             </div>
             {
                 open && (
