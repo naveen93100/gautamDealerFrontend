@@ -1,4 +1,4 @@
-import { LayoutDashboard, Package, Users } from "lucide-react";
+import { LayoutDashboard, LogOut, Package, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -23,17 +23,18 @@ const AdminSidebar = ({ sidebarOpen }) => {
     }
 
 
- 
+
     return (
         <aside
             className={`min-h-screen  shrink-0 transition-all duration-300 ${sidebarOpen ? "w-64" : "w-20"} bg-linear-to-b from-slate-900 via-slate-800 to-slate-900 `}
         >
             <div className="flex flex-col h-full ">
                 {/* Logo */}
-                <div className="p-6 border-b border-slate-700 flex items-center gap-3">
+                <div className="p-5 border-b border-slate-700 flex items-center gap-3">
                     <div className="w-10 h-10 bg-red-600 rounded-xl flex items-center justify-center text-white font-bold">
                         G
                     </div>
+                   
                     {sidebarOpen && (
                         <div>
                             <p className="text-white font-bold">Dealer</p>
@@ -66,6 +67,11 @@ const AdminSidebar = ({ sidebarOpen }) => {
                         );
                     })}
                 </nav>
+                <div className="mb-10 text-white flex justify-center">
+                    <button className="flex flex-row border rounded-2xl px-5 py-2 bg-red-700 ">
+                        <span> <LogOut /></span>{sidebarOpen && <span>Logout</span>}
+                    </button>
+                </div>
             </div>
         </aside>
     );
