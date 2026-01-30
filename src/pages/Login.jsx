@@ -13,30 +13,72 @@ const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [admin, setAdmin] = useState(false)
+  console.log("admin : ", admin)
 
   const onSubmit = async (data) => {
+    console.log(data)
     try {
       toast.dismiss()
       setLoading(true)
       // let res = await axios.post('https://gautamsolar.us/api/dealer/login', data);
-      let res = await axios.post('http://localhost:1008/api/dealer/login', data);
+      if (admin === false) {
+        let res = await axios.post('http://localhost:1008/api/dealer/login', data);
 
-      if (res?.data?.success) {
-        setLoading(false)
-        // toast.success(`Welcome,${(res?.data?.data?.firstName.charAt(0).toUpperCase()+res?.data?.data?.firstName.slice(1))}`,{duration:100})
-        login(res?.data?.data, res?.data?.token)
-        navigate('/dashboard')
+        if (res?.data?.success) {
+          setLoading(false)
+          // toast.success(`Welcome,${(res?.data?.data?.firstName.charAt(0).toUpperCase()+res?.data?.data?.firstName.slice(1))}`,{duration:100})
+          login(res?.data?.data, res?.data?.token)
+          navigate('/dashboard')
+        }
+      } else {
+
+        let res = await axios.post('http://localhost:1008/adminPanel/loginAdmin', data, { withCredentials: true });
+         console.log(res )
+
+        if (res?.data?.success) {
+          setLoading(false)
+          // toast.success(`Welcome,${(res?.data?.data?.firstName.charAt(0).toUpperCase()+res?.data?.data?.firstName.slice(1))}`,{duration:100})
+          // login(res?.data?.data, res?.data?.token)
+          navigate('/admin')
+        }
       }
-
     } catch (er) {
-      toast.error(er?.response?.data?.message);
-      console.log("error ",er);
+      toast.error(er?.response?.data?.message || er.message);
+      console.log("error ", er);
     }
     finally {
       setLoading(false);
     }
   };
 
+  // const onSubmit = async (data) => {
+  //   try {
+  //     toast.dismiss();
+  //     setLoading(true);
+
+  //     const url = admin
+  //       ? "http://localhost:1008/adminPanel/loginAdmin"
+  //       : "http://localhost:1008/api/dealer/login";
+
+  //     const res = await axios.post(url, data, {
+  //       withCredentials: true
+  //     });
+
+  //     console.log("res : ", res)
+
+  //     if (res?.data?.success) {
+  //       login(res?.data?.data, admin ? "admin" : "dealer");
+  //       navigate(admin ? "/admin" : "/dashboard");
+  //     }
+
+  //   } catch (er) {
+  //     toast.error(er?.response?.data?.message || er.message);
+  //     console.log("error ", er);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   return (
 
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4 font-sans">
@@ -52,9 +94,14 @@ const Login = () => {
           />
           <div className="h-1 w-12 bg-[#a20000] rounded-full mb-6"></div>
           <h2 className="text-2xl font-extrabold text-gray-900 tracking-tight">
-            Dealer Login
+            {
+              admin ? ("Admin Login") : "Dealer Login"
+            }
           </h2>
-          <p className="text-gray-500 text-sm mt-1">Access your solar partnership dashboard</p>
+          {
+            !admin && <p className="text-gray-500 text-sm mt-1">Access your solar partnership dashboard</p>
+          }
+
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -125,12 +172,13 @@ const Login = () => {
 
           {/* Footer Link */}
           <div className="text-center pt-4">
-            <p className="text-gray-500 text-sm font-medium">
+            {!admin && <p className="text-gray-500 text-sm font-medium">
               New to Gautam Solar?{" "}
               <Link to="/register" className="text-[#a20000] font-bold hover:underline">
                 Create Account
               </Link>
-            </p>
+            </p>}
+            <span onClick={() => setAdmin(!admin)} className="text-red-700">{admin ? "Dealer Login" : "Admin Login"}</span>
           </div>
 
         </form>
@@ -139,7 +187,7 @@ const Login = () => {
       {/* Subtle bottom disclaimer */}
       <div className="fixed bottom-6 text-center w-full">
         <p className="text-gray-400 text-[10px] uppercase tracking-[0.2em]">
-          © { new Date().getFullYear()} Gautam Solar Private Limited
+          © {new Date().getFullYear()} Gautam Solar Private Limited
         </p>
       </div>
     </div>
