@@ -9,7 +9,7 @@ const AdminLayout = () => {
 
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth < 768) {
+            if (window.innerWidth < 1024) {
                 setIsMobile(true);
                 setSidebarOpen(false); // auto collapse
             } else {
@@ -26,32 +26,34 @@ const AdminLayout = () => {
 
 
     return (
-        <div className="flex min-h-screen bg-gray-100">
-            <AdminSidebar sidebarOpen={sidebarOpen} />
+        <div className="flex flex-col min-h-screen overflow-y-hidden">
+            <div className="flex min-h-screen border bg-gray-100">
+                <AdminSidebar sidebarOpen={sidebarOpen} />
 
-            <div className="flex-1 flex flex-col">
-                {/* Header */}
-                <header className="h-16 bg-white border-b flex items-center px-6">
-                    <button onClick={() => setSidebarOpen(!sidebarOpen)}>
-                        {sidebarOpen ? <MoveLeft /> : <Menu />}
-                    </button>
+                <div className="flex-1 flex flex-col">
+                    {/* Header */}
+                    <header className="h-16 bg-white border-b flex items-center px-6">
+                        <button onClick={() => setSidebarOpen(!sidebarOpen)}>
+                            {sidebarOpen ? <MoveLeft /> : <Menu />}
+                        </button>
 
-                    <div className=" ml-5  w-45 ">
-                        <img src="/companyLogo/companyLogo.png" alt="Gautam Solar" />
-                    </div>
+                        <div className=" ml-5  w-45 ">
+                            <img src="/companyLogo/companyLogo.png" alt="Gautam Solar" />
+                        </div>
 
-                    <div className="ml-auto text-right mr-5">
-                        <p className="text-red-600 ">Proposal Dashboard</p>
-                        <p className="text-md font-bold text-red-700">Powered by Gautam Solar</p>
-                    </div>
-                </header>
+                        <div className="ml-auto text-right mr-5">
+                            <p className="text-red-600 ">Admin Dashboard</p>
+                            <p className="text-md font-bold text-red-700">Powered by Gautam Solar</p>
+                        </div>
+                    </header>
 
-                {/* Page Content */}
-                <main className="flex-1 overflow-y-auto p-6 bg-red-50">
-                    <div className="max-w-7xl mx-auto">
-                        <Outlet />
-                    </div>
-                </main>
+                    {/* Page Content */}
+                    <main className="flex-1 overflow-y-hidden p-6 bg-gray-200">
+                        <div className=" mx-auto">
+                            <Outlet />
+                        </div>
+                    </main>
+                </div>
             </div>
         </div>
     );

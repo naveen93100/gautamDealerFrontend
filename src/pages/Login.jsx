@@ -14,10 +14,10 @@ const Login = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [admin, setAdmin] = useState(false)
-  console.log("admin : ", admin)
+  // console.log("admin : ", admin)
 
   const onSubmit = async (data) => {
-    console.log(data)
+    // console.log(data)
     try {
       toast.dismiss()
       setLoading(true)
@@ -34,7 +34,7 @@ const Login = () => {
       } else {
 
         let res = await axios.post('http://localhost:1008/adminPanel/loginAdmin', data, { withCredentials: true });
-         console.log(res )
+        //  console.log(res )
 
         if (res?.data?.success) {
           setLoading(false)
