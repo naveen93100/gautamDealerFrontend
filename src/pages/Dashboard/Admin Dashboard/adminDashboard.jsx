@@ -32,13 +32,13 @@ const adminDashboard = () => {
                
                 <div className="w-full sm:w-64 border border-red-200 p-5 rounded-2xl shadow-md bg-red-100">
                     <p className="text-lg font-medium text-gray-600">Total Dealer</p>
-                    <h2 className="text-3xl font-bold text-red-700 mt-1">{data?.dealerData.length}</h2>
+                    <h2 className="text-3xl font-bold text-red-700 mt-1">{data?.dealerData?.length}</h2>
                 </div>
 
              
                 <div className="w-full sm:w-64 border border-red-200 p-5 rounded-2xl shadow-md bg-red-100">
                     <p className="text-lg font-medium text-gray-600">Total Panel Technology</p>
-                    <h2 className="text-3xl font-bold text-red-700 mt-1">{data?.pannelData.length}</h2>
+                    <h2 className="text-3xl font-bold text-red-700 mt-1">{data?.pannelData?.length}</h2>
                 </div>
             </div>
         </div>
