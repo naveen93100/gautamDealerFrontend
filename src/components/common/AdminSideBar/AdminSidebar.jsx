@@ -38,11 +38,9 @@ const AdminSidebar = ({ sidebarOpen }) => {
 
     }
 
-
-
     return (
         <aside
-            className={`max-h-screen  shrink-0 transition-all duration-300 ${sidebarOpen ? "w-64" : "w-20"} bg-linear-to-b from-slate-900 via-slate-800 to-slate-900 `}
+            className={`min-h-screen  shrink-0 transition-all duration-300 ${sidebarOpen ? "w-64" : "w-20"} bg-linear-to-b from-slate-900 via-slate-800 to-slate-900 `}
         >
             <div className="flex flex-col h-full ">
                 {/* Logo */}

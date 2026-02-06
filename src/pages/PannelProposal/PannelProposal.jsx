@@ -118,7 +118,7 @@ const PannelProposal = () => {
         // <div className="p-6 space-y-6">
         <div className="space-y-6 max-w-7xl mx-auto">
 
-            <div className="space-y-6 border p-8 rounded-2xl shadow-md shadow-gray-500 ">
+            <div className="space-y-6 border-3 border-red-200 p-8 rounded-2xl shadow-md shadow-red-300 ">
                 <div className="flex items-center justify-between bg-gray-200 p-4 rounded-xl border">
                     <h1 className="text-xl font-semibold text-gray-800">
                         Panel Management
