@@ -10,7 +10,7 @@ const PanelCard = ({
     return (
         <div
             onClick={onNavigate}
-            className="p-5 bg-red-100 rounded-xl shadow-sm border hover:shadow-md transition cursor-pointer"
+            className="p-5 bg-red-100 rounded-xl shadow-sm border border-red-300 hover:shadow-md transition cursor-pointer"
         >
             <h3 className="font-medium text-gray-800">{title}</h3>
 

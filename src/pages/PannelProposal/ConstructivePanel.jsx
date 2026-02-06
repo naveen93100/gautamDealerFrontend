@@ -129,7 +129,7 @@ const ConstructivePanel = () => {
         <div className="p-6 space-y-6">
             <div className="space-y-6 border-2 border-red-300 p-8 rounded-2xl shadow-md shadow-red-300 ">
 
-                <div className="flex items-center justify-between bg-gray-200 p-4 rounded-xl border">
+                <div className="flex items-center justify-between bg-gray-200 p-4 rounded-xl border border-red-300 shadow-lg shadow-red-300">
                     <h1 className="text-xl font-semibold text-gray-800">
                         Panel Constructive Management
                     </h1>
@@ -141,7 +141,7 @@ const ConstructivePanel = () => {
                         + Add Constructive
                     </button>
                 </div>
-                <div className="mb-6 bg-gray-200 border rounded-xl p-5 shadow-sm">
+                <div className="mb-6 bg-gray-200 border border-red-300 rounded-xl p-5 shadow-sm">
                     <div className="flex items-center justify-between">
                         <div>
                             <h1 className="text-xl font-semibold text-gray-800">

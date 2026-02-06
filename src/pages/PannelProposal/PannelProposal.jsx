@@ -119,8 +119,8 @@ const PannelProposal = () => {
         <div className="space-y-6 max-w-7xl mx-auto">
 
             <div className="space-y-6 border-3 border-red-200 p-8 rounded-2xl shadow-md shadow-red-300 ">
-                <div className="flex items-center justify-between bg-gray-200 p-4 rounded-xl border">
-                    <h1 className="text-xl font-semibold text-gray-800">
+                <div className="flex items-center justify-between bg-gray-200 p-4 rounded-xl border border-red-400">
+                    <h1 className="text-xl font-semibold text-gray-800 ">
                         Panel Management
                     </h1>
 
@@ -145,39 +145,6 @@ const PannelProposal = () => {
                         </div>
                     ) : (
                         pannelData.map((panel) => (
-                            // <div
-                            //     key={panel._id}
-                            //     onClick={(e) => handleNavigate(e, panel)}
-                            //     className="p-5 bg-white rounded-xl shadow-sm border hover:shadow-md transition"
-                            // >
-                            //     <h3 className="font-medium text-gray-800">
-                            //         {panel.panelType}
-                            //     </h3>
-
-                            //     <p className="text-xs text-gray-500 mt-1">
-                            //         Panel configuration
-                            //     </p>
-
-                            //     {/* Buttons */}
-                            //     <div className="mt-4 flex items-center gap-3">
-
-                            //         <button
-                            //             className="px-4 py-1.5 text-sm font-medium rounded-lgbg-blue-50 text-blue-600 border border-blue-200 hover:bg-blue-600 hover:text-white transition"
-                            //             onClick={(e) => handleEdit(e, panel)}
-                            //         >
-                            //             Edit
-                            //         </button>
-
-                            //         <button
-                            //             className={`px-4 py-1.5 text-sm font-medium rounded-lg border transition
-                            //        ${panel?.panelActive ? "bg-red-50 text-red-600 border-red-200 hover:bg-red-600 hover:text-white" : "bg-green-50 text-green-600 border-green-200 hover:bg-green-600 hover:text-white"
-                            //                 }`}
-                            //             onClick={(e) => handleToggle(e, panel)}
-                            //         >
-                            //             {panel?.panelActive ? "InActive" : "Active"}
-                            //         </button>
-                            //     </div>
-                            // </div>
                             <PanelCard
                                 title={panel?.panelType}
                                 subtitle=" Panel configuration"
