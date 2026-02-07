@@ -1,103 +1,3 @@
-// import React, { useEffect, useState } from "react";
-// import { apiCall } from "../../services/api";
-// import toast from "react-hot-toast";
-
-// const Input = ({ field = [], apiData, setOpen, refresh, panelData }) => {
-//     // console.log("API Data : ", field)
-//     // console.log("API Data : ", apiData)
-//     console.log("panelData Data : ", panelData)
-//     const [formData, setFormData] = useState({});
-
-//     useEffect(() => {
-//         if (panelData) {
-//             setFormData(panelData);
-//         }
-//     }, [panelData]);
-
-//     const handleChange = (e) => {
-//         const { name, value } = e.target;
-
-//         setFormData((prev) => ({
-//             ...prev,
-//             [name]: value,
-//         }));
-//     };
-
-//     console.log("form Data :", formData);
-//     // console.log("form Data :", formData?.panelType?.length);
-
-
-//     const handleSubmit = async (e) => {
-//         e.preventDefault();
-//         toast.dismiss();
-
-//         // if (!formData?.panelType?.trim()) {
-//         //     return alert("Panel Type cannot be empty");
-//         // }
-//         try {
-//             if (apiData?.method === "post") {
-//                 const response = await apiCall(apiData?.method, apiData?.url, formData);
-//                 toast.success(response?.data?.message);
-//             }
-//             if (apiData.method === "put") {
-//                 const response = await apiCall(apiData?.method, apiData?.url, null, {
-//                     params: {
-//                         ...formData,
-//                         _id: panelData?._id
-
-//                     }
-//                 });
-//                 toast.success(response?.data?.message);
-//             }
-//             setTimeout(() => {
-//                 refresh();
-//             }, 500);
-//             setOpen(false)
-//         } catch (error) {
-//             console.log(error);
-//             if (error.status === 404) {
-//                 toast.error("There Have Some Server error , Please wait we are resolve your error...")
-//             } else {
-//                 toast.error(error?.response?.data?.message)
-//             }
-//         }
-//     }
-//     return (
-//         <div className="space-y-4">
-//             {field.map((item) => (
-//                 <div key={item?.name} className="flex flex-col gap-1">
-//                     <label
-//                         htmlFor={item?.name}
-//                         className="text-sm font-medium text-gray-700"
-//                     >
-//                         {item?.label}
-//                     </label>
-
-//                     <input
-//                         id={item?.name}
-//                         name={item?.name}
-//                         type={item?.type}
-//                         placeholder={item?.placeholder}
-//                         value={formData[item?.name] || ""}
-//                         onChange={handleChange}
-//                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
-//                     />
-//                 </div>
-//             ))}
-
-//             <button
-//                 onClick={handleSubmit}
-//                 className="w-full mt-6 px-6 py-2.5 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition disabled:opacity-50 disabled:cursor-not-allowed "
-//             >
-//                 Submit
-//             </button>
-
-//         </div>
-//     );
-// };
-
-// export default Input;
-
 
 import React, { useEffect, useState } from "react";
 
@@ -110,33 +10,119 @@ const Input = ({ field = [], initialData = {}, onSubmit, submitText = "Submit" }
         }
     }, [initialData]);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
+
+    // const handleChange = (e, item) => {
+    //     // console.log("type : ", item)
+    //     if (item?.type === "file") {
+    //         const files = Array.from(e.target.files);
+
+    //         if (item.maxFiles && files.length > item.maxFiles) {
+    //             alert(`Maximum ${item.maxFiles} images allowed`);
+    //             return;
+    //         }
+    //         for (let file of files) {
+    //             if (!file.type.startsWith("image/")) {
+    //                 alert("Only image files are allowed (jpeg,jpg,webp,png)");
+    //                 return;
+    //             }
+
+    //             if (item.maxSize && file.size > item.maxSize) {
+    //                 alert("Each image must be less than 2MB");
+    //                 return;
+    //             }
+    //         }
+
+
+    //         setFormData((prev) => ({
+    //             ...prev,
+    //             [item.name]: files,
+    //         }));
+    //     } else {
+    //         const { name, value } = e.target;
+
+    //         setFormData((prev) => ({
+    //             ...prev,
+    //             [name]: value,
+    //         }));
+    //     }
+    // };
+
+    const handleChange = (e, item) => {
+        if (item.type === "file") {
+            const files = Array.from(e.target.files);
+
+            if (item.maxFiles && files.length > item.maxFiles) {
+                alert(`Maximum ${item.maxFiles} images allowed`);
+                return;
+            }
+
+            for (let file of files) {
+                // MIME check
+                if (!file.type.startsWith("image/")) {
+                    alert("Only image files are allowed");
+                    return;
+                }
+
+                // Size check
+                if (item.maxSize && file.size > item.maxSize) {
+                    alert("Each image must be less than 2MB");
+                    return;
+                }
+
+                // Extension check
+                const ext = file.name.split(".").pop().toLowerCase();
+
+                if (item.extensions && !item.extensions.includes(ext)) {
+                    alert("Only jpeg, jpg, png, webp images are allowed");
+                    return;
+                }
+            }
+
+            setFormData((prev) => ({
+                ...prev,
+                [item.name]: files,
+            }));
+        } else {
+            setFormData((prev) => ({
+                ...prev,
+                [item.name]: e.target.value,
+            }));
+        }
     };
+
+
+    // console.log("formData : ", formData)
+
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     onSubmit(formData);
+    // };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         onSubmit(formData);
     };
 
+
     return (
         <form className="space-y-4" onSubmit={handleSubmit}>
             {field.map((item) => (
+                // console.log("item ",item),
                 <div key={item.name} className="flex flex-col gap-1">
                     <label className="text-sm font-medium text-gray-700">
                         {item.label}
                     </label>
 
                     <input
-                        name={item.name}
-                        type={item.type}
+                        required={true}
+                        name={item?.name}
+                        type={item?.type}
+                        // placeholder={item.placeholder}
+                        // value={formData[item.name] || ""}
+                        multiple={item.multiple || false}
                         placeholder={item.placeholder}
-                        value={formData[item.name] || ""}
-                        onChange={handleChange}
+                        value={item.type !== "file" ? formData[item.name] || "" : undefined}
+                        onChange={(e) => handleChange(e, item)}
                         className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
                     />
                 </div>

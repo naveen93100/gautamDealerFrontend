@@ -54,7 +54,9 @@ const ConstructivePanel = () => {
     }, [])
     // console.log("Data : ", constructiveData);
     const handleToggle = async (e, data) => {
+        e.stopPropagation()
         toast.dismiss();
+        // console.log(data)
         // console.log("data?.isActive", data?.isActive)
         const payload = {
             panelId,
@@ -78,7 +80,7 @@ const ConstructivePanel = () => {
     }
 
     const handleCreate = async (data) => {
-        console.log(("data  ", data));
+        // console.log(("data  ", data));
         toast?.dismiss();
         try {
             const response = await apiCall("post", "/adminPanel/createConstructive", { constructiveType: data?.constructiveType, panelId, technologyId })
@@ -122,6 +124,8 @@ const ConstructivePanel = () => {
     }
 
     const handleNavigate = async (e, data) => {
+        e.stopPropagation();
+        naviagate("/admin/panel/technology/constructive/panelWatt", { state: { data } })
 
     }
 
@@ -148,7 +152,7 @@ const ConstructivePanel = () => {
                                 {technologyName}
                             </h1>
                             <p className="text-sm text-gray-500 mt-1">
-                                Technology Consstructive configuration
+                                Technology Constructive configuration
                             </p>
                         </div>
 
