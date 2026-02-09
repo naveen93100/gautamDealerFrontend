@@ -75,7 +75,8 @@ const TechnologyPanel = () => {
 
     }
 
-    const handleUpdateTech = async (data) => {
+    const handleUpdateTech = async (e,data) => {
+        e.stopPropagation()
         // console.log("data: ", data)
         toast.dismiss();
         const payload = {
@@ -97,6 +98,7 @@ const TechnologyPanel = () => {
     }
 
     const handleToggle = async (e, tech) => {
+        e.stopPropagation()
         toast.dismiss();
 
         // console.log("tech : ", tech)

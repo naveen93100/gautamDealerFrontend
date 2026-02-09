@@ -9,6 +9,7 @@ import MainPage from '../../components/common/MainPage';
 
 import "./index.css";
 import { useLocation, useNavigate } from 'react-router-dom';
+import CreatePannelPropsal from '../../components/Ui/createPannelPropsal';
 
 const SolarDealerDashboard = () => {
 
@@ -21,9 +22,10 @@ const SolarDealerDashboard = () => {
   const [select, setSelect] = useState(null);
   const [printP, setPrintP] = useState(false)
   const [proposalsImages, setProposalsImages] = useState([]);
-
   const [proposalData, setProposalData] = useState(null);
-  const navigate=useNavigate();
+
+  const [createPanelProp, setCreatePanelProp] = useState(false);
+  const navigate = useNavigate();
 
 
   const fetchProposal = useCallback(async () => {
@@ -80,6 +82,13 @@ const SolarDealerDashboard = () => {
               <h3 className="text-xl sm:text-2xl flex items-center justify-center gap-2 font-bold text-gray-800">Solar Proposals
 
               </h3>
+              <button
+                onClick={() => setCreatePanelProp(true)}
+                className="flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors w-full sm:w-auto shadow-md "
+              >
+                <Plus className="w-5 h-5" />
+                Create Panel Proposal
+              </button>
               <button
                 onClick={() => setShowCreateModal(true)}
                 className="flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors w-full sm:w-auto shadow-md "
@@ -154,7 +163,7 @@ const SolarDealerDashboard = () => {
                     </button>
                     {/* download */}
                     <button
-                      onClick={() =>{
+                      onClick={() => {
                         //   (e) => {
                         //   // setSelect(proposal?.proposalsData[0])
                         //   // navigate('/ui');
@@ -168,9 +177,9 @@ const SolarDealerDashboard = () => {
                         //   // setTimeout(() => {
                         //   //   handlePrint();
                         //   // }, 1000);
-                          navigate('/preview-proposal',{state:proposal})
-                          //  handleDownload(proposal)
-                        }
+                        navigate('/preview-proposal', { state: proposal })
+                        //  handleDownload(proposal)
+                      }
                       }
                       className={`flex items-center justify-center gap-2 px-4 py-2 text-red-600 border border-red-600 hover:bg-red-50 rounded-lg transition-colors w-full sm:w-auto sm:self-end ${loading ? "cursor-not-allowed text-red-300" : ""}`}
                     >
@@ -204,6 +213,13 @@ const SolarDealerDashboard = () => {
         {showCreateModal && (
           <CreateProposalModal setClose={setShowCreateModal} proposalData={fetchProposal} data={select} setData={setSelect} />
         )}
+
+        {/* create panel Propsoal  */}
+        {
+          createPanelProp && (
+            <CreatePannelPropsal onClose={setCreatePanelProp} />
+          )
+        }
 
       </div>
       {proposalData &&
