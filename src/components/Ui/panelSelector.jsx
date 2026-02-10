@@ -1,3 +1,4 @@
+import { IndianRupee } from "lucide-react";
 import React from "react";
 
 const PanelSelector = ({
@@ -8,6 +9,7 @@ const PanelSelector = ({
     constructiveData,
     panelWatt,
     setActiveIndex,
+    gst
 }) => {
 
     const panel = selectPanel;
@@ -20,23 +22,49 @@ const PanelSelector = ({
                 technologyId: "",
                 constructiveId: "",
                 wattId: "",
-                quantity: 1
+                quantity: 1,
+                rate: 1,
+                totalPrice: 0,
+                gstAmount: 0
             }
         ]);
 
         setActiveIndex(selectPanel.length);
     };
 
+    // const handleChange = (index, key, value) => {
+    //     setActiveIndex(index);
+
+    //     setSelectPanel(prev => {
+    //         const copy = [...prev];
+    //         copy[index] = { ...copy[index], [key]: value };
+    //         return copy;
+    //     });
+    // };
     const handleChange = (index, key, value) => {
         setActiveIndex(index);
 
         setSelectPanel(prev => {
             const copy = [...prev];
-            copy[index] = { ...copy[index], [key]: value };
+
+            // update value
+            copy[index] = {
+                ...copy[index],
+                [key]: value
+            };
+
+            const quantity = Number(copy[index].quantity || 0);
+            const rate = Number(copy[index].rate || 0);
+
+            const amount = quantity * rate;
+            const gstAmount = (amount * gst) / 100;
+
+            copy[index].totalPrice = amount;
+            copy[index].gstAmount = gstAmount;
+
             return copy;
         });
     };
-
     return (
         <section className="mb-6">
             <div className="flex items-center justify-between mb-6">
@@ -163,6 +191,46 @@ const PanelSelector = ({
                                         value={panel.quantity}
                                         onChange={e => handleChange(index, "quantity", e.target.value)}
                                         className="w-full pl-5 pr-4 py-3 border rounded-xl " />
+                                    {/* price */}
+                                    <div>
+                                        <label className="block text-sm  mt-4 font-medium mb-2"> Price per piece <i className="fa-solid fa-rupee-sign text-red-600"></i> </label>
+                                        <div className="relative">
+                                            <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                            <input
+                                                type="number"
+                                                name="rate"
+                                                value={panel.rate}
+                                                onChange={e => handleChange(index, "rate", e.target.value)}
+                                                className="w-full pl-11 pr-4 py-3 border rounded-xl focus:ring-2"
+                                                placeholder="Enter Panel Price"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                        <div>
+                                            <label className="block text-sm font-medium mb-2">Price Panel</label>
+                                            <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                            <input
+                                                name="totalPrice"
+                                                value={panel?.totalPrice}
+                                                onChange={e => handleChange(index, "totalPrice", e.target.value)}
+                                                className="w-full px-4 py-3 border rounded-xl  cursor-not-allowed"
+                                                placeholder="2,40,000"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium mb-2">Gst Amount</label>
+                                            <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                            <input
+                                                name="gstAmount"
+                                                value={panel?.gstAmount}
+                                                onChange={e => handleChange(index, "gstAmount", e.target.value)}
+                                                className="w-full px-4 py-3 border rounded-xl  cursor-not-allowed"
+                                                placeholder="2,40,000"
+                                            />
+                                        </div>
+                                    </div>
                                 </>
                             )
                         }

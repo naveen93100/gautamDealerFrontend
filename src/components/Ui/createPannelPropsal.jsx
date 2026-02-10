@@ -17,7 +17,6 @@ const CreatePannelPropsal = ({ onClose }) => {
     email: "",
     mobileNo: "",
     address: "",
-    price: 15,
     gst: 5
   })
 
@@ -27,9 +26,13 @@ const CreatePannelPropsal = ({ onClose }) => {
       technologyId: "",
       constructiveId: "",
       wattId: "",
-      quantity: 1
+      quantity: 1,
+      rate: 1,
+      totalPrice:0,
+      gstAmount: 0
     }]
   )
+  console.log("selected panel : ", selectPanel)
 
   const joditConfig = {
     readonly: false,
@@ -96,7 +99,6 @@ const CreatePannelPropsal = ({ onClose }) => {
       email: "",
       mobileNo: "",
       address: "",
-      price: 15,
       gst: 5
     })
 
@@ -106,7 +108,11 @@ const CreatePannelPropsal = ({ onClose }) => {
         technologyId: "",
         constructiveId: "",
         wattId: "",
-        quantity: 1
+        quantity: 1,
+        rate: 1,
+        totalPrice: 0,
+        gstAmount: 0
+        
       }]
     )
 
@@ -288,6 +294,7 @@ const CreatePannelPropsal = ({ onClose }) => {
               technologyData={technologyData}
               constructiveData={constructiveData}
               panelWatt={panelWatt}
+              gst={createPanelData?.gst}
             />
 
             <section>
@@ -297,24 +304,23 @@ const CreatePannelPropsal = ({ onClose }) => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-                {/* price */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">Price  <i class="fa-solid fa-rupee-sign text-red-600"></i> </label>
+               
+               
+                {/* <div>
+                  <label className="block text-sm  mt-4 font-medium mb-2">Unit Price <i className="fa-solid fa-rupee-sign text-red-600"></i> </label>
                   <div className="relative">
                     <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input
                       type="number"
-                      name="price"
-                      value={createPanelData?.price}
-                      onChange={handleChange}
+                      name="rate"
+                      value={panel.rate}
+                      onChange={e => handleChange(index, "rate", e.target.value)}
                       className="w-full pl-11 pr-4 py-3 border rounded-xl focus:ring-2"
                       placeholder="Enter Panel Price"
                     />
                   </div>
-                </div>
+                </div> */}
 
-                {/* gst  */}
                 <div>
                   <label className="block text-sm font-medium mb-2">GST* (%)</label>
                   <input
@@ -353,7 +359,7 @@ const CreatePannelPropsal = ({ onClose }) => {
 
               <button
                 type="submit"
-                onClick={() => { handleSubmit ()}}
+                onClick={() => { handleSubmit() }}
                 className={` p-3 sm:flex-1 bg-linear-to-r from-red-600 to-red-600 text-white rounded-xl ${loading ? "cursor-not-allowed" : "cursor-pointer"}`}
               >
                 {/* {data ? 'Update Proposal' : 'Create Proposal'} */}
