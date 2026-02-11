@@ -25,6 +25,7 @@ const SolarDealerDashboard = () => {
   const [proposalData, setProposalData] = useState(null);
 
   const [createPanelProp, setCreatePanelProp] = useState(false);
+  const [createEmpPanel, setCreateEmpPanel] = useState(false);
   const navigate = useNavigate();
 
 
@@ -65,6 +66,12 @@ const SolarDealerDashboard = () => {
   }
 
 
+  // console.log("proposals : ", proposals);
+
+
+
+
+
 
   return (
     <>
@@ -83,7 +90,7 @@ const SolarDealerDashboard = () => {
 
               </h3>
               <button
-                onClick={() => setCreatePanelProp(true)}
+                onClick={() => { setSelect(null); setCreatePanelProp(true) }}
                 className="flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors w-full sm:w-auto shadow-md "
               >
                 <Plus className="w-5 h-5" />
@@ -106,39 +113,27 @@ const SolarDealerDashboard = () => {
                 >
                   <div className="flex flex-col gap-4">
                     <div className="flex-1">
-                      <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3">
-                        <User className="w-5 h-5 text-red-600 flex shrink-0" />
-                        <h4 className="text-base sm:text-lg font-semibold text-gray-800 capitalize">
-                          {proposal?.name}
-                        </h4>
-                      </div>
-
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 mb-3">
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <Zap className="w-4 h-4 text-red-600 flex shrink-0" />
-                          <span className="font-medium">System:</span>
-                          <span>{proposal?.proposalsData[0]?.orderCapacity} watts</span>
+
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3">
+                          <User className="w-5 h-5 text-red-600 flex shrink-0" />
+                          <h4 className="text-base sm:text-lg font-semibold text-gray-800 capitalize">
+                            {proposal?.name}
+                          </h4>
                         </div>
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <Calendar className="w-4 h-4 text-red-600 flex shrink-0" />
-                          <span className="font-medium">Date:</span>
-                          <span>{new Date(proposal?.proposalsData[0]?.proposalDate).toDateString()}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <IndianRupee className="w-4 h-4 text-red-600 flex shrink-0" />
-                          <span className="font-medium">Total Price:</span>
-                          <span>{proposal?.proposalsData[0]?.finalPrice}</span>
-                        </div>
+
                         <div className="flex  items-center gap-2 text-sm text-gray-600 ">
                           <MapPin className="w-4 h-4 text-red-600 flex shrink-0" />
                           <span className="font-medium">Address:</span>
                           <span>{proposal?.address}</span>
                         </div>
+
                         <div className="flex items-center gap-2 text-sm text-gray-600">
                           <Mail className="w-4 h-4 text-red-600 flex shrink-0" />
                           <span className="font-medium">Email:</span>
                           <span>{proposal?.email}</span>
                         </div>
+
                         <div className="flex items-center gap-2 text-sm text-gray-600">
                           <Phone className="w-4 h-4 text-red-600 flex shrink-0" />
                           <span className="font-medium">Contact Number:</span>
@@ -147,53 +142,108 @@ const SolarDealerDashboard = () => {
                       </div>
                     </div>
 
-                    {/* edit  */}
-                    <button
-                      onClick={(e) => {
-                        setSelect(proposal)
-                        setShowCreateModal(true);
-                      }
-                      }
-                      className={`flex items-center justify-center gap-2 px-4 py-2 text-red-600 border border-red-600 hover:bg-red-50 rounded-lg transition-colors w-full sm:w-auto sm:self-end ${loading ? "cursor-not-allowed text-red-300" : ""}`}
-                    >
-                      <span className='flex items-center gap-2'>
-                        <Edit className="w-4 h-4" />
-                        Edit Proposal
-                      </span>
-                    </button>
-                    {/* download */}
-                    <button
-                      onClick={() => {
-                        //   (e) => {
-                        //   // setSelect(proposal?.proposalsData[0])
-                        //   // navigate('/ui');
-                        //   // handleDownload(e, proposal?.proposalsData[0]?._id, proposal?.name)
-                        //   setProposalData(proposal)
-                        //   setPrintP(true);
-                        //   setTimeout(
-                        //     ()=>window.print(),
-                        //   1000);
+                    {/* this is for solar panel Propsal */}
+                    {proposal?.panelData.length > 0 ? (
+                      <div className="flex flex-wrap gap-3">
 
-                        //   // setTimeout(() => {
-                        //   //   handlePrint();
-                        //   // }, 1000);
-                        navigate('/preview-proposal', { state: proposal })
-                        //  handleDownload(proposal)
-                      }
-                      }
-                      className={`flex items-center justify-center gap-2 px-4 py-2 text-red-600 border border-red-600 hover:bg-red-50 rounded-lg transition-colors w-full sm:w-auto sm:self-end ${loading ? "cursor-not-allowed text-red-300" : ""}`}
-                    >
-                      {loading
-                        && select?._id === proposal?.proposalsData[0]?._id
-                        ?
-                        <Loader2Icon className='animate-spin' />
-                        :
-                        <span className='flex items-center gap-2'>
-                          <Download className="w-4 h-4" />
-                          Download Proposal
-                        </span>
-                      }
-                    </button>
+                        {/* Edit */}
+                        <button
+                          onClick={() => {
+                            setCreatePanelProp(true)
+                            setSelect(proposal)
+                          }}
+                          className="flex items-center gap-2 px-4 py-2 border border-amber-500 text-amber-600 hover:bg-amber-50 rounded-lg transition"
+                        >
+                          <Edit className="w-4 h-4" />
+                          Edit Proposal
+                        </button>
+
+                        {/* Download */}
+                        <button
+                          className="flex items-center gap-2 px-4 py-2 border border-blue-500 text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                        >
+                          {/* {loading && select?._id === proposal?.proposalsData[0]?._id ? (
+                            <Loader2Icon className="animate-spin" />
+                          ) : ( */}
+                          <>
+                            <Download className="w-4 h-4" />
+                            Download PDF
+                          </>
+                          {/* )} */}
+                        </button>
+
+                      </div>
+                    ) : (
+                      <div className="flex flex-wrap gap-3">
+                        <button
+                          onClick={() => {
+                            setCreatePanelProp(true)
+                            setSelect(proposal)
+                          }}
+                          className="flex items-center gap-2 px-4 py-2 border border-red-500 text-red-600 hover:bg-red-50 rounded-lg transition"
+                        >
+                          <i className="fa-regular fa-square-plus"></i>
+                          Create Panel Proposal
+                        </button>
+                      </div>
+
+                    )}
+
+                    {/* this is for solar power plant  */}
+                    {
+                      proposal?.proposalsData.length > 0 ? (
+                        <div className="flex flex-wrap gap-3 justify-end">
+                          {/* edit  */}
+                          <button
+                            onClick={(e) => {
+                              setSelect(proposal)
+                              setShowCreateModal(true);
+                            }
+                            }
+                            className={`${loading ? "cursor-not-allowed text-amber-300" : ""} flex items-center gap-2 px-4 py-2 border border-amber-500 text-amber-600 hover:bg-amber-50 rounded-lg transition`}
+                          >
+                            <span className='flex items-center gap-2'>
+                              <Edit className="w-4 h-4" />
+                              Edit Power Plant Proposal
+                            </span>
+                          </button>
+                          {/* download */}
+                          <button
+                            onClick={() => {
+                              navigate('/preview-proposal', { state: proposal })
+                            }
+                            }
+                            className={`${loading ? "cursor-not-allowed text-blue-300" : ""}flex items-center gap-2 px-4 py-2 border border-blue-500 text-blue-600 hover:bg-blue-50 rounded-lg transition`}
+
+
+                          >
+                            {loading
+                              && select?._id === proposal?.proposalsData[0]?._id
+                              ?
+                              <Loader2Icon className='animate-spin' />
+                              :
+                              <span className='flex items-center gap-2'>
+                                <Download className="w-4 h-4" />
+                                Download Power Plant Proposal
+                              </span>
+                            }
+                          </button>
+                        </div>
+                      ) :
+                        <button
+                          // onClick={(e) => {
+                          //   setSelect(proposal)
+                          //   setShowCreateModal(true);
+                          // }
+                          // }
+                          className={`flex items-center justify-center gap-2 px-4 py-2 text-red-600 border border-red-600 hover:bg-red-50 rounded-lg transition-colors w-full sm:w-auto sm:self-end ${loading ? "cursor-not-allowed text-red-300" : ""}`}
+                        >
+                          <span className='flex items-center gap-2'>
+                            <i className="fa-regular fa-square-plus"></i>
+                            Create Power Plant Proposal
+                          </span>
+                        </button>
+                    }
                   </div>
                 </div>
               ))}
@@ -207,21 +257,23 @@ const SolarDealerDashboard = () => {
               }
             </div>
           </div>
-        </div>
+        </div >
 
         {/* Create Proposal Modal */}
-        {showCreateModal && (
-          <CreateProposalModal setClose={setShowCreateModal} proposalData={fetchProposal} data={select} setData={setSelect} />
-        )}
+        {
+          showCreateModal && (
+            <CreateProposalModal setClose={setShowCreateModal} proposalData={fetchProposal} data={select} setData={setSelect} />
+          )
+        }
 
         {/* create panel Propsoal  */}
         {
           createPanelProp && (
-            <CreatePannelPropsal onClose={setCreatePanelProp} />
+            <CreatePannelPropsal onClose={setCreatePanelProp} proposalData={fetchProposal} data={select} setData={setSelect} />
           )
         }
 
-      </div>
+      </div >
       {proposalData &&
         <div id='PrintData' className='print-this hidden print:block'>
           <MainPage proposalsImages={proposalsImages} proposalDatas={proposalData} printP={printP} />

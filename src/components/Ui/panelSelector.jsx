@@ -1,5 +1,6 @@
 import { IndianRupee } from "lucide-react";
 import React from "react";
+import toast from "react-hot-toast";
 
 const PanelSelector = ({
     selectPanel,
@@ -12,7 +13,7 @@ const PanelSelector = ({
     gst
 }) => {
 
-    const panel = selectPanel;
+    // const panel = selectPanel;
 
     const addPanel = () => {
         setSelectPanel(prev => [
@@ -47,10 +48,14 @@ const PanelSelector = ({
         setSelectPanel(prev => {
             const copy = [...prev];
 
-            // update value
+            const updatedValue =
+                key === "quantity" || key === "rate"
+                    ? Number(value)
+                    : value;
+
             copy[index] = {
                 ...copy[index],
-                [key]: value
+                [key]: updatedValue
             };
 
             const quantity = Number(copy[index].quantity || 0);
@@ -65,6 +70,11 @@ const PanelSelector = ({
             return copy;
         });
     };
+
+    const handleRemove = (e, index) => {
+        e.preventDefault();
+        setSelectPanel(prev => prev.filter((_, i) => i !== index))
+    }
     return (
         <section className="mb-6">
             <div className="flex items-center justify-between mb-6">
@@ -87,6 +97,11 @@ const PanelSelector = ({
                     <div className="flex items-center justify-between mb-3">
                         <h4 className="ml-2 text-base font-semibold text-red-600">
                             Panel {index + 1}
+                        </h4>
+                        <h4 className="mr-5 text-base font-semibold text-red-600">
+                            {
+                                index >= 1 && <i onClick={(e) => handleRemove(e, index)} className="fa-solid fa-trash-can"></i>
+                            }
                         </h4>
                     </div>
 
@@ -210,7 +225,6 @@ const PanelSelector = ({
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                                         <div>
                                             <label className="block text-sm font-medium mb-2">Price Panel</label>
-                                            <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                                             <input
                                                 name="totalPrice"
                                                 value={panel?.totalPrice}
@@ -221,7 +235,6 @@ const PanelSelector = ({
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium mb-2">Gst Amount</label>
-                                            <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                                             <input
                                                 name="gstAmount"
                                                 value={panel?.gstAmount}

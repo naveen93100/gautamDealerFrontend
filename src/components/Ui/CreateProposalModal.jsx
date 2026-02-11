@@ -67,7 +67,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                 The above warranties cover manufacturing defects, premature material degradation, and equipment failures.
             </em>
             </p>
-`)
+    `)
 
 
     const {

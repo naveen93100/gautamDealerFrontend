@@ -4,9 +4,14 @@ import toast from 'react-hot-toast';
 import { apiCall } from '../../services/api';
 import PanelSelector from './panelSelector';
 import JoditEditor from 'jodit-react';
+import { useAuth } from '../../Context/AuthContext';
 
-const CreatePannelPropsal = ({ onClose }) => {
+const CreatePannelPropsal = ({ onClose, proposalData, data = {} }) => {
+  console.log("data : ", data);
+  // console.log(data?.name)
+
   const [loading, setLoading] = useState(false);
+  // const { user, token } = useAuth();
   const [panelData, setPanelData] = useState();
   const [technologyData, setTechnologyData] = useState();
   const [constructiveData, setConstructiveData] = useState();
@@ -15,10 +20,14 @@ const CreatePannelPropsal = ({ onClose }) => {
   const [createPanelData, setCreatePanelData] = useState({
     customerName: "",
     email: "",
-    mobileNo: "",
+    phone: "",
     address: "",
     gst: 5
   })
+
+  const dealerId = JSON.parse(localStorage.getItem("userData"))?.id;
+  // console.log(dealerId);
+
 
   const [selectPanel, setSelectPanel] = useState(
     [{
@@ -28,11 +37,11 @@ const CreatePannelPropsal = ({ onClose }) => {
       wattId: "",
       quantity: 1,
       rate: 1,
-      totalPrice:0,
+      totalPrice: 0,
       gstAmount: 0
     }]
   )
-  console.log("selected panel : ", selectPanel)
+  // console.log("selected panel : ", selectPanel)
 
   const joditConfig = {
     readonly: false,
@@ -93,11 +102,10 @@ const CreatePannelPropsal = ({ onClose }) => {
 `)
 
   const handleClose = () => {
-    onClose(false);
     setCreatePanelData({
       customerName: "",
       email: "",
-      mobileNo: "",
+      phone: "",
       address: "",
       gst: 5
     })
@@ -112,19 +120,16 @@ const CreatePannelPropsal = ({ onClose }) => {
         rate: 1,
         totalPrice: 0,
         gstAmount: 0
-        
+
       }]
     )
+    onClose(false);
 
   }
 
 
-
-
-
-
   // console.log("createPanelData: ", createPanelData)
-  // console.log("selectPanel: ", selectPanel)
+  console.log("selectPanel: ", selectPanel)
 
 
   const handleChange = (e) => {
@@ -190,13 +195,88 @@ const CreatePannelPropsal = ({ onClose }) => {
 
   }, [selectPanel[activeIndex]?.constructiveId]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    toast.dismiss();
+    e.preventDefault();
     try {
 
+      const payload = {
+        selectedPanel: selectPanel, termsAndConditions: Body, ...createPanelData, dealerId
+      }
+      // console.log("payload : ", payload)
+
+      if (!payload?.customerName || !payload?.address || !payload?.email || !payload?.phone || !payload?.gst) {
+        return alert("All fields are required: Customer Name, Email, Address, Phone Number, and GST.");
+
+      }
+
+      selectPanel.map((panel) => {
+        // console.log("panel ", panel)
+        if (!panel?.panelId || !panel?.technologyId || !panel?.constructiveId || !panel?.wattId || !panel?.rate) {
+          return alert("Please fill in all panel details: Panel Type, Technology, Constructive Type, Panel Watt, and Rate per Panel.");
+        }
+      })
+      if (!data || data?.panelData.length === 0) {
+        var panelPropsal = await apiCall("post", "/api/dealer/createPanelPropsal", payload)
+      } else {
+        var panelPropsal = await apiCall("put", "/api/dealer/updatePanelProposal", payload)
+      }
+      toast.success(panelPropsal?.data?.message);
+      setTimeout(() => {
+        onClose(false);
+        proposalData()
+      }, 1000)
+
     } catch (error) {
-      toast.error(error?.response?.data?.message || error?.message);
+      alert(error?.response?.data?.message || error?.message);
     }
   }
+
+  //using for update panel Propsal 
+  useEffect(() => {
+    if (!data) {
+
+      setCreatePanelData({
+        customerName: "",
+        email: "",
+        phone: "",
+        address: "",
+        gst: 5
+      });
+      setSelectPanel(
+        [{
+          panelId: "",
+          technologyId: "",
+          constructiveId: "",
+          wattId: "",
+          quantity: 1,
+          rate: 1,
+          totalPrice: 0,
+          gstAmount: 0
+
+        }]
+      )
+      return;
+    }
+    setCreatePanelData({
+      customerName: data?.name || "",
+      email: data?.email || "",
+      phone: data?.phone || "",
+      address: data?.address || "",
+      gst: data?.panelData?.[0]?.gst || 5
+    });
+
+    if (data?.panelData?.length) {
+      setSelectPanel(data.panelData[0].selectedPanels);
+      setBody(data.panelData[0].termsAndConditions || "");
+    }
+
+  }, [data]);
+
+  // console.log("createPanelData update : ", createPanelData);
+
+
+
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
@@ -217,9 +297,9 @@ const CreatePannelPropsal = ({ onClose }) => {
               <Sun className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold">Create Solar Panel Proposal</h2>
+              <h2 className="text-xl font-bold">{!data || data?.panelData?.length === 0 ? "Create" : "Update"} Solar Panel Proposal</h2>
               <p className="text-red-100 text-sm mt-1">
-                Create a detailed panel proposal for your customer
+                {!data || data?.panelData?.length === 0 ? "Create" : "Update"}  a detailed panel proposal for your customer
               </p>
             </div>
           </div>
@@ -239,6 +319,7 @@ const CreatePannelPropsal = ({ onClose }) => {
                     Customer Name *
                   </label>
                   <input onChange={handleChange}
+                    value={createPanelData?.customerName}
                     name='customerName'
                     className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-red-500"
                     placeholder="Enter customer full name"
@@ -251,6 +332,7 @@ const CreatePannelPropsal = ({ onClose }) => {
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input
                       name='email'
+                      value={createPanelData?.email}
                       onChange={handleChange}
                       className="w-full pl-11 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-red-500"
                       placeholder="customer@example.com"
@@ -264,7 +346,8 @@ const CreatePannelPropsal = ({ onClose }) => {
 
                     <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input
-                      name='mobileNo'
+                      name='phone'
+                      value={createPanelData?.phone}
                       onChange={handleChange}
                       className="w-full pl-11 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-red-500"
                       placeholder="+91 98765 43210"
@@ -276,6 +359,7 @@ const CreatePannelPropsal = ({ onClose }) => {
                   <textarea
                     name='address'
                     onChange={handleChange}
+                    value={createPanelData?.address}
                     rows={3}
                     className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-red-500 resize-none"
                     placeholder="Complete installation address"
@@ -304,8 +388,8 @@ const CreatePannelPropsal = ({ onClose }) => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-               
-               
+
+
                 {/* <div>
                   <label className="block text-sm  mt-4 font-medium mb-2">Unit Price <i className="fa-solid fa-rupee-sign text-red-600"></i> </label>
                   <div className="relative">
@@ -359,11 +443,10 @@ const CreatePannelPropsal = ({ onClose }) => {
 
               <button
                 type="submit"
-                onClick={() => { handleSubmit() }}
+                onClick={(e) => { handleSubmit(e) }}
                 className={` p-3 sm:flex-1 bg-linear-to-r from-red-600 to-red-600 text-white rounded-xl ${loading ? "cursor-not-allowed" : "cursor-pointer"}`}
               >
-                {/* {data ? 'Update Proposal' : 'Create Proposal'} */}
-                Create Proposal
+                {!data || data?.panelData?.length === 0 ? "Create" : "Update"}  Proposal
 
               </button>
             </div>
