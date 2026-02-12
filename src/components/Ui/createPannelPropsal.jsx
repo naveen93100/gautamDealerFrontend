@@ -7,7 +7,7 @@ import JoditEditor from 'jodit-react';
 import { useAuth } from '../../Context/AuthContext';
 
 const CreatePannelPropsal = ({ onClose, proposalData, data = {} }) => {
-  console.log("data : ", data);
+  // console.log("data : ", data);
   // console.log(data?.name)
 
   const [loading, setLoading] = useState(false);
@@ -129,7 +129,7 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} }) => {
 
 
   // console.log("createPanelData: ", createPanelData)
-  console.log("selectPanel: ", selectPanel)
+  // console.log("selectPanel: ", selectPanel)
 
 
   const handleChange = (e) => {

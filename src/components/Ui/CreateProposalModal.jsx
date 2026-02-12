@@ -24,6 +24,16 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
         useClasses: true,
     }
 
+    const MATERIALS = [
+        "Inverter",
+        "ACDB",
+        "DCDB",
+        "Wiring Cables",
+        "Lightning Arrester",
+        "Earthing",
+        "PVC Cable",
+    ]
+
     const [Body, setBody] = useState(`
        <h3><strong>Payment Terms</strong></h3>
             <ul>
@@ -96,7 +106,8 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
     const handleCreateProposal = async (d) => {
         toast.dismiss();
         // edit
-        if (data) {
+        // console.log("data: ",data)
+        if (data?.proposalsData.length > 0) {
             // console.log(selectedMaterial);
 
             // if (Object.keys(dirtyFields).length === 0) {
@@ -151,7 +162,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                     toast.success(res?.data?.message);
                     setClose(false);
                     setTimeout(() =>
-                        window.location.reload()
+                        proposalData()
                         , 1000)
                 }
             } catch (er) {
@@ -176,7 +187,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                 if (res?.data.success) {
                     toast.success(res.data?.message)
                     setTimeout(() =>
-                        window.location.reload()
+                        proposalData()
                         , 1000)
                     setClose(false)
                 }
@@ -212,17 +223,6 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
     }
 
     useEffect(() => {
-        const MATERIALS = [
-            "Inverter",
-            "ACDB",
-            "DCDB",
-            "Wiring Cables",
-            "Lightning Arrester",
-            "Earthing",
-            "PVC Cable",
-        ]
-
-
         const defaultMaterials = MATERIALS.map(item => ({
             name: item,
             qty: 1,
@@ -231,27 +231,30 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
         setValue("components", defaultMaterials);
     }, []);
 
-
+    const defaultMaterials = MATERIALS.map(item => ({
+        name: item,
+        qty: 1,
+    }));
 
     useEffect(() => {
         if (!data) return;
-        console.log(data)
+        // console.log(data)
         setValue('customerName', data?.name);
         setValue('email', data?.email);
         setValue('phone', data?.phone);
         setValue('address', data?.address);
-        setValue('orderCapacity', (data?.proposalsData[0]?.orderCapacity) / 1000);
-        setValue('rate', data?.proposalsData[0]?.rate);
-        setValue('tax', data?.proposalsData[0]?.tax);
+        setValue('orderCapacity', data.proposalsData.length > 0 ? (data?.proposalsData[0]?.orderCapacity) / 1000 : 0);
+        setValue('rate', data.proposalsData.length > 0 ? data?.proposalsData[0]?.rate : 0);
+        setValue('tax', data.proposalsData.length > 0 ? data?.proposalsData[0]?.tax : 8.9);
 
-        setBody(data?.proposalsData[0]?.termsAndConditions);
-        // setValue('termsAndConditions', data?.proposalsData[0]?.termsAndConditions);
-        let names = data?.proposalsData[0]?.material.map(item => ({ name: item?.materialData?.name, qty: item?.quantity }));
+        // setBody(data.proposalsData > 0 ? data?.proposalsData[0]?.termsAndConditions : '');
+        setValue('termsAndConditions', data.proposalsData.length > 0 ? data?.proposalsData[0]?.termsAndConditions : '');
+        let names = data.proposalsData.length > 0 ? data?.proposalsData[0]?.material.map(item => ({ name: item?.materialData?.name, qty: item?.quantity })) : defaultMaterials;
         setValue('components', names);
     }, [data]);
 
 
-
+    // console.log("selected", selectedMaterial)
 
     return (
 
@@ -458,17 +461,9 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                             </div>
 
                             <div className='space-y-3'>
-                                {[
-                                    "Inverter",
-                                    "ACDB",
-                                    "DCDB",
-                                    "Wiring Cables",
-                                    "Lightning Arrester",
-                                    "Earthing",
-                                    "PVC Cable",
-                                ].map((item) => {
+                                {MATERIALS.map((item) => {
 
-                                    let match = selectedMaterial.find(v => v.name === item);
+                                    let match = selectedMaterial.length > 0 && selectedMaterial?.find(v => v.name === item);
                                     let isSelected = match ? { check: true, qty: match?.qty } : { check: false, qty: 0 }
 
                                     return (
@@ -522,7 +517,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                                 type="submit"
                                 className={` p-3 sm:flex-1 bg-linear-to-r from-red-600 to-red-600 text-white rounded-xl ${loading ? "cursor-not-allowed" : "cursor-pointer"}`}
                             >
-                                {data ? 'Update Proposal' : 'Create Proposal'}
+                                {data?.proposalsData?.length > 0 ? 'Update Proposal' : 'Create Proposal'}
 
                             </button>
                         </div>
