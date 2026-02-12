@@ -18,6 +18,7 @@ import ConstructivePanel from './pages/PannelProposal/ConstructivePanel';
 import AdminLayout from './pages/Dashboard/Layout/AdminLayout';
 import PannelProposal from './pages/PannelProposal/PannelProposal';
 import PanelWatt from './pages/PannelProposal/PanelWatt';
+import PanelPropsalView from './components/common/PanelPropsalView';
 
 
 
@@ -53,6 +54,7 @@ const App = () => {
             </ProtectedRoute>
          } />
          < Route path='preview-proposal' element={< MainPage />} />
+         < Route path='viewPanelProposal' element={< PanelPropsalView />} />
 
          {/* <Route path='test' element={<AdminDashboard />} /> */}
 

@@ -1,6 +1,6 @@
 
 import PdfComp from './PdfComp'
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Context/AuthContext';
 import { ArrowLeft, Download } from 'lucide-react';
 
@@ -37,6 +37,7 @@ const MainPage = ({ printP }) => {
     const { state } = useLocation();
     const { user } = useAuth()
     const proposalDatas = state
+    const navigate = useNavigate();
 
     if (!proposalDatas) return <Navigate to='/dashboard' />;
 
@@ -77,25 +78,14 @@ const MainPage = ({ printP }) => {
         <>
             <div className="flex flex-col gap-6 bg-gray-200 ">
                 <button
-                    onClick={() => window.history.back()}
-                    className=" fixed bottom-6 left-18 z-50 flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white font-medium px-5 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200
-    print:hidden
-  "
+                    onClick={() => navigate(-1)}
+                    className=" fixed bottom-6 left-18 z-50 flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white font-medium px-5 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 print:hidden "
                 >
                     <ArrowLeft /> Go Back
                 </button>
                 <button
                     onClick={() => window.print()}
-                    className="
-    fixed bottom-6 right-6 z-50
-    flex items-center gap-2
-    bg-red-600 hover:bg-red-700
-    text-white font-medium
-    px-5 py-3 rounded-full
-    shadow-lg hover:shadow-xl
-    transition-all duration-200
-    print:hidden
-  "
+                    className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-medium px-5 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 print:hidden"
                 >
                     <Download className="w-5 h-5" />
                     Download

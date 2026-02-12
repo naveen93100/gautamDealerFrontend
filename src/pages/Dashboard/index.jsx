@@ -8,7 +8,7 @@ import { useAuth } from '../../Context/AuthContext';
 import MainPage from '../../components/common/MainPage';
 
 import "./index.css";
-import { useLocation, useNavigate } from 'react-router-dom';
+import { data, useLocation, useNavigate } from 'react-router-dom';
 import CreatePannelPropsal from '../../components/Ui/createPannelPropsal';
 
 const SolarDealerDashboard = () => {
@@ -160,6 +160,7 @@ const SolarDealerDashboard = () => {
 
                         {/* Download */}
                         <button
+                          onClick={() => navigate("/viewPanelProposal", { state: { data: proposal } })}
                           className="flex items-center gap-2 px-4 py-2 border border-blue-500 text-blue-600 hover:bg-blue-50 rounded-lg transition"
                         >
                           {/* {loading && select?._id === proposal?.proposalsData[0]?._id ? (
