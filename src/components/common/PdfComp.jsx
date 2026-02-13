@@ -1,5 +1,12 @@
 
-function PdfComp({bg,children}) {
+function PdfComp({ bg, children }) {
+  // console.log("bg : ",bg)
+  const BASE_URL = "http://localhost:1008";
+
+  const imageSrc = bg?.startsWith("/")
+    ? bg
+    : `${BASE_URL}/${bg}`;
+
   return (
     <section
       className="
@@ -13,7 +20,7 @@ function PdfComp({bg,children}) {
     >
       {/* background */}
       <img
-        src={bg}
+        src={imageSrc}
         className="absolute inset-0 w-full h-full object-cover"
       />
 

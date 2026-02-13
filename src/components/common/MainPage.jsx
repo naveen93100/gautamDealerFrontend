@@ -72,6 +72,8 @@ const MainPage = ({ printP }) => {
         tax: proposalDatas?.proposalsData[0]?.tax
     }
 
+     console.log("proposalsData : ",proposalsData)
+
 
     return (
 

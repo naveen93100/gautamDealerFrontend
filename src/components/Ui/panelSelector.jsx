@@ -1,5 +1,5 @@
 import { IndianRupee } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 import toast from "react-hot-toast";
 
 const PanelSelector = ({
@@ -71,10 +71,30 @@ const PanelSelector = ({
         });
     };
 
+    useEffect(() => {
+        setSelectPanel(prev =>
+            prev.map(item => {
+                const quantity = Number(item.quantity || 0);
+                const rate = Number(item.rate || 0);
+
+                const amount = quantity * rate;
+                const gstAmount = (amount * gst) / 100;
+
+                return {
+                    ...item,
+                    totalPrice: amount,
+                    gstAmount
+                };
+            })
+        );
+    }, [gst]);
+
     const handleRemove = (e, index) => {
         e.preventDefault();
         setSelectPanel(prev => prev.filter((_, i) => i !== index))
     }
+
+
     return (
         <section className="mb-6">
             <div className="flex items-center justify-between mb-6">
