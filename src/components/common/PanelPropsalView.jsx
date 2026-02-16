@@ -55,10 +55,8 @@ const PanelPropsalView = () => {
 
     ]
 
-    console.log("pages : ", pages);
+    // console.log("pages : ", pages);
     // const START_PAGE = pages.length - panelProposal.selectedPanels.length;
-
-
 
     const panelData = {
         gst: panelProposal?.gst,
@@ -230,20 +228,20 @@ const PanelPropsalView = () => {
                         <h1 className='uppercase'>{data?.companyName}</h1>
                     }
                 </div>
-                <div className='absolute top-[75mm] px-4'>
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full border border-black">
+                <div className='absolute top-[75mm] px-4 w-full'>
+                    <div className=" overflow-x-auto ">
+                        <table className="mx-auto w-[90%] border border-black">
                             <thead>
-                                <tr className=" bg-red-800 text-white text-left">
-                                    <th className="p-3 border border-black">S.No</th>
+                                <tr className=" bg-red-800 text-white text-xs text-left">
+                                    <th className="p-3  text-xs border border-black">S.No</th>
                                     <th className="p-3 border border-black">Panel Type</th>
                                     <th className="p-3 border border-black">Technology</th>
                                     <th className="p-3 border border-black">Constructive Type</th>
                                     <th className="p-3 border border-black">Panel Watt </th>
-                                    <th className="p-3 border border-black">Rate Per Watt </th>
+                                    {/* <th className="p-3 border border-black">Rate Per Watt </th>
                                     <th className="p-3 border border-black">Quantity</th>
                                     <th className="p-3 border border-black"> <span className='flex flex-row'><IndianRupee className='' /> Amount </span> </th>
-                                    <th className="p-3 border border-black"> <span className='flex flex-row'><IndianRupee className='' /> GST {panelData?.gst}% </span></th>
+                                    <th className="p-3 border border-black"> <span className='flex flex-row'><IndianRupee className='' /> GST {panelData?.gst}% </span></th> */}
                                 </tr>
                             </thead>
 
@@ -258,33 +256,65 @@ const PanelPropsalView = () => {
                                             <td className="border border-gray-300 p-2 text-center">{panel?.technology?.technologyPanel}</td>
                                             <td className="border border-gray-300 p-2 text-center">{panel?.constructive?.constructiveType}</td>
                                             <td className="border border-gray-300 p-2 text-center">{panel?.watt?.watt}</td>
-                                            <td className="border border-gray-300 p-2 text-center">{panel?.rate}</td>
+                                            {/* <td className="border border-gray-300 p-2 text-center">{panel?.rate}</td>
                                             <td className="border border-gray-300 p-2 text-center">{panel?.quantity}</td>
                                             <td className="border border-gray-300 p-2 text-center"> {panel?.totalPrice}</td>
-                                            <td className="border border-gray-300 p-2 text-center"> {panel?.gstAmount}</td>
+                                            <td className="border border-gray-300 p-2 text-center"> {panel?.gstAmount}</td> */}
+                                        </tr>
+                                    ))
+                                }
+                            </tbody>
+                        </table>
+
+                        <table className="mx-auto w-[90%] border mt-10">
+                            <thead>
+                                <tr className=" bg-red-800 text-white text-xs text-left">
+                                    <th className="p-3  text-xs border border-black">S.No</th>
+                                    <th className="p-3  text-xs border border-black">Item Description</th>
+                                    <th className="p-3 border border-black">Rate Per Watt </th>
+                                    <th className="p-3 border border-black">Quantity</th>
+                                    <th className="p-3 border border-black"> <span className='flex flex-row'><IndianRupee className='' /> Amount </span> </th>
+                                    <th className="p-3 border border-black"> <span className='flex flex-row'><IndianRupee className='' /> GST {panelData?.gst}% </span></th>
+                                    <th className="p-3 border border-black"> <span className='flex flex-row'><IndianRupee className='' /> Amount + Gst</span></th>
+                                </tr>
+                            </thead>
+
+                            <tbody className="text-sm">
+
+                                {
+                                    panelProposal?.selectedPanels?.map((panel, idx) => (
+                                        // console.log("panel : ", panel),
+                                        <tr>
+                                            <td className="border border-gray-300 p-2 text-center">{idx + 1}</td>
+                                            <td className="border border-gray-300 p-2 text-center">{`${panel?.watt?.watt} ,${panel?.panelType?.panelType},${panel?.technology?.technologyPanel},${panel?.constructive?.constructiveType}`}</td>
+
+                                            <td className="border border-gray-300 p-2 text-center">{panel?.rate.toLocaleString()}</td>
+                                            <td className="border border-gray-300 p-2 text-center">{panel?.quantity.toLocaleString()}</td>
+                                            <td className="border border-gray-300 p-2 text-center"> {panel?.totalPrice.toLocaleString()}</td>
+                                            <td className="border border-gray-300 p-2 text-center"> {panel?.gstAmount.toLocaleString()}</td>
+                                            <td className="border border-gray-300 p-2 text-center"> {(panel?.totalPrice + panel?.gstAmount).toLocaleString()}</td>
                                         </tr>
                                     ))
                                 }
 
+
+
                             </tbody>
+
+                            <tfoot>
+                                <tr className="bg-gray-100 font-semibold">
+                                    <td colSpan={6} className="border border-gray-300 p-2 text-right">
+                                        <i class="fa-solid fa-indian-rupee-sign"></i> Total Amount
+                                    </td>
+                                    <td className='border border-gray-300 p-2 text-red-600 text-right'> {(panelProposal?.finalPrice).toLocaleString("en-IN")}</td>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
-                    {
-                        panelProposal?.selectedPanels.length > 3 ?
-                            ("") : (
-                                <div className='pt-10 border-t-1'>
-                                    <div
-                                        className=" max-w-none space-y-3"
-                                        dangerouslySetInnerHTML={{ __html: panelData?.termsAndConditions }}
-                                    >
-                                    </div>
-                                </div>
-                            )
-                    }
                 </div >
             </PdfComp >
 
-            {panelProposal?.selectedPanels.length > 3 && <PdfComp bg={pages[9]}>
+            <PdfComp bg={pages[9]}>
                 <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
                     {data?.companyLogo ?
                         <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
@@ -300,64 +330,31 @@ const PanelPropsalView = () => {
                     </div>
                 </div>
 
-            </PdfComp>}
+            </PdfComp>
 
-            {/* here i am try to point my rest of panel image that is  here because img fetch static  from the selected panel  */}
 
-            {/* this will not work */}
-            {
-                // console.log("selected panel data  : ", panelProposal?.selectedPanels)
-                // panelProposal?.selectedPanels?.flatMap(panel => console.log("panel : ", panel?.watt?.imgWatt))
+            {/* {
+                console.log(" panelProposal?.selectedPanels : ", panelProposal)
+            } */}
 
-            }
 
             {
-                // panelProposal?.selectedPanels?.map((panel, index) => {
-                //     return panel?.watt?.imgWatt?.map((item) => {
-                //         const pageIndex = 10 + index;
+                panelProposal?.selectedPanels?.flatMap(panel => panel?.watt?.imgWatt || [])?.map((item, index) => {
+                    const pageIndex = 10 + index;
 
-                //         // console.log("pageIndex : ", pages[pageIndex])
-                //         console.log("pageIndex : ", pageIndex)
+                    if (!pages[pageIndex]) return null;
 
-                //         if (!pages[pageIndex]) return null;
-
-                //         return (
-                //             <PdfComp key={index} bg={pages[pageIndex]}>
-                //                 <div className="absolute top-[40mm] left-[20mm] w-[170mm]">
-                //                     <img
-                //                         src={item}
-                //                         className="w-full object-contain"
-                //                     />
-                //                 </div>
-                //             </PdfComp>
-                //         );
-                //     })
-
-                // })
-
-                panelProposal?.selectedPanels
-                    ?.flatMap(panel => panel?.watt?.imgWatt || [])
-                    ?.map((item, index) => {
-
-                        const pageIndex = 10 + index;
-
-                        if (!pages[pageIndex]) return null;
-
-                        return (
-                            <PdfComp key={index} bg={pages[pageIndex]}>
-                                <div className="absolute top-[40mm] left-[20mm] w-[170mm]">
-                                    {/* <img
+                    return (
+                        <PdfComp key={index} bg={pages[pageIndex]}>
+                            <div className="absolute top-[40mm] left-[20mm] w-[170mm]">
+                                {/* <img
                                         src={item}
                                         className="w-full object-contain"
                                     /> */}
-                                </div>
-                            </PdfComp>
-                        );
-                    })
-
-
-
-
+                            </div>
+                        </PdfComp>
+                    );
+                })
 
             }
 
@@ -400,61 +397,6 @@ const PanelPropsalView = () => {
                     </div>
                 </div>
             </PdfComp>
-
-            {/* <PdfComp bg={pages[7]}>
-                <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
-                    {data?.companyLogo ?
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
-                        :
-                        <h1 className='uppercase'>{data?.companyName}</h1>
-                    }
-                </div>
-
-                <div className='absolute top-[75mm] px-4'>
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full border border-black">
-                            <thead>
-                                <tr className=" bg-red-800 text-white text-left">
-                                    <th className="p-3 border border-black">Component</th>
-                                    <th className="p-3 border border-black">Specifications</th>
-                                    <th className="p-3 border border-black">Qty / Units</th>
-                                </tr>
-                            </thead>
-
-                            <tbody className="text-sm">
-
-                                <tr className='bg-white'>
-                                    <td className="p-3 font-semibold border border-black">
-                                        ALMM & BIS Approved Gautam Solar&apos;s PV Modules
-                                    </td>
-                                    <td className="p-3 border border-black">
-                                        Fully compliant with Indian regulations, these systems are certified for quality, safety, and performance, ensuring reliable and dependable operation for long-term project deployment.
-                                    </td>
-                                    <td className="p-3 border border-black">{`${proposalsData?.orderCapacity / 1000}`} kW</td>
-                                </tr>
-
-                                {proposalsData?.material?.length > 1 && proposalsData?.material.map((item, idx) => (
-
-                                    <tr key={item?.mId} className={`${idx % 2 == 0 ? 'bg-red-50' : 'bg-white'}`}>
-                                        <td className="p-3 font-semibold border border-black">
-                                            {item?.materialData?.name}
-                                        </td>
-                                        <td className="p-3 border border-black">
-                                            {item?.materialData?.specification}
-                                        </td>
-                                        <td className="p-3 border border-black">{`${item?.quantity}`} {`${item?.materialData?.unit}`}</td>
-                                    </tr>
-
-                                ))}
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </PdfComp> */}
-
-
-
 
 
 
