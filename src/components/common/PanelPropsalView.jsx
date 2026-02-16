@@ -238,10 +238,7 @@ const PanelPropsalView = () => {
                                     <th className="p-3 border border-black">Technology</th>
                                     <th className="p-3 border border-black">Constructive Type</th>
                                     <th className="p-3 border border-black">Panel Watt </th>
-                                    {/* <th className="p-3 border border-black">Rate Per Watt </th>
-                                    <th className="p-3 border border-black">Quantity</th>
-                                    <th className="p-3 border border-black"> <span className='flex flex-row'><IndianRupee className='' /> Amount </span> </th>
-                                    <th className="p-3 border border-black"> <span className='flex flex-row'><IndianRupee className='' /> GST {panelData?.gst}% </span></th> */}
+
                                 </tr>
                             </thead>
 
@@ -256,10 +253,7 @@ const PanelPropsalView = () => {
                                             <td className="border border-gray-300 p-2 text-center">{panel?.technology?.technologyPanel}</td>
                                             <td className="border border-gray-300 p-2 text-center">{panel?.constructive?.constructiveType}</td>
                                             <td className="border border-gray-300 p-2 text-center">{panel?.watt?.watt}</td>
-                                            {/* <td className="border border-gray-300 p-2 text-center">{panel?.rate}</td>
-                                            <td className="border border-gray-300 p-2 text-center">{panel?.quantity}</td>
-                                            <td className="border border-gray-300 p-2 text-center"> {panel?.totalPrice}</td>
-                                            <td className="border border-gray-300 p-2 text-center"> {panel?.gstAmount}</td> */}
+
                                         </tr>
                                     ))
                                 }
@@ -280,14 +274,12 @@ const PanelPropsalView = () => {
                             </thead>
 
                             <tbody className="text-sm">
-
                                 {
                                     panelProposal?.selectedPanels?.map((panel, idx) => (
                                         // console.log("panel : ", panel),
                                         <tr>
                                             <td className="border border-gray-300 p-2 text-center">{idx + 1}</td>
                                             <td className="border border-gray-300 p-2 text-center">{`${panel?.watt?.watt} ,${panel?.panelType?.panelType},${panel?.technology?.technologyPanel},${panel?.constructive?.constructiveType}`}</td>
-
                                             <td className="border border-gray-300 p-2 text-center">{panel?.rate.toLocaleString()}</td>
                                             <td className="border border-gray-300 p-2 text-center">{panel?.quantity.toLocaleString()}</td>
                                             <td className="border border-gray-300 p-2 text-center"> {panel?.totalPrice.toLocaleString()}</td>
@@ -296,19 +288,16 @@ const PanelPropsalView = () => {
                                         </tr>
                                     ))
                                 }
-
-
-
                             </tbody>
 
-                            <tfoot>
-                                <tr className="bg-gray-100 font-semibold">
-                                    <td colSpan={6} className="border border-gray-300 p-2 text-right">
-                                        <i class="fa-solid fa-indian-rupee-sign"></i> Total Amount
-                                    </td>
-                                    <td className='border border-gray-300 p-2 text-red-600 text-right'> {(panelProposal?.finalPrice).toLocaleString("en-IN")}</td>
-                                </tr>
-                            </tfoot>
+
+                            <tr className="bg-gray-100 font-semibold">
+                                <td colSpan={6} className="border border-gray-300 p-2 text-right">
+                                    <i class="fa-solid fa-indian-rupee-sign"></i> Total Amount
+                                </td>
+                                <td className='border border-gray-300 p-2 text-red-600 text-right'> {(panelProposal?.finalPrice).toLocaleString("en-IN")}</td>
+                            </tr>
+
                         </table>
                     </div>
                 </div >
@@ -332,12 +321,6 @@ const PanelPropsalView = () => {
 
             </PdfComp>
 
-
-            {/* {
-                console.log(" panelProposal?.selectedPanels : ", panelProposal)
-            } */}
-
-
             {
                 panelProposal?.selectedPanels?.flatMap(panel => panel?.watt?.imgWatt || [])?.map((item, index) => {
                     const pageIndex = 10 + index;
@@ -355,9 +338,7 @@ const PanelPropsalView = () => {
                         </PdfComp>
                     );
                 })
-
             }
-
 
             <PdfComp bg={pages[pages.length - 1]}>
                 <div className="absolute text-red-500 scale-150 top-[8mm] left-[22mm]  w-40 h-25  overflow-hidden flex items-center justify-center">
@@ -397,8 +378,6 @@ const PanelPropsalView = () => {
                     </div>
                 </div>
             </PdfComp>
-
-
 
         </div >
     )
