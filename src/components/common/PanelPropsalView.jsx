@@ -56,6 +56,7 @@ const PanelPropsalView = () => {
     ]
 
     console.log("pages : ", pages);
+    // const START_PAGE = pages.length - panelProposal.selectedPanels.length;
 
 
 
@@ -282,6 +283,7 @@ const PanelPropsalView = () => {
                     }
                 </div >
             </PdfComp >
+
             {panelProposal?.selectedPanels.length > 3 && <PdfComp bg={pages[9]}>
                 <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
                     {data?.companyLogo ?
@@ -303,25 +305,61 @@ const PanelPropsalView = () => {
             {/* here i am try to point my rest of panel image that is  here because img fetch static  from the selected panel  */}
 
             {/* this will not work */}
+            {
+                // console.log("selected panel data  : ", panelProposal?.selectedPanels)
+                // panelProposal?.selectedPanels?.flatMap(panel => console.log("panel : ", panel?.watt?.imgWatt))
 
-            {panelProposal?.selectedPanels?.map((panel, index) => {
-                const pageIndex = 10 + index;
+            }
 
-                console.log("pageIndex : ", pages[pageIndex])
+            {
+                // panelProposal?.selectedPanels?.map((panel, index) => {
+                //     return panel?.watt?.imgWatt?.map((item) => {
+                //         const pageIndex = 10 + index;
 
-                if (!pages[pageIndex]) return null;
+                //         // console.log("pageIndex : ", pages[pageIndex])
+                //         console.log("pageIndex : ", pageIndex)
 
-                return (
-                    <PdfComp key={index} bg={pages[pageIndex]}>
-                        <div className="absolute top-[40mm] left-[20mm] w-[170mm]">
-                            <img
-                                src={panel?.watt?.imgWatt}
-                                className="w-full object-contain"
-                            />
-                        </div>
-                    </PdfComp>
-                );
-            })}
+                //         if (!pages[pageIndex]) return null;
+
+                //         return (
+                //             <PdfComp key={index} bg={pages[pageIndex]}>
+                //                 <div className="absolute top-[40mm] left-[20mm] w-[170mm]">
+                //                     <img
+                //                         src={item}
+                //                         className="w-full object-contain"
+                //                     />
+                //                 </div>
+                //             </PdfComp>
+                //         );
+                //     })
+
+                // })
+
+                panelProposal?.selectedPanels
+                    ?.flatMap(panel => panel?.watt?.imgWatt || [])
+                    ?.map((item, index) => {
+
+                        const pageIndex = 10 + index;
+
+                        if (!pages[pageIndex]) return null;
+
+                        return (
+                            <PdfComp key={index} bg={pages[pageIndex]}>
+                                <div className="absolute top-[40mm] left-[20mm] w-[170mm]">
+                                    {/* <img
+                                        src={item}
+                                        className="w-full object-contain"
+                                    /> */}
+                                </div>
+                            </PdfComp>
+                        );
+                    })
+
+
+
+
+
+            }
 
 
             <PdfComp bg={pages[pages.length - 1]}>

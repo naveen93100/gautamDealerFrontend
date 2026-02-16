@@ -75,8 +75,7 @@ const TechnologyPanel = () => {
 
     }
 
-    const handleUpdateTech = async (e,data) => {
-        e.stopPropagation()
+    const handleUpdateTech = async (data) => {
         // console.log("data: ", data)
         toast.dismiss();
         const payload = {
@@ -84,6 +83,8 @@ const TechnologyPanel = () => {
             _id: data?._id,
             technologyPanel: data?.technologyPanel
         }
+
+        // console.log("payload : ", payload);
         try {
             const response = await apiCall("put", "adminPanel/updateTechnology", { ...payload });
             toast.success(response?.data?.message);

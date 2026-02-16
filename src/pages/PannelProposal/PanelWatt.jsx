@@ -94,7 +94,7 @@ const PanelWatt = () => {
     const handleCreatePanelWatt = async (data) => {
         // console.log("data : ", data);
         let formData = new FormData()
-        console.log(data?.imgWatt)
+        // console.log(data?.imgWatt)
 
         // const payload = {
         //     panelId: location?.state?.data?.panelId,
