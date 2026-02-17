@@ -150,8 +150,33 @@ const PanelWatt = () => {
         setUpdateData(data)
     }
 
-    const handleEditPanelWatt = (data) => {
-        console.log("handleUpdate : ", data)
+    const handleEditPanelWatt = async (data) => {
+        // console.log("handleUpdate : ", data)
+        toast.dismiss();
+        const formData = new FormData();
+
+        formData.append("id", data?._id)
+        formData.append("watt", data?.watt)
+        formData.append("constructiveId", data?.constructiveId)
+
+        data?.imgWatt?.forEach((item, index) => {
+            formData.append("imgWatt", item);
+            formData.append("imgOrder[]", index);
+        });
+
+
+        try {
+            const apiData = await apiCall("put", "/adminPanel/updatePanelWatt", formData)
+            toast.success(apiData?.data?.message);
+            setEdit(false)
+            setTimeout(() => {
+                fetchData();
+            }, 1000)
+
+
+        } catch (error) {
+            toast.error(error?.response?.data?.message || error?.message)
+        }
 
     }
     return (
