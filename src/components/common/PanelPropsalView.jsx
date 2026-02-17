@@ -40,7 +40,7 @@ const PanelPropsalView = () => {
     // console.log("wattIamge : ", wattImages);
 
     const pages = [
-        "/panelimg/p1.jpg.jpeg",
+        "/panelimg/p1.jpeg",
         "/panelimg/p2.jpg.jpeg",
         "/panelimg/p3.jpg.jpeg",
         "/panelimg/p4.jpg.jpeg",
@@ -49,7 +49,7 @@ const PanelPropsalView = () => {
         "/panelimg/p7.jpg.jpeg",
         "/panelimg/p8.jpg.jpeg",
         "/panelimg/table.jpg.jpeg",
-        "/panelimg/table.jpg.jpeg",
+        "/panelimg/term&Condition.jpeg",
         ...wattImages,
         "/panelimg/p9.jpg.jpeg",
 
@@ -64,28 +64,25 @@ const PanelPropsalView = () => {
         termsAndConditions: panelProposal?.termsAndConditions
     }
 
-
-    // console.log("data : ,", data)
     return (
         <div className="flex min-h-screen flex-col gap-6 bg-gray-200 ">
-            <div className=''>
-                <button
-                    onClick={() => navigate(-1)}
-                    className=" fixed bottom-6 left-18 z-50 flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white font-medium px-5 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 print:hidden  "
-                >
-                    <ArrowLeft /> Go Back
-                </button>
-                <button
-                    onClick={() => window.print()}
-                    className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-medium px-5 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 print:hidden"
-                >
-                    <Download className="w-5 h-5" />
-                    Download
-                </button>
-            </div>
+            <button
+                onClick={() => navigate(-1)}
+                className=" fixed bottom-6 left-18 z-50 flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white font-medium px-5 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 print:hidden  "
+            >
+                <ArrowLeft /> Go Back
+            </button>
+            <button
+                onClick={() => window.print()}
+                className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-medium px-5 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 print:hidden"
+            >
+                <Download className="w-5 h-5" />
+                Download
+            </button>
+
 
             <PdfComp bg={pages[0]}>
-                <div className="absolute scale-150 top-[8mm] left-[22mm]  w-40 h-25  overflow-hidden flex items-center justify-center">
+                <div className="absolute scale-150 top-[8mm] left-[22mm]  w-40 h-18  overflow-hidden flex items-center justify-center">
                     {data?.companyLogo ?
                         <img loading='lazy' src={data?.companyLogo} alt="img" className=' w-2/3 object-cover ' />
                         :
@@ -94,7 +91,7 @@ const PanelPropsalView = () => {
                     }
                 </div>
 
-                <div className="absolute top-[5mm] right-[6mm]  text-end">
+                <div className="absolute top-[8mm] right-[6mm]  text-end">
                     <div className='text-white'>
 
                         <span className='capitalize inline-block text-lg'>
@@ -230,14 +227,14 @@ const PanelPropsalView = () => {
                 </div>
                 <div className='absolute top-[75mm] px-4 w-full'>
                     <div className=" overflow-x-auto ">
-                        <table className="mx-auto w-[90%] border border-black">
+                        <table className="mx-auto w-[90%] border border-gray-400">
                             <thead>
                                 <tr className=" bg-red-800 text-white text-xs text-left">
-                                    <th className="p-3  text-xs border border-black">S.No</th>
-                                    <th className="p-3 border border-black">Panel Type</th>
-                                    <th className="p-3 border border-black">Technology</th>
-                                    <th className="p-3 border border-black">Constructive Type</th>
-                                    <th className="p-3 border border-black">Panel Watt </th>
+                                    <th className="p-3  text-xs border border-gray-400">S.No</th>
+                                    <th className="p-3 border border-gray-400">Panel Type</th>
+                                    <th className="p-3 border border-gray-400">Technology</th>
+                                    <th className="p-3 border border-gray-400">Constructive Type</th>
+                                    <th className="p-3 border border-gray-400">Panel Watt </th>
 
                                 </tr>
                             </thead>
@@ -263,13 +260,13 @@ const PanelPropsalView = () => {
                         <table className="mx-auto w-[90%] border mt-10">
                             <thead>
                                 <tr className=" bg-red-800 text-white text-xs text-left">
-                                    <th className="p-3  text-xs border border-black">S.No</th>
-                                    <th className="p-3  text-xs border border-black">Item Description</th>
-                                    <th className="p-3 border border-black">Rate Per Watt </th>
-                                    <th className="p-3 border border-black">Quantity</th>
-                                    <th className="p-3 border border-black"> <span className='flex flex-row'><IndianRupee className='' /> Amount </span> </th>
-                                    <th className="p-3 border border-black"> <span className='flex flex-row'><IndianRupee className='' /> GST {panelData?.gst}% </span></th>
-                                    <th className="p-3 border border-black"> <span className='flex flex-row'><IndianRupee className='' /> Amount + Gst</span></th>
+                                    <th className="p-3  text-xs border border-gray-400">S.No</th>
+                                    <th className="p-3  text-xs border border-gray-400">Item Description</th>
+                                    <th className="p-3 text-xs "> <span className='flex flex-row'><IndianRupee className='' />Rate Per Panel </span> </th>
+                                    <th className="p-3 text-xs border border-gray-400">Quantity</th>
+                                    <th className="p-3 text-xs border border-gray-400"> <span className='flex flex-row'><IndianRupee className='' /> Amount </span> </th>
+                                    <th className="p-3 text-xs border border-gray-400"> <span className='flex flex-row'><IndianRupee className='' /> GST {panelData?.gst}% </span></th>
+                                    <th className="p-3 text-xs border border-gray-400"> <span className='flex flex-row'><IndianRupee className='' /> Amount + Gst</span></th>
                                 </tr>
                             </thead>
 
@@ -279,7 +276,7 @@ const PanelPropsalView = () => {
                                         // console.log("panel : ", panel),
                                         <tr>
                                             <td className="border border-gray-300 p-2 text-center">{idx + 1}</td>
-                                            <td className="border border-gray-300 p-2 text-center">{`${panel?.watt?.watt} ,${panel?.panelType?.panelType},${panel?.technology?.technologyPanel},${panel?.constructive?.constructiveType}`}</td>
+                                            <td className="border border-gray-300 p-2 text-center">{`${panel?.watt?.watt}Wp ,${panel?.panelType?.panelType},${panel?.technology?.technologyPanel},${panel?.constructive?.constructiveType}`}</td>
                                             <td className="border border-gray-300 p-2 text-center">{panel?.rate.toLocaleString()}</td>
                                             <td className="border border-gray-300 p-2 text-center">{panel?.quantity.toLocaleString()}</td>
                                             <td className="border border-gray-300 p-2 text-center"> {panel?.totalPrice.toLocaleString()}</td>
@@ -324,16 +321,10 @@ const PanelPropsalView = () => {
             {
                 panelProposal?.selectedPanels?.flatMap(panel => panel?.watt?.imgWatt || [])?.map((item, index) => {
                     const pageIndex = 10 + index;
-
                     if (!pages[pageIndex]) return null;
-
                     return (
                         <PdfComp key={index} bg={pages[pageIndex]}>
                             <div className="absolute top-[40mm] left-[20mm] w-[170mm]">
-                                {/* <img
-                                        src={item}
-                                        className="w-full object-contain"
-                                    /> */}
                             </div>
                         </PdfComp>
                     );

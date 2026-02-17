@@ -111,6 +111,7 @@ const ConstructivePanel = () => {
             id: data?._id,
             constructiveType: data?.constructiveType
         }
+        
         try {
             const response = await apiCall("put", "/adminPanel/updateConstructive", { ...payload })
             toast.success(response?.data?.message);

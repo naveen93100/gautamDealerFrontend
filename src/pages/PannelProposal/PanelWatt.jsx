@@ -9,12 +9,15 @@ import { X } from 'lucide-react';
 
 const PanelWatt = () => {
     const location = useLocation();
-    console.log("location : ", location?.state?.data)
+    // console.log("location : ", location?.state?.data)
     const constructiveId = location?.state?.data?._id
     const constructiveName = location?.state?.data?.constructiveType
     const navigate = useNavigate()
     const [data, setData] = useState()
-    const [open, setOpen] = useState();
+    const [open, setOpen] = useState(false);
+    const [edit, setEdit] = useState(false)
+    const [updateData, setUpdateData] = useState()
+
 
     const field = [
         {
@@ -108,9 +111,14 @@ const PanelWatt = () => {
         formData.append("technologyId", location?.state?.data?.technologyId);
         formData.append("constructiveId", constructiveId);
         formData.append("watt", Number(data?.watt));
-        data?.imgWatt.forEach((item) => {
+
+
+        // when we are adding the image then the index of image is not sort , we have no granted to store img that we are provide that reson we need to add a index to know the index of image, this problem is occur in multer
+        data?.imgWatt.forEach((item, index) => {
             formData.append("imgWatt", item);
-        })
+            formData.append("imgOrder[]", index);
+        });
+
 
 
 
@@ -128,6 +136,22 @@ const PanelWatt = () => {
         } catch (error) {
             toast.error(error?.response?.data?.message || error?.message)
         }
+
+        // console.log("formData : ", formData)
+
+    }
+
+
+
+    const handleOpenEdit = (e, data) => {
+        // console.log("panelWatt Data : ",data)
+        e.stopPropagation();
+        setEdit(true);
+        setUpdateData(data)
+    }
+
+    const handleEditPanelWatt = (data) => {
+        console.log("handleUpdate : ", data)
 
     }
     return (
@@ -184,13 +208,12 @@ const PanelWatt = () => {
                         </div>
                     ) : (
                         data?.map((panelWatt) => (
-                            // console.log("panelWatt : ",panelWatt),
+                            // console.log("panelWatt : ", panelWatt),
                             <PanelCard
                                 title={`${panelWatt?.watt} Watt`}
                                 subtitle={"Panel Watt Conmfiguration"}
                                 key={panelWatt?._id}
                                 active={panelWatt?.isActive}
-
                                 onEdit={(e) => handleOpenEdit(e, panelWatt)}
                                 onToggle={(e) => handleToggle(e, panelWatt)}
                             />
@@ -225,6 +248,32 @@ const PanelWatt = () => {
                     </div>
                 )
             }
+
+            {
+                edit && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+                        <div className="bg-white w-[90%] max-w-md rounded-xl shadow-lg p-6 relative animate-fadeIn">
+                            <button
+                                onClick={() => setEdit(false)}
+                                className="absolute top-3 right-3 p-2 rounded-full text-red-400 hover:bg-red-50 hover:text-red-600 transition"
+                            >
+                                <X size={20} />
+                            </button>
+
+                            <h2 className="text-lg font-semibold text-gray-800 mb-4">
+                                Edit Panel Watt
+                            </h2>
+                            <Input
+                                field={field}
+                                onSubmit={handleEditPanelWatt}
+                                initialData={updateData}
+                                submitText='Edit Panel Watt'
+                            />
+                        </div>
+                    </div>
+                )
+            }
+
 
 
         </div>

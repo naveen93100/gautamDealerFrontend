@@ -7,6 +7,8 @@ const PanelCard = ({
     onEdit,
     onToggle
 }) => {
+
+    // console.log("onEdit : ", onEdit)
     return (
         <div
             onClick={onNavigate}
