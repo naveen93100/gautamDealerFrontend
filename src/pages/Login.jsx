@@ -36,6 +36,7 @@ const Login = () => {
       } else {
 
         let res = await axios.post('https://gautamsolar.us/adminPanel/loginAdmin', data, { withCredentials: true });
+        // let res = await axios.post('http://localhost:1008/adminPanel/loginAdmin', data, { withCredentials: true });
         //  console.log(res )
 
         if (res?.data?.success) {

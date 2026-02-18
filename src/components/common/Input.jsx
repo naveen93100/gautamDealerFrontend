@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 
-const BASE_IMAGE_URL = "https://gautamsolar.us/Proposal_Images/watt/";
+const BASE_IMAGE_URL = "https://gautamsolar.us/proposal_images/watt/";
 
 const Input = ({ field = [], initialData = {}, onSubmit, submitText = "Submit" }) => {
     const [formData, setFormData] = useState({});

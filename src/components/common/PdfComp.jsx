@@ -1,7 +1,7 @@
 
 function PdfComp({ bg, children }) {
   // console.log("bg : ",bg)
-  const BASE_URL = "https://gautamsolar.us/Proposal_Images/watt";
+  const BASE_URL = "https://gautamsolar.us/proposal_images/watt";
 
   const imageSrc = bg?.startsWith("/")
     ? bg
