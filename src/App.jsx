@@ -19,6 +19,7 @@ import AdminLayout from './pages/Dashboard/Layout/AdminLayout';
 import PannelProposal from './pages/PannelProposal/PannelProposal';
 import PanelWatt from './pages/PannelProposal/PanelWatt';
 import PanelPropsalView from './components/common/PanelPropsalView';
+import DealerList from './pages/DealerList';
 
 
 
@@ -45,8 +46,9 @@ const App = () => {
             <Route path='panel/technology' element={<TechnologyPanel />} />
             <Route path='panel/technology/constructive' element={<ConstructivePanel />} />
             <Route path='panel/technology/constructive/panelWatt' element={<PanelWatt />} />
-            {/* <Route path="users" element={<AdminUsers />} /> */}
+            <Route path='dealer' element={<DealerList/>}/>
          </Route>
+            {/* <Route path="users" element={<AdminUsers />} /> */}
 
          <Route path='/dashboard' element={
             <ProtectedRoute>
