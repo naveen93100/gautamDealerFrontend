@@ -16,6 +16,7 @@ export const apiCall = (method, url, data, config = {}) => {
   });
 };
 
+
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token") || null;
