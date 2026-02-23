@@ -2,9 +2,9 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const axiosInstance = axios.create({
-  baseURL: "https://gautamsolar.us",
-  // baseURL: "http://localhost:1008",
-  withCredentials:true
+  // baseURL: "https://gautamsolar.us", 
+  baseURL: "http://localhost:1008",
+  withCredentials: true
 });
 
 export const apiCall = (method, url, data, config = {}) => {
@@ -15,6 +15,7 @@ export const apiCall = (method, url, data, config = {}) => {
     ...config,
   });
 };
+
 
 axiosInstance.interceptors.request.use(
   (config) => {
