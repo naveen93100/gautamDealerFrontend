@@ -23,9 +23,9 @@ const Login = () => {
       setLoading(true)
       // let res = await axios.post('https://gautamsolar.us/api/dealer/login', data);
       if (admin === false) {
-        // let res = await axios.post('https://gautamsolar.us/api/dealer/login', data);
+        let res = await axios.post('https://gautamsolar.us/api/dealer/login', data);
 
-        let res = await axios.post('http://localhost:1008/api/dealer/login', data);
+        // let res = await axios.post('http://localhost:1008/api/dealer/login', data);
 
         if (res?.data?.success) {
           setLoading(false)
