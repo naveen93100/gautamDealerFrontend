@@ -95,6 +95,7 @@ const Header = () => {
                                         e.target.style.display = 'none';
                                         e.target.nextSibling.style.display = 'block';
                                     }}
+                                    
                                 />
                                 <span className="hidden text-sm font-bold text-gray-800">
                                     GAUTAM SOLAR
