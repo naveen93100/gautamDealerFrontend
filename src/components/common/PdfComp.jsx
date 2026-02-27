@@ -1,7 +1,8 @@
 
 function PdfComp({ bg, children }) {
   // console.log("bg : ",bg)
-  const BASE_URL = "https://gautamsolar.us/Proposal_Images/watt";
+  // const BASE_URL = "https://gautamsolar.us/Proposal_Images/watt";
+  const BASE_URL = "http://localhost:1008/Proposal_Images/watt";
 
   const imageSrc = bg?.startsWith("/")
     ? bg
@@ -17,10 +18,11 @@ function PdfComp({ bg, children }) {
         mx-auto
         overflow-hidden
       "
-      // style={{
-      //   pageBreakAfter: "always",   // 👈 VERY IMPORTANT
-      //   breakAfter: "page"          // modern browsers
-      // }}
+    // style={{
+    //   pageBreakAfter: "always",   // 👈 VERY IMPORTANT
+    //   breakAfter: "page"          // modern browsers
+    // }}
+    
     >
       {/* background */}
       <img
