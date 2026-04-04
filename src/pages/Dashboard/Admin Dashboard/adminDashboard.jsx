@@ -14,7 +14,7 @@ const adminDashboard = () => {
                 setData(apiData?.data?.data)
 
             } catch (error) {
-                console.log(error?.response?.data?.message || "We are resolve your error...")
+                console.log(error?.response?.data?.message || "We are resolving your error...")
             }
         }
         fetchData();
