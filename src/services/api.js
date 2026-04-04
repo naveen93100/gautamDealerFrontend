@@ -2,7 +2,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const axiosInstance = axios.create({
-  baseURL: "https://gautamsolar.us", 
+  // baseURL: "https://gautamsolar.us", 
+  baseURL: import.meta.env.VITE_SERVER_ADDRESS, 
   // baseURL: "http://localhost:1008",
   withCredentials: true
 });
