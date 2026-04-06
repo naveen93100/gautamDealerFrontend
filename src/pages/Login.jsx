@@ -34,7 +34,6 @@ const Login = () => {
           navigate('/dashboard')
         }
       } else {
-         
         
         let res = await axios.post(`${import.meta.env.VITE_SERVER_ADDRESS}/api/adminPanel/loginAdmin`, data, { withCredentials: true });
         //  console.log(res )
