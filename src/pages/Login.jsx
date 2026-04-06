@@ -35,7 +35,7 @@ const Login = () => {
         }
       } else {
         
-        let res = await axios.post(`${import.meta.env.VITE_SERVER_ADDRESS}/api/adminPanel/loginAdmin`, data, { withCredentials: true });
+        let res = await axios.post(`${import.meta.env.VITE_SERVER_ADDRESS}/adminPanel/loginAdmin`, data, { withCredentials: true });
         //  console.log(res )
 
         if (res?.data?.success) {
