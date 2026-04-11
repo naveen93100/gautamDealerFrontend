@@ -14,6 +14,9 @@ const Login = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [admin, setAdmin] = useState(false)
+  const api=import.meta.env.VITE_SERVER_ADDRESS;
+  console.log("api",api);
+  console.log(import.meta.env);
   // console.log("admin : ", admin)
 
   const onSubmit = async (data) => {
@@ -22,6 +25,7 @@ const Login = () => {
       toast.dismiss()
       setLoading(true)
       if (admin === false) {
+        console.log('import.meta.env.VITE_SERVER_ADDRESS:',import.meta.env.VITE_SERVER_ADDRESS);
          
         let res = await axios.post(`${import.meta.env.VITE_SERVER_ADDRESS}/api/dealer/login`, data);
 
