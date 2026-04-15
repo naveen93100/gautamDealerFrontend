@@ -96,7 +96,7 @@ const MainPage = ({ printP }) => {
                 <PdfComp bg={pages[0]}>
                     <div className="absolute scale-150 top-[8mm] left-[22mm]  w-40 h-25  overflow-hidden flex items-center justify-center">
                         {data?.companyLogo ?
-                            <img loading='lazy' src={data?.companyLogo} alt="" className=' w-2/3 object-cover ' />
+                            <img loading='lazy' src={data?.companyLogo} alt="" className=' w-2/2 object-cover ' />
                             :
                             <h1 className='uppercase'>{data?.companyName}</h1>
                         }

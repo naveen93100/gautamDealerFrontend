@@ -82,13 +82,14 @@ const PanelPropsalView = () => {
 
 
             <PdfComp bg={pages[0]}>
-                <div className="absolute scale-150 top-[8mm] left-[22mm]  w-40 h-18  overflow-hidden flex items-center justify-center">
+                <div className="absolute top-[10mm] left-[19mm]  w-[15rem] h-[10rem] flex items-center justify-center">
+                    <div className=''>
                     {data?.companyLogo ?
-                        <img loading='lazy' src={data?.companyLogo} alt="img" className=' w-2/3 object-cover ' />
+                        <img loading='lazy' src={data?.companyLogo} alt="img" className=' w-full h-40 object-contain' />
                         :
                         <h1 className='uppercase'>{data?.companyName}</h1>
-
                     }
+                    </div>
                 </div>
 
                 <div className="absolute top-[8mm] right-[6mm]  text-end">
