@@ -42,7 +42,7 @@ const Header = () => {
                     <div className="hidden md:flex items-center gap-4 lg:gap-6 z-10">
                         {/* Company Badge */}
                         <div className="bg-white/0 backdrop-blur-sm rounded-xl px-4 py-2.5  shadow-lg">
-                            <div className="flex items-center gap-3">
+                            <a href='https://gautamsolar.com' target='_blank' className="flex items-center gap-3">
                                 <img
                                     src="/logo.png"
                                     alt="Gautam Solar"
@@ -53,7 +53,7 @@ const Header = () => {
                                 <span className="hidden text-sm  font-bold text-gray-800 whitespace-nowrap">
                                     GAUTAM SOLAR
                                 </span>
-                            </div>
+                            </a>
                         </div>
 
                         {/* Logout Button */}
