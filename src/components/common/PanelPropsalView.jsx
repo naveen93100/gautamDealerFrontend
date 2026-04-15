@@ -1,5 +1,5 @@
 import { ArrowLeft, Download, IndianRupee } from 'lucide-react';
-import React from 'react'
+
 import { useLocation, useNavigate } from 'react-router-dom'
 import PdfComp from './PdfComp';
 import { useAuth } from '../../Context/AuthContext';
@@ -9,7 +9,6 @@ const PanelPropsalView = () => {
 
     const location = useLocation();
     const proposalDatas = location?.state?.data;
-    // console.log("Proposal data   : ", proposalDatas)
     const { user } = useAuth()
 
 
