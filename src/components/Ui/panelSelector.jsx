@@ -10,13 +10,12 @@ const PanelSelector = ({
     constructiveData,
     panelWatt,
     setActiveIndex,
-    gst
+    gst,
 }) => {
-
     // const panel = selectPanel;
 
     const addPanel = () => {
-        setSelectPanel(prev => [
+        setSelectPanel((prev) => [
             ...prev,
             {
                 panelId: "",
@@ -26,8 +25,9 @@ const PanelSelector = ({
                 quantity: 1,
                 rate: 1,
                 totalPrice: 0,
-                gstAmount: 0
-            }
+                gstAmount: 0,
+                wattPerPrice: 0,
+            },
         ]);
 
         setActiveIndex(selectPanel.length);
@@ -45,17 +45,15 @@ const PanelSelector = ({
     const handleChange = (index, key, value) => {
         setActiveIndex(index);
 
-        setSelectPanel(prev => {
+        setSelectPanel((prev) => {
             const copy = [...prev];
 
             const updatedValue =
-                key === "quantity" || key === "rate"
-                    ? Number(value)
-                    : value;
+                key === "quantity" || key === "rate" ? Number(value) : value;
 
             copy[index] = {
                 ...copy[index],
-                [key]: updatedValue
+                [key]: updatedValue,
             };
 
             const quantity = Number(copy[index].quantity || 0);
@@ -72,8 +70,8 @@ const PanelSelector = ({
     };
 
     useEffect(() => {
-        setSelectPanel(prev =>
-            prev.map(item => {
+        setSelectPanel((prev) =>
+            prev.map((item) => {
                 const quantity = Number(item.quantity || 0);
                 const rate = Number(item.rate || 0);
 
@@ -83,17 +81,16 @@ const PanelSelector = ({
                 return {
                     ...item,
                     totalPrice: amount,
-                    gstAmount
+                    gstAmount,
                 };
-            })
+            }),
         );
     }, [gst]);
 
     const handleRemove = (e, index) => {
         e.preventDefault();
-        setSelectPanel(prev => prev.filter((_, i) => i !== index))
-    }
-
+        setSelectPanel((prev) => prev.filter((_, i) => i !== index));
+    };
 
     return (
         <section className="mb-6">
@@ -119,24 +116,32 @@ const PanelSelector = ({
                             Panel {index + 1}
                         </h4>
                         <h4 className="mr-5 text-base font-semibold text-red-600">
-                            {
-                                index >= 1 && <i onClick={(e) => handleRemove(e, index)} className="fa-solid fa-trash-can"></i>
-                            }
+                            {index >= 1 && (
+                                <i
+                                    onClick={(e) => handleRemove(e, index)}
+                                    className="fa-solid fa-trash-can"
+                                ></i>
+                            )}
                         </h4>
                     </div>
 
-
-                    <section key={index} className="border  rounded-2xl p-4  mb-4">
-
-                        <label className="text-sm font-medium text-gray-600">Select Panel</label>
+                    <section
+                        key={index}
+                        className="border  rounded-2xl p-4  mb-4"
+                    >
+                        <label className="text-sm font-medium text-gray-600">
+                            Select Panel
+                        </label>
                         <select
                             value={panel.panelId}
                             required
-                            onChange={e => handleChange(index, "panelId", e.target.value)}
+                            onChange={(e) =>
+                                handleChange(index, "panelId", e.target.value)
+                            }
                             className="w-full px-4 py-2 border rounded-lg"
                         >
                             <option value="">Select Panel</option>
-                            {panelData?.map(panel => (
+                            {panelData?.map((panel) => (
                                 <option key={panel._id} value={panel._id}>
                                     {panel.panelType}
                                 </option>
@@ -152,12 +157,18 @@ const PanelSelector = ({
                                 <select
                                     required
                                     value={panel.technologyId}
-                                    onChange={e => handleChange(index, "technologyId", e.target.value)}
+                                    onChange={(e) =>
+                                        handleChange(
+                                            index,
+                                            "technologyId",
+                                            e.target.value,
+                                        )
+                                    }
                                     className="w-full px-4 py-2 border rounded-lg"
                                 >
                                     <option value="">Select Technology</option>
 
-                                    {technologyData?.map(tech => (
+                                    {technologyData?.map((tech) => (
                                         <option key={tech._id} value={tech._id}>
                                             {tech.technologyPanel}
                                         </option>
@@ -165,7 +176,6 @@ const PanelSelector = ({
                                 </select>
                             </>
                         )}
-
 
                         {panel?.technologyId && (
                             <>
@@ -176,12 +186,20 @@ const PanelSelector = ({
                                 <select
                                     required
                                     value={panel.constructiveId}
-                                    onChange={e => handleChange(index, "constructiveId", e.target.value)}
+                                    onChange={(e) =>
+                                        handleChange(
+                                            index,
+                                            "constructiveId",
+                                            e.target.value,
+                                        )
+                                    }
                                     className="w-full px-4 py-2 border rounded-lg"
                                 >
-                                    <option value="">Select Constructive</option>
+                                    <option value="">
+                                        Select Constructive
+                                    </option>
 
-                                    {constructiveData?.map(cons => (
+                                    {constructiveData?.map((cons) => (
                                         <option key={cons._id} value={cons._id}>
                                             {cons.constructiveType}
                                         </option>
@@ -189,7 +207,6 @@ const PanelSelector = ({
                                 </select>
                             </>
                         )}
-
 
                         {panel?.constructiveId && (
                             <>
@@ -200,12 +217,18 @@ const PanelSelector = ({
                                 <select
                                     required
                                     value={panel.wattId}
-                                    onChange={e => handleChange(index, "wattId", e.target.value)}
+                                    onChange={(e) =>
+                                        handleChange(
+                                            index,
+                                            "wattId",
+                                            e.target.value,
+                                        )
+                                    }
                                     className="w-full px-4 py-2 border rounded-lg"
                                 >
                                     <option value="">Select Watt</option>
 
-                                    {panelWatt?.map(w => (
+                                    {panelWatt?.map((w) => (
                                         <option key={w._id} value={w._id}>
                                             {w.watt} Watt
                                         </option>
@@ -214,64 +237,113 @@ const PanelSelector = ({
                             </>
                         )}
 
-                        {
-                            panel?.wattId && (
-                                <>
-                                    <label className="text-sm font-medium text-gray-600 mt-4 block">
-                                        Quantity
+                        {panel?.wattId && (
+                            <>
+                                <label className="text-sm font-medium text-gray-600 mt-4 block">
+                                    Quantity
+                                </label>
+                                <input
+                                    type="number"
+                                    min={1}
+                                    required
+                                    value={panel.quantity}
+                                    onChange={(e) =>
+                                        handleChange(
+                                            index,
+                                            "quantity",
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="w-full pl-5 pr-4 py-3 border rounded-xl "
+                                />
+                                {/* price */}
+                                <div>
+                                    <label className="block text-sm  mt-4 font-medium mb-2">
+                                        {" "}
+                                        Price per piece{" "}
+                                        <i className="fa-solid fa-rupee-sign text-red-600"></i>{" "}
                                     </label>
-                                    <input type="number"
-                                        min={1}
-                                        required
-                                        value={panel.quantity}
-                                        onChange={e => handleChange(index, "quantity", e.target.value)}
-                                        className="w-full pl-5 pr-4 py-3 border rounded-xl " />
-                                    {/* price */}
+                                    <div className="relative">
+                                        <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                        <input
+                                            type="number"
+                                            name="rate"
+                                            value={panel.rate}
+                                            onChange={(e) =>
+                                                handleChange(
+                                                    index,
+                                                    "rate",
+                                                    e.target.value,
+                                                )
+                                            }
+                                            className="w-full pl-11 pr-4 py-3 border rounded-xl focus:ring-2"
+                                            placeholder="Enter Panel Price"
+                                        />
+                                    </div>
+                                </div>
+                                {/* new filed */}
+                                <div>
+                                    <label className="block text-sm font-medium mb-2">
+                                        Watt per Price
+                                    </label>
+                                    <input
+                                        name="getperwattprice"
+                                        value={panel?.wattPerPrice}
+                                        onChange={(e) =>
+                                            handleChange(
+                                                index,
+                                                "wattPerPrice",
+                                                e.target.value,
+                                            )
+                                        }
+                                        className="w-full px-4 py-3 border rounded-xl  "
+                                        placeholder="2,40,000"
+                                    />
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                                     <div>
-                                        <label className="block text-sm  mt-4 font-medium mb-2"> Price per piece <i className="fa-solid fa-rupee-sign text-red-600"></i> </label>
-                                        <div className="relative">
-                                            <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                            <input
-                                                type="number"
-                                                name="rate"
-                                                value={panel.rate}
-                                                onChange={e => handleChange(index, "rate", e.target.value)}
-                                                className="w-full pl-11 pr-4 py-3 border rounded-xl focus:ring-2"
-                                                placeholder="Enter Panel Price"
-                                            />
-                                        </div>
+                                        <label className="block text-sm font-medium mb-2">
+                                            Price Panel
+                                        </label>
+                                        <input
+                                            name="totalPrice"
+                                            value={panel?.totalPrice}
+                                            onChange={(e) =>
+                                                handleChange(
+                                                    index,
+                                                    "totalPrice",
+                                                    e.target.value,
+                                                )
+                                            }
+                                            className="w-full px-4 py-3 border rounded-xl  cursor-not-allowed"
+                                            placeholder="2,40,000"
+                                        />
                                     </div>
-
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                                        <div>
-                                            <label className="block text-sm font-medium mb-2">Price Panel</label>
-                                            <input
-                                                name="totalPrice"
-                                                value={panel?.totalPrice}
-                                                onChange={e => handleChange(index, "totalPrice", e.target.value)}
-                                                className="w-full px-4 py-3 border rounded-xl  cursor-not-allowed"
-                                                placeholder="2,40,000"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium mb-2">Gst Amount</label>
-                                            <input
-                                                name="gstAmount"
-                                                value={panel?.gstAmount}
-                                                onChange={e => handleChange(index, "gstAmount", e.target.value)}
-                                                className="w-full px-4 py-3 border rounded-xl  cursor-not-allowed"
-                                                placeholder="2,40,000"
-                                            />
-                                        </div>
+                                    <div>
+                                        <label className="block text-sm font-medium mb-2">
+                                            Gst Amount
+                                        </label>
+                                        <input
+                                            name="gstAmount"
+                                            value={panel?.gstAmount}
+                                            onChange={(e) =>
+                                                handleChange(
+                                                    index,
+                                                    "gstAmount",
+                                                    e.target.value,
+                                                )
+                                            }
+                                            className="w-full px-4 py-3 border rounded-xl  cursor-not-allowed"
+                                            placeholder="2,40,000"
+                                        />
                                     </div>
-                                </>
-                            )
-                        }
+                                </div>
+                            </>
+                        )}
                     </section>
-
                 </>
             ))}
-
         </section>
     );
 };

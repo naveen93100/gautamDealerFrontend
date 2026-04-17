@@ -1,15 +1,26 @@
-import { useFieldArray, useForm } from 'react-hook-form';
-import { X, Sun, User, Mail, Phone, MapPin, Zap, DollarSign, MessageCircle } from "lucide-react"
-import { useAuth } from '../../Context/AuthContext';
-import { apiCall } from '../../services/api';
-import toast from 'react-hot-toast';
-import { useEffect, useRef, useState } from 'react';
-import { BiRupee } from 'react-icons/bi';
-import JoditEditor from 'jodit-react';
+import { useFieldArray, useForm } from "react-hook-form";
+import {
+    X,
+    Sun,
+    User,
+    Mail,
+    Phone,
+    MapPin,
+    Zap,
+    DollarSign,
+    MessageCircle,
+} from "lucide-react";
+import { useAuth } from "../../Context/AuthContext";
+import { apiCall } from "../../services/api";
+import toast from "react-hot-toast";
+import { useEffect, useRef, useState } from "react";
+import { BiRupee } from "react-icons/bi";
+import JoditEditor from "jodit-react";
 
-const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
+const CreateProposalModal = ({ setClose, proposalData, data, setData, customerId }) => {
     const [loading, setLoading] = useState(false);
 
+  
     const { user, token } = useAuth();
     const joditConfig = {
         readonly: false,
@@ -19,10 +30,11 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
             insertImageAsBase64URI: true,
         },
         toolbarAdaptive: false,
-        buttons: "bold,italic,underline,|,ul,ol,|,table,link,image,|,align,left,center,right,justify,|,brush,eraser,|,paragraph,fontsize,|,undo,redo",
+        buttons:
+            "bold,italic,underline,|,ul,ol,|,table,link,image,|,align,left,center,right,justify,|,brush,eraser,|,paragraph,fontsize,|,undo,redo",
         allowHTML: true,
         useClasses: true,
-    }
+    };
 
     const MATERIALS = [
         "Inverter",
@@ -32,7 +44,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
         "Lightning Arrester",
         "Earthing",
         "PVC Cable",
-    ]
+    ];
 
     const [Body, setBody] = useState(`
        <h3><strong>Payment Terms</strong></h3>
@@ -77,8 +89,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                 The above warranties cover manufacturing defects, premature material degradation, and equipment failures.
             </em>
             </p>
-    `)
-
+    `);
 
     const {
         register,
@@ -86,22 +97,21 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
         formState: { errors, dirtyFields },
         setValue,
         watch,
-        getValues
+        getValues,
     } = useForm({
         defaultValues: {
-            customerName: "",
-            email: "",
-            phone: "",
-            address: "",
+            // customerName: "",
+            // email: "",
+            // phone: "",
+            // address: "",
             orderCapacity: "",
             rate: "",
             components: [],
-            tax: 8.9
+            tax: 8.9,
         },
-    })
+    });
 
-
-    let selectedMaterial = watch('components')
+    let selectedMaterial = watch("components");
 
     const handleCreateProposal = async (d) => {
         toast.dismiss();
@@ -117,22 +127,20 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
             // console.log(d);
 
             if (selectedMaterial.length < 5) {
-                toast.error('Please Select At least 5 Components')
+                toast.error("Please Select At least 5 Components");
                 return;
             }
 
             let formData = {};
 
-            formData.name = d?.customerName,
-                formData.email = d?.email,
-                formData.phone = d?.phone,
-                formData.address = d?.address,
-                formData.rate = d?.rate,
-                formData.orderCapacity = d?.orderCapacity,
-                formData.tax = d?.tax,
-                formData.propId = data?.proposalsData[0]?._id
-
-
+            ((formData.name = d?.customerName),
+                (formData.email = d?.email),
+                (formData.phone = d?.phone),
+                (formData.address = d?.address),
+                (formData.rate = d?.rate),
+                (formData.orderCapacity = d?.orderCapacity),
+                (formData.tax = d?.tax),
+                (formData.propId = data?.proposalsData[0]?._id));
 
             // if (Object.keys(dirtyFields).length >= 1) {
             //     Object.keys(dirtyFields).forEach((k) => {
@@ -151,19 +159,20 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
             //     })
             // }
 
-
             try {
                 setLoading(true);
                 formData.termsAndConditions = Body;
-                formData.components = d?.components
+                formData.components = d?.components;
 
-                let res = await apiCall('PATCH', '/api/dealer/edit-proposal', formData);
+                let res = await apiCall(
+                    "PATCH",
+                    "/api/dealer/edit-proposal",
+                    formData,
+                );
                 if (res?.data?.success) {
                     toast.success(res?.data?.message);
                     setClose(false);
-                    setTimeout(() =>
-                        proposalData()
-                        , 1000)
+                    setTimeout(() => proposalData(), 1000);
                 }
             } catch (er) {
                 toast.error(er?.response?.data?.message);
@@ -177,28 +186,29 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
             try {
                 setLoading(true);
                 if (selectedMaterial.length < 5) {
-                    toast.error('Please Select At least 5 Components')
+                    toast.error("Please Select At least 5 Components");
                     return;
                 }
                 d.dealerId = user?.id;
                 d.termsAndConditions = Body;
+                d.customerId=customerId
 
-                let res = await apiCall('POST', '/api/dealer/create-propsal', d);
+                let res = await apiCall(
+                    "POST",
+                    "/api/dealer/create-powerPlant-proposal",
+                    d,
+                );
                 if (res?.data.success) {
-                    toast.success(res.data?.message)
-                    setTimeout(() =>
-                        proposalData()
-                        , 1000)
-                    setClose(false)
+                    toast.success(res.data?.message);
+                    setTimeout(() => proposalData(), 1000);
+                    setClose(false);
                 }
-
             } catch (er) {
                 console.log(er);
-                toast.error(er.response?.data?.message)
+                toast.error(er.response?.data?.message);
             } finally {
                 setLoading(false);
             }
-
         }
     };
 
@@ -206,24 +216,21 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
         let updated = [...selectedMaterial];
 
         if (qty === 0) {
-            updated = updated.filter(v => v.name !== item);
-        }
-        else {
-            let find = updated.findIndex(v => v.name === item);
+            updated = updated.filter((v) => v.name !== item);
+        } else {
+            let find = updated.findIndex((v) => v.name === item);
 
             if (find === -1) {
                 updated.push({ name: item, qty });
+            } else {
+                updated[find].qty = qty;
             }
-            else {
-                updated[find].qty = qty
-            }
-
         }
-        setValue('components', updated);
-    }
+        setValue("components", updated);
+    };
 
     useEffect(() => {
-        const defaultMaterials = MATERIALS.map(item => ({
+        const defaultMaterials = MATERIALS.map((item) => ({
             name: item,
             qty: 1,
         }));
@@ -231,7 +238,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
         setValue("components", defaultMaterials);
     }, []);
 
-    const defaultMaterials = MATERIALS.map(item => ({
+    const defaultMaterials = MATERIALS.map((item) => ({
         name: item,
         qty: 1,
     }));
@@ -239,36 +246,54 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
     useEffect(() => {
         if (!data) return;
         // console.log(data)
-        setValue('customerName', data?.name);
-        setValue('email', data?.email);
-        setValue('phone', data?.phone);
-        setValue('address', data?.address);
-        setValue('orderCapacity', data.proposalsData.length > 0 ? (data?.proposalsData[0]?.orderCapacity) / 1000 : 0);
-        setValue('rate', data.proposalsData.length > 0 ? data?.proposalsData[0]?.rate : 0);
-        setValue('tax', data.proposalsData.length > 0 ? data?.proposalsData[0]?.tax : 8.9);
+        // setValue("customerName", data?.name);
+        // setValue("email", data?.email);
+        // setValue("phone", data?.phone);
+        // setValue("address", data?.address);
+        setValue(
+            "orderCapacity",
+            data.proposalsData.length > 0
+                ? data?.proposalsData[0]?.orderCapacity / 1000
+                : 0,
+        );
+        setValue(
+            "rate",
+            data.proposalsData.length > 0 ? data?.proposalsData[0]?.rate : 0,
+        );
+        setValue(
+            "tax",
+            data.proposalsData.length > 0 ? data?.proposalsData[0]?.tax : 8.9,
+        );
 
         // setBody(data.proposalsData > 0 ? data?.proposalsData[0]?.termsAndConditions : '');
-        setValue('termsAndConditions', data.proposalsData.length > 0 ? data?.proposalsData[0]?.termsAndConditions : '');
-        let names = data.proposalsData.length > 0 ? data?.proposalsData[0]?.material.map(item => ({ name: item?.materialData?.name, qty: item?.quantity })) : defaultMaterials;
-        setValue('components', names);
+        setValue(
+            "termsAndConditions",
+            data.proposalsData.length > 0
+                ? data?.proposalsData[0]?.termsAndConditions
+                : "",
+        );
+        let names =
+            data.proposalsData.length > 0
+                ? data?.proposalsData[0]?.material.map((item) => ({
+                      name: item?.materialData?.name,
+                      qty: item?.quantity,
+                  }))
+                : defaultMaterials;
+        setValue("components", names);
     }, [data]);
-
 
     // console.log("selected", selectedMaterial)
 
     return (
-
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full min-h-[90vh] overflow-hidden">
-
                 {/* Header */}
                 <div className="bg-[#d40202] p-4 text-white relative">
                     <button
                         onClick={() => {
-                            setData(null)
-                            setClose(false)
-                        }
-                        }
+                            setData(null);
+                            setClose(false);
+                        }}
                         className="absolute top-4 right-4 p-2 hover:bg-white/20 rounded-full transition-all"
                     >
                         <X className="w-5 h-5" />
@@ -279,7 +304,9 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                             <Sun className="w-8 h-8 text-white" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-bold">New Solar Power Plant</h2>
+                            <h2 className="text-xl font-bold">
+                                New Solar Power Plant
+                            </h2>
                             <p className="text-red-100 text-sm mt-1">
                                 Create a detailed proposal for your customer
                             </p>
@@ -288,35 +315,42 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                 </div>
 
                 <form onSubmit={handleSubmit(handleCreateProposal)}>
-
                     <div className="p-6 overflow-y-auto max-h-[calc(90vh-50px)]">
-
                         {/* Customer Information */}
-                        <section className="mb-6">
+
+                        {/* <section className="mb-6">
                             <div className="flex items-center gap-2 mb-4">
                                 <User className="w-5 h-5 text-red-600" />
-                                <h3 className="text-lg font-semibold">Customer Information</h3>
+                                <h3 className="text-lg font-semibold">
+                                    Customer Information 
+                                </h3>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {/* Name */}
+                                
                                 <div className="md:col-span-2">
                                     <label className="block text-sm font-medium mb-2">
                                         Customer Name *
                                     </label>
                                     <input
-                                        {...register("customerName", { required: "Customer name is required" })}
+                                        {...register("customerName", {
+                                            required:
+                                                "Customer name is required",
+                                        })}
                                         className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-red-500"
                                         placeholder="Enter customer full name"
                                     />
                                     {errors.customerName && (
-                                        <p className="text-red-500 text-sm mt-1">{errors.customerName.message}</p>
+                                        <p className="text-red-500 text-sm mt-1">
+                                            {errors.customerName.message}
+                                        </p>
                                     )}
                                 </div>
 
-                                {/* Email */}
                                 <div>
-                                    <label className="block text-sm font-medium mb-2">Email *</label>
+                                    <label className="block text-sm font-medium mb-2">
+                                        Email *
+                                    </label>
                                     <div className="relative">
                                         <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                                         <input
@@ -332,75 +366,99 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                                         />
                                     </div>
                                     {errors.email && (
-                                        <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+                                        <p className="text-red-500 text-sm mt-1">
+                                            {errors.email.message}
+                                        </p>
                                     )}
                                 </div>
 
-                                {/* Phone */}
+                         
                                 <div>
-                                    <label className="block text-sm font-medium mb-2">Phone *</label>
+                                    <label className="block text-sm font-medium mb-2">
+                                        Phone *
+                                    </label>
                                     <div className="relative">
                                         <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                                         <input
-                                            {...register("phone", { required: "Phone number is required" })}
+                                            {...register("phone", {
+                                                required:
+                                                    "Phone number is required",
+                                            })}
                                             className="w-full pl-11 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-red-500"
                                             placeholder="+91 98765 43210"
                                         />
                                     </div>
                                     {errors.phone && (
-                                        <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
+                                        <p className="text-red-500 text-sm mt-1">
+                                            {errors.phone.message}
+                                        </p>
                                     )}
                                 </div>
 
-                                {/* Address */}
                                 <div className="md:col-span-2">
-                                    <label className="block text-sm font-medium mb-2">Address *</label>
+                                    <label className="block text-sm font-medium mb-2">
+                                        Address *
+                                    </label>
                                     <textarea
-                                        {...register("address", { required: "Address is required" })}
+                                        {...register("address", {
+                                            required: "Address is required",
+                                        })}
                                         rows={3}
                                         className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-red-500 resize-none"
                                         placeholder="Complete installation address"
                                     />
                                     {errors.address && (
-                                        <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>
+                                        <p className="text-red-500 text-sm mt-1">
+                                            {errors.address.message}
+                                        </p>
                                     )}
                                 </div>
                             </div>
-                        </section>
+
+                        </section> */}
 
                         {/* System Details */}
                         <section className="mb-6">
                             <div className="flex items-center gap-2 mb-4">
                                 <Zap className="w-5 h-5 text-red-600" />
-                                <h3 className="text-lg font-semibold">Power Plant Capacity (kW)</h3>
+                                <h3 className="text-lg font-semibold">
+                                    Power Plant Capacity (kW)
+                                </h3>
                             </div>
 
                             <input
-                                type='number'
+                                type="number"
                                 className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-red-500"
                                 placeholder="Order Capacity (kW)"
-                                {...register("orderCapacity", { required: "orderCapacity is required" })}
+                                {...register("orderCapacity", {
+                                    required: "orderCapacity is required",
+                                })}
                                 min={0}
                             />
                             {errors.rooftopCapacity && (
-                                <p className="text-red-500 text-sm mt-1">{errors.rooftopCapacity.message}</p>
+                                <p className="text-red-500 text-sm mt-1">
+                                    {errors.rooftopCapacity.message}
+                                </p>
                             )}
                         </section>
 
                         {/* Pricing */}
                         <section className="max-w-5xl mx-auto border rounded-2xl p-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
                                 {/* Left */}
                                 <div className="w-full">
                                     <div className="flex items-center gap-2 mb-3">
                                         <BiRupee className="w-5 h-5 text-red-600" />
-                                        <h3 className="text-lg font-semibold">Rate / Watt (Rs)</h3>
+                                        <h3 className="text-lg font-semibold">
+                                            Rate / Watt (Rs)
+                                        </h3>
                                     </div>
 
                                     <input
                                         type="number"
-                                        {...register("rate", { required: "Rate is required" })}
+                                        {...register("rate", {
+                                            required: "Rate is required",
+                                        })}
                                         className="w-full px-4 py-3 border rounded-xl"
                                         placeholder="Rate ₹"
                                         min={0}
@@ -411,7 +469,9 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                                 <div className="w-full">
                                     <div className="flex items-center gap-2 mb-3">
                                         <BiRupee className="w-5 h-5 text-red-600" />
-                                        <h3 className="text-lg font-semibold">GST (%)</h3>
+                                        <h3 className="text-lg font-semibold">
+                                            GST (%)
+                                        </h3>
                                     </div>
 
                                     <input
@@ -421,11 +481,8 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                                         placeholder="Rate ₹"
                                     />
                                 </div>
-
                             </div>
                         </section>
-
-
 
                         {/* message */}
                         {/* {data && */}
@@ -433,7 +490,9 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                         <section className="mb-6">
                             <div className="flex items-center gap-2 mb-4">
                                 <MessageCircle className="w-5 h-5 text-red-600" />
-                                <h3 className="text-lg font-semibold">Terms & Conditions / Message</h3>
+                                <h3 className="text-lg font-semibold">
+                                    Terms & Conditions / Message
+                                </h3>
                             </div>
 
                             {/* <textarea
@@ -453,33 +512,51 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                         {/* Components Included */}
                         <section className="mb-6 mt-5">
                             <div className="flex items-center justify-between  gap-2 mb-4">
-                                <div className='flex items-center'>
+                                <div className="flex items-center">
                                     <Zap className="w-5 h-5 text-red-600" />
-                                    <h3 className="text-lg font-semibold">Components Included</h3>
+                                    <h3 className="text-lg font-semibold">
+                                        Components Included
+                                    </h3>
                                 </div>
-                                <h3 className="text-lg font-semibold">Quantity/Units</h3>
+                                <h3 className="text-lg font-semibold">
+                                    Quantity/Units
+                                </h3>
                             </div>
 
-                            <div className='space-y-3'>
+                            <div className="space-y-3">
                                 {MATERIALS.map((item) => {
-
-                                    let match = selectedMaterial.length > 0 && selectedMaterial?.find(v => v.name === item);
-                                    let isSelected = match ? { check: true, qty: match?.qty } : { check: false, qty: 0 }
+                                    let match =
+                                        selectedMaterial.length > 0 &&
+                                        selectedMaterial?.find(
+                                            (v) => v.name === item,
+                                        );
+                                    let isSelected = match
+                                        ? { check: true, qty: match?.qty }
+                                        : { check: false, qty: 0 };
 
                                     return (
-
-                                        <div key={item} className='p-2 border rounded-2xl flex justify-between'>
-                                            <label key={item} className="flex items-center gap-2 ">
+                                        <div
+                                            key={item}
+                                            className="p-2 border rounded-2xl flex justify-between"
+                                        >
+                                            <label
+                                                key={item}
+                                                className="flex items-center gap-2 "
+                                            >
                                                 <input
                                                     onChange={(e) => {
                                                         if (!e.target.checked) {
-                                                            handleSelect(0, item);
-                                                        }
-                                                        else {
-                                                            handleSelect(1, item);
+                                                            handleSelect(
+                                                                0,
+                                                                item,
+                                                            );
+                                                        } else {
+                                                            handleSelect(
+                                                                1,
+                                                                item,
+                                                            );
                                                         }
                                                     }}
-
                                                     type="checkbox"
                                                     checked={isSelected?.check}
                                                     value={item}
@@ -488,25 +565,38 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                                                 {item}
                                             </label>
 
-                                            {isSelected &&
+                                            {isSelected && (
                                                 <>
-                                                    <input value={isSelected?.qty} onChange={(e) => handleSelect(Number(e.target.value), item)} type="number" placeholder='Quantity' className='border border-dotted w-48 p-1 rounded-sm mr-5' />
+                                                    <input
+                                                        value={isSelected?.qty}
+                                                        onChange={(e) =>
+                                                            handleSelect(
+                                                                Number(
+                                                                    e.target
+                                                                        .value,
+                                                                ),
+                                                                item,
+                                                            )
+                                                        }
+                                                        type="number"
+                                                        placeholder="Quantity"
+                                                        className="border border-dotted w-48 p-1 rounded-sm mr-5"
+                                                    />
                                                 </>
-                                            }
+                                            )}
                                         </div>
-                                    )
+                                    );
                                 })}
                             </div>
                         </section>
-
 
                         {/* Footer */}
                         <div className="items-center justify-center bg-gray-50 flex gap-3 mt-5">
                             <button
                                 type="button"
                                 onClick={() => {
-                                    setData(null)
-                                    setClose(false)
+                                    setData(null);
+                                    setClose(false);
                                 }}
                                 className="sm:flex-1 p-3 border rounded-xl text-sm cursor-pointer"
                             >
@@ -517,18 +607,16 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData }) => {
                                 type="submit"
                                 className={` p-3 sm:flex-1 bg-linear-to-r from-red-600 to-red-600 text-white rounded-xl ${loading ? "cursor-not-allowed" : "cursor-pointer"}`}
                             >
-                                {data?.proposalsData?.length > 0 ? 'Update Proposal' : 'Create Proposal'}
-
+                                {data?.proposalsData?.length > 0
+                                    ? "Update Proposal"
+                                    : "Create Proposal"}
                             </button>
                         </div>
                     </div>
-
                 </form>
-
             </div>
         </div>
+    );
+};
 
-    )
-}
-
-export default CreateProposalModal
+export default CreateProposalModal;

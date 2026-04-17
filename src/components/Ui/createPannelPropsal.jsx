@@ -6,7 +6,7 @@ import PanelSelector from './panelSelector';
 import JoditEditor from 'jodit-react';
 import { useAuth } from '../../Context/AuthContext';
 
-const CreatePannelPropsal = ({ onClose, proposalData, data = {} }) => {
+const CreatePannelPropsal = ({ onClose, proposalData, data = {} , customerId}) => {
   // console.log("data : ", data);
   // console.log(data?.name)
 
@@ -19,9 +19,9 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [createPanelData, setCreatePanelData] = useState({
     customerName: "",
-    email: "",
-    phone: "",
-    address: "",
+    // email: "",
+    // phone: "",
+    // address: "",
     gst: 5
   })
 
@@ -101,10 +101,10 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} }) => {
 
   const handleClose = () => {
     setCreatePanelData({
-      customerName: "",
-      email: "",
-      phone: "",
-      address: "",
+      // customerName: "",
+      // email: "",
+      // phone: "",
+      // address: "",
       gst: 5
     })
 
@@ -199,12 +199,12 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} }) => {
     try {
 
       const payload = {
-        selectedPanel: selectPanel, termsAndConditions: Body, ...createPanelData, dealerId
+        selectedPanel: selectPanel, termsAndConditions: Body, ...createPanelData, dealerId , customerId
       }
-      // console.log("payload : ", payload)
+      console.log("payload : ", payload)
 
-      if (!payload?.customerName || !payload?.address || !payload?.email || !payload?.phone || !payload?.gst) {
-        return alert("All fields are required: Customer Name, Email, Address, Phone Number, and GST.");
+      if ( !payload?.gst) {
+        return alert("fields are required: GST.");
 
       }
 
@@ -215,7 +215,7 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} }) => {
         }
       })
       if (!data || data?.panelData.length === 0) {
-        var panelPropsal = await apiCall("post", "/api/dealer/createPanelPropsal", payload)
+        var panelPropsal = await apiCall("post", "/api/dealer/create-solarPanel-proposal", payload)
       } else {
         var panelPropsal = await apiCall("put", "/api/dealer/updatePanelProposal", payload)
       }
@@ -235,10 +235,10 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} }) => {
     if (!data) {
 
       setCreatePanelData({
-        customerName: "",
-        email: "",
-        phone: "",
-        address: "",
+        // customerName: "",
+        // email: "",
+        // phone: "",
+        // address: "",
         gst: 5
       });
       setSelectPanel(
@@ -257,10 +257,10 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} }) => {
       return;
     }
     setCreatePanelData({
-      customerName: data?.name || "",
-      email: data?.email || "",
-      phone: data?.phone || "",
-      address: data?.address || "",
+      // customerName: data?.name || "",
+      // email: data?.email || "",
+      // phone: data?.phone || "",
+      // address: data?.address || "",
       gst: data?.panelData?.[0]?.gst || 5
     });
 
@@ -279,6 +279,7 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} }) => {
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full min-h-[90vh] overflow-hidden">
+      
         <div className="bg-[#d40202] p-4 text-white relative">
           <button
             onClick={() => {
@@ -305,7 +306,7 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} }) => {
 
         <form>
           <div className="p-6 overflow-y-auto max-h-[calc(90vh-50px)]">
-            <section className="mb-6">
+            {/* <section className="mb-6">
               <div className="flex items-center gap-2 mb-4">
                 <User className="w-5 h-5 text-red-600" />
                 <h3 className="text-lg font-semibold">Customer Information</h3>
@@ -366,7 +367,7 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} }) => {
                 </div>
               </div>
 
-            </section>
+            </section> */}
 
             <PanelSelector
               selectPanel={selectPanel}
