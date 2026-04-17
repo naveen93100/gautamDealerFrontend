@@ -20,6 +20,7 @@ import PannelProposal from './pages/PannelProposal/PannelProposal';
 import PanelWatt from './pages/PannelProposal/PanelWatt';
 import PanelPropsalView from './components/common/PanelPropsalView';
 import DealerList from './pages/DealerList';
+import ClientPanelHistory from './pages/Dashboard/Layout/ClientPanelHistory';
 
 
 
@@ -57,6 +58,8 @@ const App = () => {
          } />
          < Route path='preview-proposal' element={< MainPage />} />
          < Route path='viewPanelProposal' element={< PanelPropsalView />} />
+         {/* client panel history  */}
+         <Route path='clientpanel-history' element={<ClientPanelHistory/>}/>
 
          {/* <Route path='test' element={<AdminDashboard />} /> */}
 

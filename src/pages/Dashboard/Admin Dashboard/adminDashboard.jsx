@@ -43,6 +43,7 @@ const adminDashboard = () => {
                     <h2 className="text-3xl font-bold text-red-700 mt-1">{data?.pannelData?.length}</h2>
                 </div>
             </div>
+          
         </div>
 
     )

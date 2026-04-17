@@ -92,7 +92,7 @@ const Profile = () => {
 
     return (
         <>
-            <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 lg:p-8 mb-6 8 border border-gray-300 shadow-gray-400">
+            <div className="bg-white rounded-xl  p-4 sm:p-6 lg:p-8 mb-6 8 border border-gray-300 shadow-gray-400">
                 <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
                     <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 w-full sm:w-auto">
                         {/* <div className="w-20 h-24 sm:w-28 rounded-2xl bg-linear-to-br from-white to-gray-500   flex items-center justify-center overflow-hidden shrink-0">

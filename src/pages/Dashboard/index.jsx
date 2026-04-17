@@ -10,6 +10,7 @@ import MainPage from '../../components/common/MainPage';
 import "./index.css";
 import { data, useLocation, useNavigate } from 'react-router-dom';
 import CreatePannelPropsal from '../../components/Ui/createPannelPropsal';
+import ClientSection from './Layout/ClientSection';
 
 const SolarDealerDashboard = () => {
 
@@ -75,15 +76,33 @@ const SolarDealerDashboard = () => {
 
   return (
     <>
-      <div className="dont-print min-h-screen bg-linear-to-br from-red-50 via-orange-50 to-white">
-        {/* Header */}
+     <div  className=" mt-24 dont-print min-h-screen bg-linear-to-br from-red-50 via-orange-50 to-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+       <Profile />
+
+       {/* create client */}
+
+       <ClientSection/>
+      </div>
+     </div>
+    </>
+  );
+};
+
+export default SolarDealerDashboard;
+
+
+
+
+ {/* <div className="dont-print min-h-screen bg-linear-to-br from-red-50 via-orange-50 to-white">
+  
 
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
-          {/* Profile Section */}
+        
           <Profile />
 
-          {/* Proposals Section */}
+    
           <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 lg:p-8 border border-gray-300 shadow-gray-400">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 ">
               <h3 className="text-xl sm:text-2xl flex items-center justify-center gap-2 font-bold text-gray-800">Solar Proposals
@@ -142,11 +161,11 @@ const SolarDealerDashboard = () => {
                       </div>
                     </div>
 
-                    {/* this is for solar panel Propsal */}
+                 
                     {proposal?.panelData.length > 0 ? (
                       <div className="flex flex-wrap gap-3">
 
-                        {/* Edit */}
+                    
                         <button
                           onClick={() => {
                             setCreatePanelProp(true)
@@ -158,19 +177,16 @@ const SolarDealerDashboard = () => {
                           Edit Proposal
                         </button>
 
-                        {/* Download */}
                         <button
                           onClick={() => navigate("/viewPanelProposal", { state: { data: proposal } })}
                           className="flex items-center gap-2 px-4 py-2 border border-blue-500 text-blue-600 hover:bg-blue-50 rounded-lg transition"
                         >
-                          {/* {loading && select?._id === proposal?.proposalsData[0]?._id ? (
-                            <Loader2Icon className="animate-spin" />
-                          ) : ( */}
+                      
                           <>
                             <Download className="w-4 h-4" />
                             Download PDF
                           </>
-                          {/* )} */}
+                      
                         </button>
 
                       </div>
@@ -190,11 +206,11 @@ const SolarDealerDashboard = () => {
 
                     )}
 
-                    {/* this is for solar power plant  */}
+                   
                     {
                       proposal?.proposalsData.length > 0 ? (
                         <div className="flex flex-wrap gap-3 justify-end">
-                          {/* edit  */}
+                     
                           <button
                             onClick={(e) => {
                               setSelect(proposal)
@@ -208,7 +224,7 @@ const SolarDealerDashboard = () => {
                               Edit Power Plant Proposal
                             </span>
                           </button>
-                          {/* download */}
+                       
                           <button
                             onClick={() => {
                               navigate('/preview-proposal', { state: proposal })
@@ -260,14 +276,14 @@ const SolarDealerDashboard = () => {
           </div>
         </div >
 
-        {/* Create Proposal Modal */}
+      
         {
           showCreateModal && (
             <CreateProposalModal setClose={setShowCreateModal} proposalData={fetchProposal} data={select} setData={setSelect} />
           )
         }
 
-        {/* create panel Propsoal  */}
+       
         {
           createPanelProp && (
             <CreatePannelPropsal onClose={setCreatePanelProp} proposalData={fetchProposal} data={select} setData={setSelect} />
@@ -279,9 +295,4 @@ const SolarDealerDashboard = () => {
         <div id='PrintData' className='print-this hidden print:block'>
           <MainPage proposalsImages={proposalsImages} proposalDatas={proposalData} printP={printP} />
         </div>
-      }
-    </>
-  );
-};
-
-export default SolarDealerDashboard;
+      } */}

@@ -18,7 +18,8 @@ const Header = () => {
     }
 
     return (
-        <header className="dont-print bg-linear-to-br from-red-600 via-red-700 to-red-600 text-white shadow-2xl relative overflow-hidden">
+        // <header className="  dont-print bg-linear-to-br from-red-600 via-red-700 to-red-600 text-white shadow-2xl overflow-hidden">
+        <header className="fixed top-0 left-0 w-full z-50 dont-print bg-linear-to-br from-red-600 via-red-700 to-red-600 text-white shadow-2xl overflow-hidden">
             {/* Decorative background elements */}
 
             <div className="relative max-w-7xl mx-auto px-4 ">

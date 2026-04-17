@@ -1,0 +1,350 @@
+import React, { useCallback, useEffect, useState } from "react";
+import {
+    Plus,
+    Download,
+    Calendar,
+    DollarSign,
+    Zap,
+    TrendingUp,
+    Sun,
+    Loader2Icon,
+    MapPin,
+    Mail,
+    Phone,
+    IndianRupee,
+    Edit,
+    User,
+} from "lucide-react";
+import { data, useLocation, useNavigate } from "react-router-dom";
+import CreateProposalModal from "../../../components/Ui/CreateProposalModal";
+import { apiCall } from "../../../services/api";
+import { useAuth } from "../../../Context/AuthContext";
+import MainPage from "../../../components/common/MainPage";
+import CreatePannelPropsal from "../../../components/Ui/createPannelPropsal";
+const ClientPanelHistory = () => {
+    const [proposals, setProposals] = useState([]);
+    const location = useLocation();
+    const { clientId: customerId } = location.state;
+    const { user, token } = useAuth();
+
+    console.log("show the proposals data ===>", proposals);
+
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [select, setSelect] = useState(null);
+    const [printP, setPrintP] = useState(false);
+    const [proposalsImages, setProposalsImages] = useState([]);
+    const [proposalData, setProposalData] = useState(null);
+
+    const [createPanelProp, setCreatePanelProp] = useState(false);
+    const [createEmpPanel, setCreateEmpPanel] = useState(false);
+    const navigate = useNavigate();
+
+    const fetchProposal = useCallback(async () => {
+        try {
+            let res = await apiCall(
+                "GET",
+                `/api/dealer/get-proposal?dealerId=${user?.id}&customerId=${customerId}`,
+            );
+
+            console.log("ooooo", res?.data);
+
+            if (res?.data?.success) {
+                // console.log(res?.data?.images)
+                setProposalsImages(res?.data?.images);
+                setProposals(res?.data?.data);
+            }
+        } catch (er) {
+            console.log("Somthing is worng", er);
+        }
+    }, [user?.id]);
+
+    useEffect(() => {
+        if (user?.id) {
+            fetchProposal();
+        }
+    }, [user?.id]);
+
+    const customFunc = (proposal) => {
+        setProposalData(proposal);
+
+        const originalTitle = document.title;
+        document.title = `${proposal?.name}_Proposal`;
+
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                window.print();
+                setTimeout(() => {
+                    document.title = originalTitle;
+                }, 500);
+            });
+        });
+    };
+
+    console.log(proposals);
+
+    return (
+        <>
+            <div className="fixed top-0 left-0 w-full z-50 dont-print bg-linear-to-r from-red-600 via-red-700 to-red-600 text-white shadow-xl border-b border-red-400">
+                <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-2">
+                    {/* Left Side */}
+                    <div>
+                        <h1 className="text-2xl font-bold tracking-wide">
+                            Client Panel Proposal
+                        </h1>
+                        <p className="text-sm text-red-100 mt-1">
+                            Proposal Summary & Details
+                        </p>
+                    </div>
+
+                    {/* Right Side */}
+                    <div className="bg-white/10 backdrop-blur-md px-5 py-2 rounded-xl border border-white/20">
+                        <p className="text-sm text-red-100">Client Name</p>
+                        <p className="text-lg font-semibold capitalize">
+                            {proposals?.name || "N/A"}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div className=" mt-20 dont-print min-h-screen bg-linear-to-br from-red-50 via-orange-50 to-white">
+                <div className="max-w-7.2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+                    <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 lg:p-8 border border-gray-300 shadow-gray-400">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 ">
+                            <h3 className="text-xl sm:text-2xl flex items-center justify-center gap-2 font-bold text-gray-800">
+                                Solar Proposals
+                            </h3>
+                            <button
+                                onClick={() => {
+                                    setSelect(null);
+                                    setCreatePanelProp(true);
+                                }}
+                                className="flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors w-full sm:w-auto shadow-md "
+                            >
+                                <Plus className="w-5 h-5" />
+                                Create Panel Proposal
+                            </button>
+                            <button
+                                onClick={() => {
+                                    (setSelect(null), setShowCreateModal(true));
+                                }}
+                                className="flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors w-full sm:w-auto shadow-md "
+                            >
+                                <Plus className="w-5 h-5" />
+                                Create Power Plant Proposal
+                            </button>
+                        </div>
+
+                        <div className="grid gap-4">
+                            {proposals?.proposalsData?.length > 0 &&
+                                proposals?.proposalsData?.map((proposal) => (
+                                    <div
+                                        // key={proposal?._id}
+                                        className="border-2 border-gray-300  rounded-xl p-4 sm:p-6 shadow-lg hover:border-red-300 transition-all shadow-red-200"
+                                    >
+                                        <div className="flex flex-col gap-4">
+                                            <div className="flex-1">
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 mb-3">
+                                                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3">
+                                                        <User className="w-5 h-5 text-red-600 flex shrink-0" />
+                                                        <h4 className="text-base sm:text-lg font-semibold text-gray-800 capitalize">
+                                                            {proposals?.name}
+                                                        </h4>
+                                                    </div>
+
+                                                    <div className="flex  items-center gap-2 text-sm text-gray-600 ">
+                                                        <MapPin className="w-4 h-4 text-red-600 flex shrink-0" />
+                                                        <span className="font-medium">
+                                                            Address:
+                                                        </span>
+                                                        <span>
+                                                            {proposal?.address}
+                                                        </span>
+                                                    </div>
+
+                                                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                        <Mail className="w-4 h-4 text-red-600 flex shrink-0" />
+                                                        <span className="font-medium">
+                                                            Email:
+                                                        </span>
+                                                        <span>
+                                                            {proposal?.email}
+                                                        </span>
+                                                    </div>
+
+                                                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                        <Phone className="w-4 h-4 text-red-600 flex shrink-0" />
+                                                        <span className="font-medium">
+                                                            Contact Number:
+                                                        </span>
+                                                        <span>
+                                                            {proposal?.phone}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {proposal?.panelData.length > 0 ? (
+                                                <div className="flex flex-wrap gap-3">
+                                                    <button
+                                                        onClick={() => {
+                                                            setCreatePanelProp(
+                                                                true,
+                                                            );
+                                                            setSelect(proposal);
+                                                        }}
+                                                        className="flex items-center gap-2 px-4 py-2 border border-amber-500 text-amber-600 hover:bg-amber-50 rounded-lg transition"
+                                                    >
+                                                        <Edit className="w-4 h-4" />
+                                                        Edit Proposal
+                                                    </button>
+
+                                                    <button
+                                                        onClick={() =>
+                                                            navigate(
+                                                                "/viewPanelProposal",
+                                                                {
+                                                                    state: {
+                                                                        data: proposal,
+                                                                    },
+                                                                },
+                                                            )
+                                                        }
+                                                        className="flex items-center gap-2 px-4 py-2 border border-blue-500 text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                                                    >
+                                                        <>
+                                                            <Download className="w-4 h-4" />
+                                                            Download PDF
+                                                        </>
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <div className="flex flex-wrap gap-3">
+                                                    <button
+                                                        onClick={() => {
+                                                            setCreatePanelProp(
+                                                                true,
+                                                            );
+                                                            setSelect(proposal);
+                                                        }}
+                                                        className="flex items-center gap-2 px-4 py-2 border border-red-500 text-red-600 hover:bg-red-50 rounded-lg transition"
+                                                    >
+                                                        <i className="fa-regular fa-square-plus"></i>
+                                                        Create Panel Proposal
+                                                    </button>
+                                                </div>
+                                            )}
+
+                                            {proposal?.proposalData?.length >
+                                            0 ? (
+                                                <div className="flex flex-wrap gap-3 justify-end">
+                                                    <button
+                                                        onClick={(e) => {
+                                                            setSelect(proposal);
+                                                            setShowCreateModal(
+                                                                true,
+                                                            );
+                                                        }}
+                                                        className={`${loading ? "cursor-not-allowed text-amber-300" : ""} flex items-center gap-2 px-4 py-2 border border-amber-500 text-amber-600 hover:bg-amber-50 rounded-lg transition`}
+                                                    >
+                                                        <span className="flex items-center gap-2">
+                                                            <Edit className="w-4 h-4" />
+                                                            Edit Power Plant
+                                                            Proposal
+                                                        </span>
+                                                    </button>
+
+                                                    <button
+                                                        onClick={() => {
+                                                            navigate(
+                                                                "/preview-proposal",
+                                                                {
+                                                                    state: proposal,
+                                                                },
+                                                            );
+                                                        }}
+                                                        className={`${loading ? "cursor-not-allowed text-blue-300" : ""}flex items-center gap-2 px-4 py-2 border border-blue-500 text-blue-600 hover:bg-blue-50 rounded-lg transition`}
+                                                    >
+                                                        {loading &&
+                                                        select?._id ===
+                                                            proposal
+                                                                ?.proposalsData[0]
+                                                                ?._id ? (
+                                                            <Loader2Icon className="animate-spin" />
+                                                        ) : (
+                                                            <span className="flex items-center gap-2">
+                                                                <Download className="w-4 h-4" />
+                                                                Download Power
+                                                                Plant Proposal
+                                                            </span>
+                                                        )}
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <button
+                                                    onClick={(e) => {
+                                                        setSelect(proposal);
+                                                        setShowCreateModal(
+                                                            true,
+                                                        );
+                                                    }}
+                                                    className={`flex items-center justify-center gap-2 px-4 py-2 text-red-600 border border-red-600 hover:bg-red-50 rounded-lg transition-colors w-full sm:w-auto sm:self-end ${loading ? "cursor-not-allowed text-red-300" : ""}`}
+                                                >
+                                                    <span className="flex items-center gap-2">
+                                                        <i className="fa-regular fa-square-plus"></i>
+                                                        Create Power Plant
+                                                        Proposal
+                                                    </span>
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+
+                            {proposals.length === 0 && (
+                                <div className="flex flex-col items-center justify-center h-64 text-center border-2 border-dashed border-gray-300 rounded-lg p-6 m-6">
+                                    <h2 className="text-2xl font-semibold text-gray-700 mb-2">
+                                        No Proposal Created Yet
+                                    </h2>
+                                    <p className="text-gray-500 mb-4">
+                                        It looks like you haven't created any
+                                        proposals so far.
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                {showCreateModal && (
+                    <CreateProposalModal
+                        setClose={setShowCreateModal}
+                        proposalData={fetchProposal}
+                        data={select}
+                        setData={setSelect}
+                    />
+                )}
+
+                {createPanelProp && (
+                    <CreatePannelPropsal
+                        onClose={setCreatePanelProp}
+                        proposalData={fetchProposal}
+                        data={select}
+                        setData={setSelect}
+                    />
+                )}
+            </div>
+
+            {proposalData && (
+                <div id="PrintData" className="print-this hidden print:block">
+                    <MainPage
+                        proposalsImages={proposalsImages}
+                        proposalDatas={proposalData}
+                        printP={printP}
+                    />
+                </div>
+            )}
+        </>
+    );
+};
+
+export default ClientPanelHistory;
