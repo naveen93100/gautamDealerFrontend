@@ -101,26 +101,7 @@ const ClientPanelHistory = () => {
         });
     };
 
-    // const hangedeleteProposal = async (item) => {
-    //     const payload = {
-    //         type: item?.type,
-    //         proposalId: item._id,
-    //     };
-
-    //     const res = await apiCall(
-    //         "DELETE",
-    //         `/api/dealer/delete-proposal`,
-    //         payload,
-    //     );
-
-    //     console.log("showing the response for deleteing the proposal", res?.data)
-
-    //     try {
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
-
+   
     const hangedeleteProposal = async (item) => {
   const payload = {
     type: item?.type,
