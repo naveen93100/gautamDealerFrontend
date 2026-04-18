@@ -11,8 +11,7 @@ const PanelPropsalView = () => {
     const proposalDatas = location?.state;
     const { user } = useAuth()
     
-    console.log(proposalDatas);
-
+      
     const data = {
         firstName: user?.firstName,
         lastName: user?.lastName,
@@ -23,8 +22,6 @@ const PanelPropsalView = () => {
         companyLogo: user?.profileImg,
         address: user?.address,
     }
-
-    // console.log(data)
 
     const customerData = {
         name: proposalDatas?.name,

@@ -37,6 +37,7 @@ const MainPage = ({ printP }) => {
     const { state } = useLocation();
     const { user } = useAuth()
     const proposalDatas = state
+    console.log(proposalDatas)
     const navigate = useNavigate();
 
     if (!proposalDatas) return <Navigate to='/dashboard' />;
@@ -51,6 +52,7 @@ const MainPage = ({ printP }) => {
         companyLogo: user?.profileImg,
         address: user?.address,
     }
+    console.log(data)
 
 
     const customerData = {
@@ -61,15 +63,15 @@ const MainPage = ({ printP }) => {
     }
 
     const proposalsData = {
-        rate: proposalDatas?.proposalsData[0]?.rate,
-        orderCapacity: proposalDatas?.proposalsData[0]?.orderCapacity,
-        termsAndConditions: proposalDatas?.proposalsData[0]?.termsAndConditions,
-        proposalDate: proposalDatas?.proposalsData[0]?.proposalDate,
-        price: proposalDatas?.proposalsData[0]?.price,
-        finalPrice: proposalDatas?.proposalsData[0]?.finalPrice,
-        gstAmt: proposalDatas?.proposalsData[0]?.gstAmt,
-        material: proposalDatas?.proposalsData[0]?.material,
-        tax: proposalDatas?.proposalsData[0]?.tax
+        rate: proposalDatas?.rate,
+        orderCapacity: proposalDatas?.orderCapacity,
+        termsAndConditions: proposalDatas?.termsAndConditions,
+        proposalDate: proposalDatas?.proposalDate,
+        price: proposalDatas?.price,
+        finalPrice: proposalDatas?.finalPrice,
+        gstAmt: proposalDatas?.gstAmt,
+        material: proposalDatas?.material,
+        tax: proposalDatas?.tax
     }
 
     //  console.log("proposalsData : ",proposalsData)
@@ -98,8 +100,8 @@ const MainPage = ({ printP }) => {
                         {data?.companyLogo ?
                             <img loading='lazy' src={data?.companyLogo} alt="" className=' w-2/2 object-cover ' />
                             :
-                            <h1 className='uppercase'>{data?.companyName}</h1>
-                        }
+                             <h1 className='uppercase'>{data?.companyName}</h1> 
+                         } 
                     </div>
 
                     <div className="absolute top-[5mm] right-[3mm]  text-end">
