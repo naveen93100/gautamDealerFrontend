@@ -3,7 +3,7 @@ import { Mail, Phone, MapPin, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { apiCall } from "../../../services/api";
 import { useAuth } from "../../../Context/AuthContext";
-
+import toast from "react-hot-toast";
 const COLOR_MAP = {
     coral: {
         bg: "bg-[#FAECE7]",
@@ -43,6 +43,7 @@ export default function ClientSection() {
     const [clients, setClients] = useState([]);
     const [search, setSearch] = useState("");
     const [showModal, setShowModal] = useState(false);
+    const [errors, setErrosr] = useState({});
     const [form, setForm] = useState({
         name: "",
         email: "",
@@ -90,8 +91,29 @@ export default function ClientSection() {
         );
     });
     const handleCreate = async () => {
+        const newErrors = {};
+
         if (!form.name.trim()) {
-            toast.error("Full name is required");
+            newErrors.name = "Full Name is required";
+        }
+        if (!form.email.trim()) {
+            newErrors.email = "Emial is required";
+        }
+        if (!form.phone.trim()) {
+            newErrors.phone = "Phone is required";
+        }
+        if (!form.address.trim()) {
+            newErrors.address = "Address is required";
+        }
+
+        // if (!form.name.trim()) {
+        //     toast.error("Full name is required");
+        //     return;
+        // }
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrosr(newErrors);
+            toast.error("please fill all required fields");
             return;
         }
 
@@ -107,7 +129,7 @@ export default function ClientSection() {
                 newClient,
             );
 
-            console.log("shoing the cretae clinet response?", res?.data);
+            // console.log("shoing the cretae clinet response?", res?.data);
 
             if (res?.data?.success) {
                 setClients((prev) => [newClient, ...prev]);
@@ -119,31 +141,50 @@ export default function ClientSection() {
                     phone: "",
                     location: "",
                 });
-
+                setErrosr({});
                 setShowModal(false);
                 toast.success("Client created successfully");
             } else {
                 toast.error("Failed to create client");
             }
-        } catch (error) {
-            console.log(error);
-            toast.error("Something went wrong");
+        } catch (er) {
+            // console.log(er?.)
+            toast.error(er?.response?.data?.message);
         }
     };
 
-    const field = (key, label, ph) => (
-        <div key={key} className="mb-3">
-            <label className="text-xs text-gray-400 mb-1 block">{label}</label>
-            <input
-                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-[#D85A30] focus:ring-2 focus:ring-[#D85A30]/20 bg-gray-50"
-                placeholder={ph}
-                value={form[key]}
-                onChange={(e) =>
-                    setForm((p) => ({ ...p, [key]: e.target.value }))
-                }
-            />
-        </div>
-    );
+    const field = (key, label, ph) => {
+        const hasError = errors[key];
+
+        return (
+            <div key={key} className="mb-3">
+                <label className="text-md text-gray-400 mb-1 block">
+                    {label} <span className="text-red-700 text-lg">*</span>{" "}
+                </label>
+                <input
+                    className={`w-full border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-[#D85A30] focus:ring-2 focus:ring-[#D85A30]/20 bg-gray-50 ${
+                        hasError
+                            ? "border-red-500 focus:ring-2 focus:ring-red-300"
+                            : "border-gray-200 focus:border-[#D85A30] focus:ring-2-[#D85A30]/20"
+                    }`}
+                    placeholder={ph}
+                    value={form[key]}
+                    onChange={(e) => {
+                        setForm((p) => ({ ...p, [key]: e.target.value }));
+
+                        setErrosr((p) => ({
+                            ...p,
+                            [key]: "",
+                        }));
+                    }}
+                />
+
+                {hasError && (
+                    <p className="text-red-500 text-sm mt-1">{hasError}</p>
+                )}
+            </div>
+        );
+    };
 
     return (
         <div className="mt-2">
@@ -262,21 +303,37 @@ export default function ClientSection() {
                                 Add new client
                             </h3>
                             <button
-                                onClick={() => setShowModal(false)}
+                                onClick={() => {
+                                    setShowModal(false);
+                                    setForm({
+                                        name: "",
+                                        email: "",
+                                        phone: "",
+                                        address: "",
+                                    });
+                                }}
                                 className="text-gray-400 hover:text-gray-600 text-lg leading-none"
                             >
                                 ✕
                             </button>
                         </div>
 
-                        {field("name", "Full Name *", "Enter Name")}
+                        {field("name", "Full Name", "Enter Name")}
                         {field("email", "Email", "Enter Email")}
                         {field("phone", "Phone", "Enter Mobile Number")}
                         {field("address", "Location", "Enter Location")}
 
                         <div className="flex gap-2 justify-end mt-2">
                             <button
-                                onClick={() => setShowModal(false)}
+                                onClick={() => {
+                                    (setShowModal(false),
+                                        setForm({
+                                            name: "",
+                                            email: "",
+                                            phone: "",
+                                            address: "",
+                                        }));
+                                }}
                                 className="px-4 py-2 text-sm border border-gray-200 rounded-xl text-gray-500 hover:bg-gray-50"
                             >
                                 Cancel
