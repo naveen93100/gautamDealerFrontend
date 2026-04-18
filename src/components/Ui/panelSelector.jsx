@@ -12,7 +12,6 @@ const PanelSelector = ({
     setActiveIndex,
     gst,
 }) => {
-    console.log(panelWatt)
     const addPanel = () => {
         setSelectPanel((prev) => [
             ...prev,
@@ -58,10 +57,8 @@ const PanelSelector = ({
             const quantity = Number(copy[index].quantity || 0);
             const rate = Number(copy[index].rate || 0);
                 
-            const watt=Number(panelWatt[0]?.watt)
+            const watt=Number(panelWatt?panelWatt[0]?.watt:1)
             const amount = (watt*quantity) * rate;
-            console.log("watt:",watt,"quantity:",quantity,"rate:",rate)
-            console.log(amount)
             const gstAmount = (amount * gst) / 100;
 
             copy[index].totalPrice = amount;
@@ -76,15 +73,14 @@ const PanelSelector = ({
             prev.map((item) => {
                 const quantity = Number(item.quantity || 0);
                 const rate = Number(item.rate || 0);
-                
-                  const watt=Number(panelWatt[0]?.watt)
+                const watt=Number(panelWatt?panelWatt[0]?.watt:1)
                 const amount = (watt*quantity) * rate;
                 // const amount = quantity * rate;
                 const gstAmount = (amount * gst)/100;
 
                 return {
                     ...item,
-                    totalPrice: amount+gstAmount,
+                    totalPrice: amount,
                     gstAmount,
                 };
             }),

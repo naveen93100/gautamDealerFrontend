@@ -15,7 +15,7 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} , customerId}) =
   const [panelData, setPanelData] = useState();
   const [technologyData, setTechnologyData] = useState();
   const [constructiveData, setConstructiveData] = useState();
-  const [panelWatt, setPanelWatt] = useState();
+  const [panelWatt, setPanelWatt] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [createPanelData, setCreatePanelData] = useState({
     customerName: "",
@@ -126,10 +126,6 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} , customerId}) =
   }
 
 
-  // console.log("createPanelData: ", createPanelData)
-  // console.log("selectPanel: ", selectPanel)
-
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCreatePanelData((prev) => ({
@@ -201,12 +197,12 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} , customerId}) =
       const payload = {
         selectedPanel: selectPanel, termsAndConditions: Body, ...createPanelData, dealerId , customerId
       }
-      console.log("payload : ", payload)
 
       if ( !payload?.gst) {
         return alert("fields are required: GST.");
 
       }
+
 
       selectPanel.map((panel) => {
         // console.log("panel ", panel)
@@ -271,10 +267,6 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} , customerId}) =
 
   }, [data]);
 
-  // console.log("createPanelData update : ", createPanelData);
-
-
-
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
@@ -306,68 +298,7 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} , customerId}) =
 
         <form>
           <div className="p-6 overflow-y-auto max-h-[calc(90vh-50px)]">
-            {/* <section className="mb-6">
-              <div className="flex items-center gap-2 mb-4">
-                <User className="w-5 h-5 text-red-600" />
-                <h3 className="text-lg font-semibold">Customer Information</h3>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium mb-2">
-                    Customer Name *
-                  </label>
-                  <input onChange={handleChange}
-                    value={createPanelData?.customerName}
-                    name='customerName'
-                    className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-red-500"
-                    placeholder="Enter customer full name"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">Email *</label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      name='email'
-                      value={createPanelData?.email}
-                      onChange={handleChange}
-                      className="w-full pl-11 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-red-500"
-                      placeholder="customer@example.com"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">Phone *</label>
-                  <div className="relative">
-
-                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      name='phone'
-                      value={createPanelData?.phone}
-                      onChange={handleChange}
-                      className="w-full pl-11 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-red-500"
-                      placeholder="+91 98765 43210"
-                    />
-                  </div>
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium mb-2">Address *</label>
-                  <textarea
-                    name='address'
-                    onChange={handleChange}
-                    value={createPanelData?.address}
-                    rows={3}
-                    className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-red-500 resize-none"
-                    placeholder="Complete installation address"
-                  />
-
-                </div>
-              </div>
-
-            </section> */}
+       
 
             <PanelSelector
               selectPanel={selectPanel}

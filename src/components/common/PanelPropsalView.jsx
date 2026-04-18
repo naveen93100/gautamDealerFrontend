@@ -231,10 +231,10 @@ const PanelPropsalView = () => {
                             <thead>
                                 <tr className=" bg-red-800 text-white text-xs text-left">
                                     <th className="p-3  text-xs border border-gray-400">S.No</th>
+                                    <th className="p-3 border border-gray-400">Panel Watt </th>
                                     <th className="p-3 border border-gray-400">Panel Type</th>
                                     <th className="p-3 border border-gray-400">Technology</th>
                                     <th className="p-3 border border-gray-400">Constructive Type</th>
-                                    <th className="p-3 border border-gray-400">Panel Watt </th>
 
                                 </tr>
                             </thead>
@@ -246,10 +246,10 @@ const PanelPropsalView = () => {
                                         // console.log("panel : ", panel),
                                         <tr>
                                             <td className="border border-gray-300 p-2 text-center">{idx + 1}</td>
+                                            <td className="border border-gray-300 p-2 text-center">{panel?.watt?.watt} wp</td>
                                             <td className="border border-gray-300 p-2 text-center">{panel?.panelType?.panelType}</td>
                                             <td className="border border-gray-300 p-2 text-center">{panel?.technology?.technologyPanel}</td>
                                             <td className="border border-gray-300 p-2 text-center">{panel?.constructive?.constructiveType}</td>
-                                            <td className="border border-gray-300 p-2 text-center">{panel?.watt?.watt}</td>
 
                                         </tr>
                                     ))
@@ -262,7 +262,7 @@ const PanelPropsalView = () => {
                                 <tr className=" bg-red-800 text-white text-xs text-left">
                                     <th className="p-3  text-xs border border-gray-400">S.No</th>
                                     <th className="p-3  text-xs border border-gray-400">Item Description</th>
-                                    <th className="p-3 text-xs "> <span className='flex flex-row'><IndianRupee className='' />Rate Per Panel </span> </th>
+                                    <th className="p-3 text-xs "> <span className='flex flex-row'><IndianRupee className='' />Rate/Watt </span> </th>
                                     <th className="p-3 text-xs border border-gray-400">Quantity</th>
                                     <th className="p-3 text-xs border border-gray-400"> <span className='flex flex-row'><IndianRupee className='' /> Amount </span> </th>
                                     <th className="p-3 text-xs border border-gray-400"> <span className='flex flex-row'><IndianRupee className='' /> GST {panelData?.gst}% </span></th>
@@ -276,7 +276,7 @@ const PanelPropsalView = () => {
                                         // console.log("panel : ", panel),
                                         <tr>
                                             <td className="border border-gray-300 p-2 text-center">{idx + 1}</td>
-                                            <td className="border border-gray-300 p-2 text-center">{`${panel?.watt?.watt}Wp ,${panel?.panelType?.panelType},${panel?.technology?.technologyPanel},${panel?.constructive?.constructiveType}`}</td>
+                                            <td className="border border-gray-300 p-2 text-center ">{`${panel?.watt?.watt}Wp Gautam Solar ,${panel?.panelType?.panelType},${panel?.technology?.technologyPanel},${panel?.constructive?.constructiveType}`}</td>
                                             <td className="border border-gray-300 p-2 text-center">{panel?.rate.toLocaleString()}</td>
                                             <td className="border border-gray-300 p-2 text-center">{panel?.quantity.toLocaleString()}</td>
                                             <td className="border border-gray-300 p-2 text-center"> {panel?.totalPrice.toLocaleString()}</td>
