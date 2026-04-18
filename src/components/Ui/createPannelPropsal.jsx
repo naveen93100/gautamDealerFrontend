@@ -59,7 +59,7 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} , customerId}) =
   const [Body, setBody] = useState(`
        <h3><strong>Payment Terms</strong></h3>
             <ul>
-            <li><strong>100% </strong> before despatch.</li>
+            <li><strong>100% </strong> before dispatch.</li>
             <li>Net metering licensing and documentation will be handled by our team.</li>
             <li>Any applicable net metering charges will be charged separately.</li>
             </ul>
