@@ -71,16 +71,24 @@ export default function ClientSection() {
     }, [user?.id]);
 
     const filtered = clients.filter((c) => {
-        const q = search.toLowerCase();
+        const q = search.trim().toLowerCase();
 
         return (
             !q ||
-            c?.fullName?.toLowerCase().includes(q) ||
-            c?.email?.toLowerCase().includes(q) ||
-            c?.location?.toLowerCase().includes(q)
+            String(c?.name || "")
+                .toLowerCase()
+                .includes(q) ||
+            String(c?.email || "")
+                .toLowerCase()
+                .includes(q) ||
+            String(c?.phone || "")
+                .toLowerCase()
+                .includes(q) ||
+            String(c?.address || "")
+                .toLowerCase()
+                .includes(q)
         );
     });
-
     const handleCreate = async () => {
         if (!form.name.trim()) {
             toast.error("Full name is required");
@@ -172,7 +180,7 @@ export default function ClientSection() {
                         const col = colors[index % colors.length];
                         return (
                             <div
-                                key={c.id}
+                                key={index}
                                 onClick={() =>
                                     navigate("/clientpanel-history", {
                                         state: {
