@@ -56,7 +56,10 @@ const App = () => {
                <Layout />
             </ProtectedRoute>
          } />
+         {/* power plant */}
          < Route path='preview-proposal' element={< MainPage />} />
+           
+           {/* solar panel */}
          < Route path='viewPanelProposal' element={< PanelPropsalView />} />
          {/* client panel history  */}
          <Route path='clientpanel-history' element={<ClientPanelHistory/>}/>

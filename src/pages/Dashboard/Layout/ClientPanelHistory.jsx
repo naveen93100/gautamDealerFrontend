@@ -28,6 +28,7 @@ import { apiCall } from "../../../services/api";
 import { useAuth } from "../../../Context/AuthContext";
 import MainPage from "../../../components/common/MainPage";
 import CreatePannelPropsal from "../../../components/Ui/createPannelPropsal";
+
 const ClientPanelHistory = () => {
     const [proposals, setProposals] = useState([]);
     const location = useLocation();
@@ -325,7 +326,17 @@ const ClientPanelHistory = () => {
                                                 <Pencil className="w-4 h-4" />{" "}
                                                 Edit
                                             </button>
-                                            <button className="flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-500 text-blue-600 hover:bg-blue-50 transition text-sm font-medium">
+                                            <button onClick={()=>{
+                                                // const type={
+                                                //     solarpanel:
+                                                // };
+                                                 
+                                                if(type.includes(item?.type)){
+                                                    navigate(item?.type,{state:item})
+                                                }
+
+
+                                            }} className="flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-500 text-blue-600 hover:bg-blue-50 transition text-sm font-medium">
                                                 <Download className="w-4 h-4" />{" "}
                                                 Download
                                             </button>
