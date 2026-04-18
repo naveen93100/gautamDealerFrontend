@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Mail, Phone, MapPin, Search } from "lucide-react";
+import { Mail, Phone, MapPin, Search, Pencil } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { apiCall } from "../../../services/api";
 import { useAuth } from "../../../Context/AuthContext";
@@ -44,13 +44,15 @@ export default function ClientSection() {
     const [search, setSearch] = useState("");
     const [showModal, setShowModal] = useState(false);
     const [errors, setErrosr] = useState({});
+
     const [form, setForm] = useState({
         name: "",
         email: "",
         phone: "",
         address: "",
     });
-
+    const [isEdit, setIsEdit] = useState(false);
+    const [selectedClient, setSelectedClient] = useState(null);
     useEffect(() => {
         const getClient = async () => {
             try {
@@ -153,6 +155,59 @@ export default function ClientSection() {
         }
     };
 
+    const resetForm = () => {
+        setForm({
+            name: "",
+            email: "",
+            phone: "",
+            address: "",
+        });
+
+        setErrosr({});
+        setSelectedClient(null);
+        setIsEdit(false);
+    };
+    const handleEditClient = (client) => {
+        setIsEdit(true);
+        setSelectedClient(client);
+
+        setForm({
+            name: client.name || "",
+            email: client.email || "",
+            phone: client.phone || "",
+            address: client.address || "",
+        });
+
+        setShowModal(true);
+    };
+
+    const handleUpdateClient = async () => {
+        try {
+            const response = await apiCall(
+                "PATCH",
+                `/api/dealer/edit-customer/${selectedClient._id}`,
+                form,
+            );
+
+            if (response?.data?.success) {
+                setClients((prev) =>
+                    prev.map((item) =>
+                        item._id === selectedClient._id
+                            ? { ...item, ...form }
+                            : item,
+                    ),
+                );
+
+                toast.success("Client updated successfully");
+
+                setShowModal(false);
+                resetForm();
+            }
+        } catch (error) {
+            console.log(error?.response?.data?.message);
+        }
+    };
+
     const field = (key, label, ph) => {
         const hasError = errors[key];
 
@@ -162,7 +217,7 @@ export default function ClientSection() {
                     {label} <span className="text-red-700 text-lg">*</span>{" "}
                 </label>
                 <input
-                    className={`w-full border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-[#D85A30] focus:ring-2 focus:ring-[#D85A30]/20 bg-gray-50 ${
+                    className={`w-full border border-gray-200 rounded-xl px-3 py-2  text-sm outline-none focus:border-[#D85A30] focus:ring-2 focus:ring-[#D85A30]/20 bg-gray-50 ${
                         hasError
                             ? "border-red-500 focus:ring-2 focus:ring-red-300"
                             : "border-gray-200 focus:border-[#D85A30] focus:ring-2-[#D85A30]/20"
@@ -201,11 +256,14 @@ export default function ClientSection() {
                     <Search className="w-4 h-4 absolute left-3 top-3 text-gray-400 text-sm shrink-0" />
                 </div>
                 <button
-                    onClick={() => setShowModal(true)}
+                    onClick={() => {
+                        resetForm();
+                        setShowModal(true);
+                    }}
                     className="flex items-center justify-center gap-2 bg-red-700 hover:bg-[#e75050] text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 hover:shadow-md"
                 >
                     <span className="text-base leading-none">＋</span>
-                    New Client
+                    Create Client
                 </button>
             </div>
 
@@ -222,13 +280,14 @@ export default function ClientSection() {
                         return (
                             <div
                                 key={index}
-                                onClick={() =>
+                                onClick={(e) => {
+                                    // e.stopPropagation()
                                     navigate("/clientpanel-history", {
                                         state: {
                                             clientId: c._id,
                                         },
-                                    })
-                                }
+                                    });
+                                }}
                                 className="bg-white border border-gray-200 rounded-2xl p-5 cursor-pointer relative overflow-hidden hover:-translate-y-1 hover:shadow-lg hover:border-gray-300 transition-all duration-200 group"
                             >
                                 {/* Left stripe */}
@@ -243,10 +302,20 @@ export default function ClientSection() {
                                     >
                                         {initials(c.name)}
                                     </div>
-                                    <div className="min-w-0">
+                                    <div className="flex justify-between items-center w-full min-w-0">
                                         <div className="text-sm font-semibold text-gray-800 truncate">
                                             {c.name || "—"}
                                         </div>
+
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleEditClient(c);
+                                            }}
+                                            className="flex items-center gap-2 px-4 py-2 cursor-pointer rounded-lg border border-amber-500 text-amber-600 hover:bg-amber-50 transition text-sm font-medium"
+                                        >
+                                            <Pencil className="w-4 h-4" /> Edit
+                                        </button>
                                     </div>
                                 </div>
 
@@ -312,7 +381,7 @@ export default function ClientSection() {
                                         address: "",
                                     });
                                 }}
-                                className="text-gray-400 hover:text-gray-600 text-lg leading-none"
+                                className="text-gray-400 hover:text-gray-600 text-lg leading-none cursor-pointer"
                             >
                                 ✕
                             </button>
@@ -321,28 +390,29 @@ export default function ClientSection() {
                         {field("name", "Full Name", "Enter Name")}
                         {field("email", "Email", "Enter Email")}
                         {field("phone", "Phone", "Enter Mobile Number")}
-                        {field("address", "Location", "Enter Location")}
+                        {field("address", "Address", "Enter Address")}
 
                         <div className="flex gap-2 justify-end mt-2">
                             <button
                                 onClick={() => {
-                                    (setShowModal(false),
-                                        setForm({
-                                            name: "",
-                                            email: "",
-                                            phone: "",
-                                            address: "",
-                                        }));
+                                    setShowModal(false);
+                                    resetForm();
                                 }}
-                                className="px-4 py-2 text-sm border border-gray-200 rounded-xl text-gray-500 hover:bg-gray-50"
+                                className="px-4 py-2 text-sm border border-gray-200 rounded-xl text-gray-500 cursor-pointer hover:bg-gray-50"
                             >
                                 Cancel
                             </button>
                             <button
-                                onClick={handleCreate}
-                                className="px-5 py-2 text-sm bg-[#D85A30] hover:bg-[#c04e28] text-white rounded-xl font-medium transition-colors"
+                                onClick={
+                                    isEdit ? handleUpdateClient : handleCreate
+                                }
+                                className={`px-5 py-2.5 rounded-xl text-sm font-semibold text-white cursor-pointer transition-all duration-200 shadow-sm hover:shadow-md active:scale-95 ${
+                                    isEdit
+                                        ? "bg-amber-500 hover:bg-amber-600"
+                                        : "bg-[#D85A30] hover:bg-[#c04e28]"
+                                }`}
                             >
-                                Create client
+                                {isEdit ? "Update Client" : "Create Client"}
                             </button>
                         </div>
                     </div>
