@@ -12,8 +12,7 @@ const PanelSelector = ({
     setActiveIndex,
     gst,
 }) => {
-    // const panel = selectPanel;
-
+    console.log(panelWatt)
     const addPanel = () => {
         setSelectPanel((prev) => [
             ...prev,
@@ -58,8 +57,11 @@ const PanelSelector = ({
 
             const quantity = Number(copy[index].quantity || 0);
             const rate = Number(copy[index].rate || 0);
-
-            const amount = quantity * rate;
+                
+            const watt=Number(panelWatt[0]?.watt)
+            const amount = (watt*quantity) * rate;
+            console.log("watt:",watt,"quantity:",quantity,"rate:",rate)
+            console.log(amount)
             const gstAmount = (amount * gst) / 100;
 
             copy[index].totalPrice = amount;
@@ -74,13 +76,15 @@ const PanelSelector = ({
             prev.map((item) => {
                 const quantity = Number(item.quantity || 0);
                 const rate = Number(item.rate || 0);
-
-                const amount = quantity * rate;
-                const gstAmount = (amount * gst) / 100;
+                
+                  const watt=Number(panelWatt[0]?.watt)
+                const amount = (watt*quantity) * rate;
+                // const amount = quantity * rate;
+                const gstAmount = (amount * gst)/100;
 
                 return {
                     ...item,
-                    totalPrice: amount,
+                    totalPrice: amount+gstAmount,
                     gstAmount,
                 };
             }),
@@ -260,7 +264,7 @@ const PanelSelector = ({
                                 <div>
                                     <label className="block text-sm  mt-4 font-medium mb-2">
                                         {" "}
-                                        Price per piece{" "}
+                                        Rate/Watt{" "}
                                         <i className="fa-solid fa-rupee-sign text-red-600"></i>{" "}
                                     </label>
                                     <div className="relative">
@@ -282,9 +286,9 @@ const PanelSelector = ({
                                     </div>
                                 </div>
                                 {/* new filed */}
-                                <div>
+                                {/* <div>
                                     <label className="block text-sm font-medium mb-2">
-                                        Watt per Price
+                                        Watt per piece
                                     </label>
                                     <input
                                         name="getperwattprice"
@@ -297,9 +301,9 @@ const PanelSelector = ({
                                             )
                                         }
                                         className="w-full px-4 py-3 border rounded-xl  "
-                                        placeholder="2,40,000"
+                                        placeholder="0"
                                     />
-                                </div>
+                                </div> */}
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                                     <div>
