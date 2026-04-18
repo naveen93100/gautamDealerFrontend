@@ -340,7 +340,7 @@ const MainPage = ({ printP }) => {
                         </div>
 
                         {/* PAYMENT TERMS */}
-                        <div className='pt-10 border-t-1'>
+                        <div className='pt-10 border-t'>
                             <div
                                 className=" max-w-none space-y-3"
                                 dangerouslySetInnerHTML={{ __html: proposalsData?.termsAndConditions }}
