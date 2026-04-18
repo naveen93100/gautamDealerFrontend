@@ -110,8 +110,8 @@ const PanelSelector = ({
             </div>
 
             {selectPanel.map((panel, index) => (
-                <>
-                    <div className="flex items-center justify-between mb-3">
+                <React.Fragment key={index}>
+                    <div  className="flex items-center justify-between mb-3">
                         <h4 className="ml-2 text-base font-semibold text-red-600">
                             Panel {index + 1}
                         </h4>
@@ -342,7 +342,7 @@ const PanelSelector = ({
                             </>
                         )}
                     </section>
-                </>
+                </React.Fragment>
             ))}
         </section>
     );

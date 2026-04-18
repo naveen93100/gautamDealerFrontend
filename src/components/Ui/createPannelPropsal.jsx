@@ -257,12 +257,12 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} , customerId}) =
       // email: data?.email || "",
       // phone: data?.phone || "",
       // address: data?.address || "",
-      gst: data?.panelData?.[0]?.gst || 5
+      gst: data?.gst || 5
     });
 
-    if (data?.panelData?.length) {
-      setSelectPanel(data.panelData[0].selectedPanels);
-      setBody(data.panelData[0].termsAndConditions || "");
+    if (data) {
+      setSelectPanel(data?.selectedPanels);
+      setBody(data?.termsAndConditions || "");
     }
 
   }, [data]);

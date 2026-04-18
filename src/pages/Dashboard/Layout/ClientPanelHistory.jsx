@@ -53,18 +53,18 @@ const ClientPanelHistory = () => {
         ...(proposals?.proposalsData || []).map((p) => ({
             ...p,
             type: "powerplant",
-            email:proposals?.email,
-            phone:proposals?.phone,
-            address:proposals?.address,
-            name:proposals?.name
+            email: proposals?.email,
+            phone: proposals?.phone,
+            address: proposals?.address,
+            name: proposals?.name,
         })),
         ...(proposals?.panelData || []).map((p) => ({
             ...p,
             type: "solarpanel",
-            email:proposals?.email,
-            phone:proposals?.phone,
-            address:proposals?.address,
-            name:proposals?.name
+            email: proposals?.email,
+            phone: proposals?.phone,
+            address: proposals?.address,
+            name: proposals?.name,
         })),
     ];
 
@@ -143,7 +143,22 @@ const ClientPanelHistory = () => {
             });
         }
     };
+    const handleEdit = (item) => {
+        setSelect(item);
 
+        switch (item.type) {
+            case "powerplant":
+                setShowCreateModal(true);
+                break;
+
+            case "solarpanel":
+                setCreatePanelProp(true);
+                break;
+
+            default:
+                console.log("Unknown type");
+        }
+    };
 
     return (
         <>
@@ -166,11 +181,9 @@ const ClientPanelHistory = () => {
 
                         {/* Right Side */}
                         <div className="w-fit  bg-white/10 backdrop-blur-md px-4 sm:px-5 py-3 rounded-xl border border-white/20 text-center ">
-                            <p className="text-xs text-red-100">
-                                Client Name
-                            </p>
+                            <p className="text-xs text-red-100">Client Name</p>
 
-                            <p className="text-base text-xs font-semibold capitalize break-words">
+                            <p className="text-base font-semibold capitalize wrap-break-word">
                                 {proposals?.name || "N/A"}
                             </p>
                         </div>
@@ -182,15 +195,15 @@ const ClientPanelHistory = () => {
                 <div className="max-w-7.2xl  mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10">
                     <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 lg:p-8 border border-gray-300 shadow-gray-400">
                         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mb-6">
-                             <button
-                                    onClick={() => {
-                                       navigate(-1)
-                                    }}
-                                    className={`flex items-center justify-center gap-2 px-3 py-2 bg-[${bgColor}] text-white rounded-xl hover:bg-red-700 transition shadow-md w-full sm:w-auto text-xs hover:scale-105 cursor-pointer`}
-                                >
-                                    <ArrowLeft className="w-5 h-5" />
-                                    Go Back
-                                </button>
+                            <button
+                                onClick={() => {
+                                    navigate(-1);
+                                }}
+                                className={`flex items-center justify-center gap-2 px-3 py-2 bg-[${bgColor}] text-white rounded-xl hover:bg-red-700 transition shadow-md w-full sm:w-auto text-xs hover:scale-105 cursor-pointer`}
+                            >
+                                <ArrowLeft className="w-5 h-5" />
+                                Go Back
+                            </button>
                             {/* Left Side Buttons */}
                             <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
                                 <button
@@ -344,22 +357,32 @@ const ClientPanelHistory = () => {
                                                 <Trash2 className="w-4 h-4" />{" "}
                                                 Delete
                                             </button>
-                                            <button className="flex items-center gap-2 px-4 py-2 rounded-lg border border-amber-500 text-amber-600 hover:bg-amber-50 transition text-sm font-medium">
+                                            <button
+                                                onClick={() => handleEdit(item)}
+                                                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-amber-500 text-amber-600 hover:bg-amber-50 transition text-sm font-medium"
+                                            >
                                                 <Pencil className="w-4 h-4" />{" "}
                                                 Edit
                                             </button>
-                                            <button onClick={()=>{
-                                                const type={
-                                                    solarpanel:'/viewPanelProposal',
-                                                    powerplant:'/preview-proposal'
-                                                };
+                                            <button
+                                                onClick={() => {
+                                                    const type = {
+                                                        solarpanel:
+                                                            "/viewPanelProposal",
+                                                        powerplant:
+                                                            "/preview-proposal",
+                                                    };
 
-                                                const route=type[item?.type]
-                                                 if(route){
-                                                    navigate(route,{state:item})
-                                                 }
-
-                                            }} className="flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-500 text-blue-600 hover:bg-blue-50 transition text-sm font-medium">
+                                                    const route =
+                                                        type[item?.type];
+                                                    if (route) {
+                                                        navigate(route, {
+                                                            state: item,
+                                                        });
+                                                    }
+                                                }}
+                                                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-500 text-blue-600 hover:bg-blue-50 transition text-sm font-medium"
+                                            >
                                                 <Download className="w-4 h-4" />{" "}
                                                 Download
                                             </button>
@@ -391,8 +414,7 @@ const ClientPanelHistory = () => {
                     />
                 )}
             </div>
-            
-             
+
             {proposalData && (
                 <div id="PrintData" className="print-this hidden print:block">
                     <MainPage
