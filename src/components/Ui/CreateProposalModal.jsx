@@ -250,35 +250,33 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData, customerId
         // setValue("email", data?.email);
         // setValue("phone", data?.phone);
         // setValue("address", data?.address);
+        console.log({data})
         setValue(
-            "orderCapacity",
-            data.proposalsData.length > 0
-                ? data?.proposalsData[0]?.orderCapacity / 1000
-                : 0,
+            "orderCapacity",data?.orderCapacity / 1000 || 0,
         );
         setValue(
             "rate",
-            data.proposalsData.length > 0 ? data?.proposalsData[0]?.rate : 0,
+             data?.rate || 0,
         );
         setValue(
             "tax",
-            data.proposalsData.length > 0 ? data?.proposalsData[0]?.tax : 8.9,
+             data?.tax || 8.9,
         );
 
         // setBody(data.proposalsData > 0 ? data?.proposalsData[0]?.termsAndConditions : '');
         setValue(
             "termsAndConditions",
-            data.proposalsData.length > 0
-                ? data?.proposalsData[0]?.termsAndConditions
-                : "",
+           
+                data?.termsAndConditions
+                || "",
         );
         let names =
-            data.proposalsData.length > 0
-                ? data?.proposalsData[0]?.material.map((item) => ({
+            
+                 data?.material.map((item) => ({
                       name: item?.materialData?.name,
                       qty: item?.quantity,
                   }))
-                : defaultMaterials;
+                || defaultMaterials;
         setValue("components", names);
     }, [data]);
 
