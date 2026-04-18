@@ -56,6 +56,7 @@ const App = () => {
                <Layout />
             </ProtectedRoute>
          } />
+         
          {/* power plant */}
          < Route path='preview-proposal' element={< MainPage />} />
            

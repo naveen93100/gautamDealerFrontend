@@ -20,6 +20,7 @@ import {
     Pencil,
     ChevronDown,
     PanelsTopLeft,
+    ArrowLeft,
 } from "lucide-react";
 import { data, useLocation, useNavigate } from "react-router-dom";
 import CreateProposalModal from "../../../components/Ui/CreateProposalModal";
@@ -52,10 +53,18 @@ const ClientPanelHistory = () => {
         ...(proposals?.proposalsData || []).map((p) => ({
             ...p,
             type: "powerplant",
+            email:proposals?.email,
+            phone:proposals?.phone,
+            address:proposals?.address,
+            name:proposals?.name
         })),
         ...(proposals?.panelData || []).map((p) => ({
             ...p,
             type: "solarpanel",
+            email:proposals?.email,
+            phone:proposals?.phone,
+            address:proposals?.address,
+            name:proposals?.name
         })),
     ];
 
@@ -135,6 +144,7 @@ const ClientPanelHistory = () => {
         }
     };
 
+
     return (
         <>
             <div
@@ -142,25 +152,25 @@ const ClientPanelHistory = () => {
                 style={{ backgroundColor: bgColor }}
             >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div className="flex items-center justify-between gap-4">
                         {/* Left Side */}
-                        <div className="text-center md:text-left">
-                            <h1 className="text-lg sm:text-2xl font-bold tracking-wide leading-tight">
+                        <div className="text-center ">
+                            <h1 className="text-lg  font-bold tracking-wide leading-tight">
                                 Client Panel Proposal
                             </h1>
 
-                            <p className="text-xs sm:text-sm text-red-100 mt-1">
+                            <p className="text-xs  text-red-100 mt-1">
                                 Proposal Summary & Details
                             </p>
                         </div>
 
                         {/* Right Side */}
-                        <div className="w-full md:w-auto bg-white/10 backdrop-blur-md px-4 sm:px-5 py-3 rounded-xl border border-white/20 text-center md:text-left">
-                            <p className="text-xs sm:text-sm text-red-100">
+                        <div className="w-fit  bg-white/10 backdrop-blur-md px-4 sm:px-5 py-3 rounded-xl border border-white/20 text-center ">
+                            <p className="text-xs text-red-100">
                                 Client Name
                             </p>
 
-                            <p className="text-base sm:text-lg font-semibold capitalize break-words">
+                            <p className="text-base text-xs font-semibold capitalize break-words">
                                 {proposals?.name || "N/A"}
                             </p>
                         </div>
@@ -169,9 +179,18 @@ const ClientPanelHistory = () => {
             </div>
 
             <div className=" mt-20  dont-print min-h-screen bg-linear-to-br from-red-50 via-orange-50 to-white">
-                <div className="max-w-7.2xl  mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+                <div className="max-w-7.2xl  mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10">
                     <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 lg:p-8 border border-gray-300 shadow-gray-400">
                         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mb-6">
+                             <button
+                                    onClick={() => {
+                                       navigate(-1)
+                                    }}
+                                    className={`flex items-center justify-center gap-2 px-3 py-2 bg-[${bgColor}] text-white rounded-xl hover:bg-red-700 transition shadow-md w-full sm:w-auto text-xs hover:scale-105 cursor-pointer`}
+                                >
+                                    <ArrowLeft className="w-5 h-5" />
+                                    Go Back
+                                </button>
                             {/* Left Side Buttons */}
                             <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
                                 <button
@@ -179,7 +198,7 @@ const ClientPanelHistory = () => {
                                         setSelect(null);
                                         setCreatePanelProp(true);
                                     }}
-                                    className={`flex items-center justify-center gap-2 px-5 py-3 bg-[${bgColor}] text-white rounded-xl hover:bg-red-700 transition shadow-md w-full sm:w-auto`}
+                                    className={`flex items-center justify-center gap-2 px-3 py-2 bg-[${bgColor}] text-white rounded-xl hover:bg-red-700 transition shadow-md w-full sm:w-auto text-xs hover:scale-105 cursor-pointer`}
                                 >
                                     <Plus className="w-5 h-5" />
                                     Create Panel Proposal
@@ -190,7 +209,7 @@ const ClientPanelHistory = () => {
                                         setSelect(null);
                                         setShowCreateModal(true);
                                     }}
-                                    className={`flex items-center justify-center gap-2 px-5 py-3 bg-[${bgColor}] text-white rounded-xl hover:bg-red-700 transition shadow-md w-full sm:w-auto`}
+                                    className={`flex items-center justify-center gap-2 px-3 py-2 bg-[${bgColor}] text-white rounded-xl hover:bg-red-700 transition shadow-md w-full sm:w-auto text-xs hover:scale-105 cursor-pointer`}
                                 >
                                     <Plus className="w-5 h-5" />
                                     Create Power Plant Proposal
@@ -330,14 +349,15 @@ const ClientPanelHistory = () => {
                                                 Edit
                                             </button>
                                             <button onClick={()=>{
-                                                // const type={
-                                                //     solarpanel:
-                                                // };
-                                                 
-                                                if(type.includes(item?.type)){
-                                                    navigate(item?.type,{state:item})
-                                                }
+                                                const type={
+                                                    solarpanel:'/viewPanelProposal',
+                                                    powerplant:'/preview-proposal'
+                                                };
 
+                                                const route=type[item?.type]
+                                                 if(route){
+                                                    navigate(route,{state:item})
+                                                 }
 
                                             }} className="flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-500 text-blue-600 hover:bg-blue-50 transition text-sm font-medium">
                                                 <Download className="w-4 h-4" />{" "}
@@ -371,7 +391,8 @@ const ClientPanelHistory = () => {
                     />
                 )}
             </div>
-
+            
+             
             {proposalData && (
                 <div id="PrintData" className="print-this hidden print:block">
                     <MainPage

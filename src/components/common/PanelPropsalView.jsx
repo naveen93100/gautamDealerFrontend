@@ -8,10 +8,10 @@ const PanelPropsalView = () => {
     const navigate = useNavigate();
 
     const location = useLocation();
-    const proposalDatas = location?.state?.data;
+    const proposalDatas = location?.state;
     const { user } = useAuth()
-
-
+    
+    console.log(proposalDatas);
 
     const data = {
         firstName: user?.firstName,
@@ -24,6 +24,8 @@ const PanelPropsalView = () => {
         address: user?.address,
     }
 
+    // console.log(data)
+
     const customerData = {
         name: proposalDatas?.name,
         email: proposalDatas?.email,
@@ -31,12 +33,10 @@ const PanelPropsalView = () => {
         address: proposalDatas?.address,
     }
 
-    const panelProposal = proposalDatas?.panelData[0];
-    // console.log("panelProposal : ", panelProposal)
+    const panelProposal = proposalDatas;
 
     const wattImages = panelProposal?.selectedPanels?.flatMap(p => p?.watt?.imgWatt || []) || [];
 
-    // console.log("wattIamge : ", wattImages);
 
     const pages = [
         "/panelimg/p1.jpeg",
