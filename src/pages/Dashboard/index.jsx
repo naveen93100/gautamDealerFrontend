@@ -30,23 +30,23 @@ const SolarDealerDashboard = () => {
   const navigate = useNavigate();
 
 
-  const fetchProposal = useCallback(async () => {
-    try {
-      let res = await apiCall('GET', `/api/dealer/get-proposal/${user?.id}`);
-      if (res?.data?.success) {
-        // console.log(res?.data?.images)
-        setProposalsImages(res?.data?.images);
-        setProposals(res?.data?.customersProposal);
-      }
+  // const fetchProposal = useCallback(async () => {
+  //   try {
+  //     let res = await apiCall('GET', `/api/dealer/get-proposal/${user?.id}`);
+  //     if (res?.data?.success) {
+  //       // console.log(res?.data?.images)
+  //       setProposalsImages(res?.data?.images);
+  //       setProposals(res?.data?.customersProposal);
+  //     }
 
-    } catch (er) {
-      console.log(er);
-    }
-  }, [user?.id])
+  //   } catch (er) {
+  //     console.log(er);
+  //   }
+  // }, [user?.id])
 
-  useEffect(() => {
-    fetchProposal();
-  }, [fetchProposal]);
+  // useEffect(() => {
+  //   fetchProposal();
+  // }, [fetchProposal]);
 
   const customFunc = (proposal) => {
 

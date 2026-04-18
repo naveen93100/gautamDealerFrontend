@@ -180,7 +180,7 @@ export default function ClientSection() {
                         const col = colors[index % colors.length];
                         return (
                             <div
-                                key={c.id}
+                                key={index}
                                 onClick={() =>
                                     navigate("/clientpanel-history", {
                                         state: {
