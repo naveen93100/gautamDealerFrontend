@@ -20,7 +20,7 @@
 //     data = {},
 //     customerId,
 // }) => {
-  
+
 //     const [loading, setLoading] = useState(false);
 //     const [panelData, setPanelData] = useState();
 //     const [technologyData, setTechnologyData] = useState();
@@ -45,7 +45,7 @@
 //             gstAmount: 0,
 //         },
 //     ]);
-   
+
 //     const joditConfig = {
 //         readonly: false,
 //         height: 400,
@@ -105,7 +105,7 @@
 
 //     const handleClose = () => {
 //         setCreatePanelData({
-          
+
 //             gst: 5,
 //         });
 
@@ -146,7 +146,7 @@
 //                         },
 //                     },
 //                 );
-              
+
 //                 setPanelData(apiData?.data?.data);
 //             } catch (error) {
 //                 toast.error(error?.response?.data?.message || error?.message);
@@ -220,7 +220,7 @@
 //             }
 
 //             selectPanel.map((panel) => {
-            
+
 //                 if (
 //                     !panel?.panelId ||
 //                     !panel?.technologyId ||
@@ -256,11 +256,10 @@
 //         }
 //     };
 
-   
 //     useEffect(() => {
 //         if (!data) {
 //             setCreatePanelData({
-          
+
 //                 gst: 5,
 //             });
 //             setSelectPanel([
@@ -343,7 +342,6 @@
 //                             </div>
 
 //                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                               
 
 //                                 <div>
 //                                     <label className="block text-sm font-medium mb-2">
@@ -406,22 +404,186 @@
 
 // export default CreateSalesPanelProposal;
 
-import React from 'react'
+import React, { useState } from "react";
+import {
+    X,
+    User,
+    Phone,
+    Mail,
+    MapPin,
+    Zap,
+    MessageCircle,
+    Plus,
+    PanelsTopLeft,
+    PanelTop,
+    Sun,
+} from "lucide-react";
 
-const CreateSalesPanelProposal = () => {
-  return (
-    <div>
-      
-    </div>
-  )
-}
+import JoditEditor from "jodit-react";
+import SalesPanelSelector from "./SalesPanelSelector";
+const CreateSalesPanelProposal = ({ onClose }) => {
+    const [selectedPanel, setSelectedPanel] = useState(null);
 
-export default CreateSalesPanelProposal
+    const [form, setForm] = useState({
+        customerName: "",
+        email: "",
+        phone: "",
+        address: "",
+        capacity: "",
+        gst: 8.9,
+    });
+ const [body, setBody] = useState(`
+         <h3><strong>Payment Terms</strong></h3>
+              <ul>
+              <li><strong>20% advance</strong> at the time of order confirmation.</li>
+              <li><strong>75% payment</strong> upon delivery of material at site.</li>
+              <li><strong>5% balance</strong> after completion of net metering.</li>
+              <li>Net metering licensing and documentation will be handled by our team.</li>
+              <li>Any applicable net metering charges will be charged separately.</li>
+              </ul>
+  
+              <h3><strong>Mode of Payments</strong></h3>
+              <p>
+              Kindly transfer the advance amount through any of the following modes: <br>
+              <strong>Bank Transfer:</strong> [Bank Account Number] <br>
+              <strong>UPI:</strong> [UPI ID]
+              </p>
+  
+              <br>
+  
+              <h3 style="background-color:#a20000; color:#fff; display:inline-block;">
+              <strong>Terms and Conditions:</strong>
+              </h3>
+  
+              <p><strong>A) Scope &amp; Design Basis:</strong></p>
+              <p>
+              The proposal is prepared based on a standard system/design configuration. Any changes or deviations in scope, layout, specifications, or quantities may result in additional costs.
+              </p>
+  
+              <p><strong>B) Validity of Quotation:</strong></p>
+              <p>
+              This quotation is valid for <strong>7 days</strong> from the date of issue.
+              </p>
+  
+              <p><strong>C) WARRANTY:</strong></p>
+              <p>
+              <strong>5 Year warranty</strong> on Solar System.
+              </p>
+  
+              <p style="font-size: 14px; color: #555;">
+              <em>
+                  The above warranties cover manufacturing defects, premature material degradation, and equipment failures.
+              </em>
+              </p>
+  `);
 
 
+    const updateField = (key, value) => {
+        setForm((prev) => ({ ...prev, [key]: value }));
+    };
 
+    const totalWatt = Number(form.capacity || 0) * 1000;
 
+    const baseAmount = totalWatt * Number(selectedPanel?.rate || 0);
 
+    const gstAmount = (baseAmount * Number(form.gst || 0)) / 100;
 
+    const grandTotal = baseAmount + gstAmount;
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
 
+        const payload = {
+            ...form,
+            selectedPanel,
+            terms: body,
+            baseAmount,
+            gstAmount,
+            grandTotal,
+        };
+
+        console.log(payload);
+        alert("Proposal Created");
+        onClose();
+    };
+
+    const joditConfig = {
+        readonly: false,
+        height: 250,
+        toolbarAdaptive: false,
+    };
+
+    return (
+        <div className="fixed inset-0 z-999 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+            <div className="bg-white rounded-3xl shadow-2xl w-full max-w-5xl overflow-hidden">
+                {/* Header */}
+                <div className="bg-[#a20000] text-white px-6 py-5 flex items-center justify-between">
+                    <div>
+                        <h2 className="text-2xl font-bold">
+                            Create Sales Proposal
+                        </h2>
+
+                        <p className="text-sm text-red-100">
+                            Fill customer and panel details
+                        </p>
+                    </div>
+
+                    <button
+                        onClick={onClose}
+                        className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center"
+                    >
+                        <X size={20} />
+                    </button>
+                </div>
+
+                {/* Form */}
+                <form
+                    onSubmit={handleSubmit}
+                    className="p-6 max-h-[85vh] overflow-y-auto"
+                >
+                    {/* Selector */}
+                    <SalesPanelSelector
+                        selectedPanel={selectedPanel}
+                        setSelectedPanel={setSelectedPanel}
+                    />
+
+                    {/* Terms */}
+                    <div className="mb-6">
+                        <div className="flex items-center gap-2 mb-3">
+                            <MessageCircle size={18} className="text-red-600" />
+                            <h3 className="font-semibold">
+                                Terms & Conditions
+                            </h3>
+                        </div>
+
+                        <JoditEditor
+                            value={body}
+                            config={joditConfig}
+                            onBlur={(newContent) => setBody(newContent)}
+                        />
+                    </div>
+
+                    {/* Footer */}
+                    <div className="flex flex-col sm:flex-row gap-3">
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="sm:flex-1 border py-3 rounded-xl"
+                        >
+                            Cancel
+                        </button>
+
+                        <button
+                            type="submit"
+                            className="sm:flex-1 bg-[#a20000] hover:bg-red-800 text-white py-3 rounded-xl"
+                        >
+                            Create Proposal
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+};
+
+export default CreateSalesPanelProposal;

@@ -13,7 +13,7 @@ import CreateSalesPanelProposal from "./CreateSalesPanelProposal";
 
 const SalesClientPanelHistory = () => {
     const [createSalesPanelProp, setCreateSalesPanelProp] = useState(false);
-     
+
     const [selectSales, setSelectSales] = useState(null);
     const navigate = useNavigate();
     const bgColor = "#a20000";
@@ -70,7 +70,7 @@ const SalesClientPanelHistory = () => {
                         <button
                             onClick={() => {
                                 setSelectSales(null);
-                              setCreateSalesPanelProp(true)
+                                setCreateSalesPanelProp(true);
                             }}
                             className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#a20000] hover:bg-red-800 text-white px-5 py-3 rounded-xl shadow-md transition-all"
                         >
@@ -146,16 +146,13 @@ const SalesClientPanelHistory = () => {
                         ))}
                     </div>
                 </div>
-
-                {createSalesPanelProp && (
-                    <CreateSalesPanelProposal
-                        onClose={setCreateSalesPanelProp}
-                        // proposalData={fetchProposal}
-                        // data={select}
-                        // setData={setSelect}
-                        // customerId={customerId}
-                    />
-                )}
+                <div>
+                    {createSalesPanelProp && (
+                        <CreateSalesPanelProposal
+                            onClose={() => setCreateSalesPanelProp(false)}
+                        />
+                    )}
+                </div>
             </div>
         </div>
     );
