@@ -240,7 +240,7 @@ const Login = () => {
         let res = await axios.post(`${import.meta.env.VITE_SERVER_ADDRESS}/api/sales/login`, data, { withCredentials: true });
         if (res?.data?.success) {
           login(res?.data?.data, res?.data?.token);
-          navigate("/sales/dashboard");
+          navigate("/sales/salesdashbord");
         }
       }
 
@@ -263,7 +263,7 @@ const Login = () => {
     admin:  { heading: "Admin Login",  sub: "" },
     sales:  { heading: "Sales Login",  sub: "Access your sales dashboard" },
   };
-  
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4 font-sans">
@@ -405,6 +405,8 @@ const Login = () => {
                 </span>
               )}
             </div>
+
+            <span onClick={() => navigate("/salesdashbord")} className="text-red-400 cursor-pointer text-2xl">Sales Login</span>
           </div>
 
         </form>
