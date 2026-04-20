@@ -13,16 +13,16 @@ import {
 import { useAuth } from "../../Context/AuthContext";
 import { apiCall } from "../../services/api";
 import toast from "react-hot-toast";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { BiRupee } from "react-icons/bi";
 import JoditEditor from "jodit-react";
 
 const CreateProposalModal = ({ setClose, proposalData, data, setData, customerId }) => {
     const [loading, setLoading] = useState(false);
 
-  
+
     const { user, token } = useAuth();
-    const joditConfig = {
+    const joditConfig = useMemo(() => ({
         readonly: false,
         height: 400,
         resize: true,
@@ -34,7 +34,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData, customerId
             "bold,italic,underline,|,ul,ol,|,table,link,image,|,align,left,center,right,justify,|,brush,eraser,|,paragraph,fontsize,|,undo,redo",
         allowHTML: true,
         useClasses: true,
-    };
+    }), []);
 
     const MATERIALS = [
         "Inverter",
@@ -116,16 +116,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData, customerId
     const handleCreateProposal = async (d) => {
         toast.dismiss();
         // edit
-        // console.log("data: ",data)
-        if (data?.proposalsData.length > 0) {
-            // console.log(selectedMaterial);
-
-            // if (Object.keys(dirtyFields).length === 0) {
-            //     toast.error('No field changes detected.');
-            //     return;
-            // }
-            // console.log(d);
-
+        if (data) {
             if (selectedMaterial.length < 5) {
                 toast.error("Please Select At least 5 Components");
                 return;
@@ -133,31 +124,11 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData, customerId
 
             let formData = {};
 
-            ((formData.name = d?.customerName),
-                (formData.email = d?.email),
-                (formData.phone = d?.phone),
-                (formData.address = d?.address),
-                (formData.rate = d?.rate),
-                (formData.orderCapacity = d?.orderCapacity),
-                (formData.tax = d?.tax),
-                (formData.propId = data?.proposalsData[0]?._id));
+            formData.rate = d?.rate,
+                formData.orderCapacity = d?.orderCapacity,
+                formData.tax = d?.tax,
+                formData.propId = data?._id;
 
-            // if (Object.keys(dirtyFields).length >= 1) {
-            //     Object.keys(dirtyFields).forEach((k) => {
-            //         if (k === 'rate' || k === 'orderCapacity' || k === 'termsAndConditions') {
-            //             // if (k === 'rate' || k === 'orderCapacity') {
-            //             formData[k] = d?.[k]
-            //         }
-            //         else {
-            //             if (k === 'customerName') {
-            //                 formData.name = d['customerName'];
-            //             }
-            //             else {
-            //                 formData[k] = d[k];
-            //             }
-            //         }
-            //     })
-            // }
 
             try {
                 setLoading(true);
@@ -166,7 +137,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData, customerId
 
                 let res = await apiCall(
                     "PATCH",
-                    "/api/dealer/edit-proposal",
+                    "/api/dealer/edit-powerplant-proposal",
                     formData,
                 );
                 if (res?.data?.success) {
@@ -191,7 +162,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData, customerId
                 }
                 d.dealerId = user?.id;
                 d.termsAndConditions = Body;
-                d.customerId=customerId
+                d.customerId = customerId
 
                 let res = await apiCall(
                     "POST",
@@ -245,42 +216,32 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData, customerId
 
     useEffect(() => {
         if (!data) return;
-        // console.log(data)
-        // setValue("customerName", data?.name);
-        // setValue("email", data?.email);
-        // setValue("phone", data?.phone);
-        // setValue("address", data?.address);
-        console.log({data})
         setValue(
-            "orderCapacity",data?.orderCapacity / 1000 || 0,
+            "orderCapacity", data?.orderCapacity / 1000 || 0,
         );
         setValue(
             "rate",
-             data?.rate || 0,
+            data?.rate || 0,
         );
         setValue(
             "tax",
-             data?.tax || 8.9,
+            data?.tax || 8.9,
         );
 
-        // setBody(data.proposalsData > 0 ? data?.proposalsData[0]?.termsAndConditions : '');
         setValue(
             "termsAndConditions",
-           
-                data?.termsAndConditions
-                || "",
+
+            data?.termsAndConditions
+            || "",
         );
-        let names =
-            
-                 data?.material.map((item) => ({
-                      name: item?.materialData?.name,
-                      qty: item?.quantity,
-                  }))
-                || defaultMaterials;
+        let names = data?.material.map((item) => ({
+            name: item?.materialData?.name,
+            qty: item?.quantity,
+        }))
+            || defaultMaterials;
+
         setValue("components", names);
     }, [data]);
-
-    // console.log("selected", selectedMaterial)
 
     return (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
@@ -314,106 +275,6 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData, customerId
 
                 <form onSubmit={handleSubmit(handleCreateProposal)}>
                     <div className="p-6 overflow-y-auto max-h-[calc(90vh-50px)]">
-                        {/* Customer Information */}
-
-                        {/* <section className="mb-6">
-                            <div className="flex items-center gap-2 mb-4">
-                                <User className="w-5 h-5 text-red-600" />
-                                <h3 className="text-lg font-semibold">
-                                    Customer Information 
-                                </h3>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                
-                                <div className="md:col-span-2">
-                                    <label className="block text-sm font-medium mb-2">
-                                        Customer Name *
-                                    </label>
-                                    <input
-                                        {...register("customerName", {
-                                            required:
-                                                "Customer name is required",
-                                        })}
-                                        className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-red-500"
-                                        placeholder="Enter customer full name"
-                                    />
-                                    {errors.customerName && (
-                                        <p className="text-red-500 text-sm mt-1">
-                                            {errors.customerName.message}
-                                        </p>
-                                    )}
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium mb-2">
-                                        Email *
-                                    </label>
-                                    <div className="relative">
-                                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                        <input
-                                            {...register("email", {
-                                                required: "Email is required",
-                                                pattern: {
-                                                    value: /^\S+@\S+$/i,
-                                                    message: "Invalid email",
-                                                },
-                                            })}
-                                            className="w-full pl-11 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-red-500"
-                                            placeholder="customer@example.com"
-                                        />
-                                    </div>
-                                    {errors.email && (
-                                        <p className="text-red-500 text-sm mt-1">
-                                            {errors.email.message}
-                                        </p>
-                                    )}
-                                </div>
-
-                         
-                                <div>
-                                    <label className="block text-sm font-medium mb-2">
-                                        Phone *
-                                    </label>
-                                    <div className="relative">
-                                        <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                        <input
-                                            {...register("phone", {
-                                                required:
-                                                    "Phone number is required",
-                                            })}
-                                            className="w-full pl-11 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-red-500"
-                                            placeholder="+91 98765 43210"
-                                        />
-                                    </div>
-                                    {errors.phone && (
-                                        <p className="text-red-500 text-sm mt-1">
-                                            {errors.phone.message}
-                                        </p>
-                                    )}
-                                </div>
-
-                                <div className="md:col-span-2">
-                                    <label className="block text-sm font-medium mb-2">
-                                        Address *
-                                    </label>
-                                    <textarea
-                                        {...register("address", {
-                                            required: "Address is required",
-                                        })}
-                                        rows={3}
-                                        className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-red-500 resize-none"
-                                        placeholder="Complete installation address"
-                                    />
-                                    {errors.address && (
-                                        <p className="text-red-500 text-sm mt-1">
-                                            {errors.address.message}
-                                        </p>
-                                    )}
-                                </div>
-                            </div>
-
-                        </section> */}
 
                         {/* System Details */}
                         <section className="mb-6">
@@ -492,13 +353,6 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData, customerId
                                     Terms & Conditions / Message
                                 </h3>
                             </div>
-
-                            {/* <textarea
-                                    {...register("termsAndConditions")}
-                                    rows={4}
-                                    className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-red-500 resize-y min-h-60"
-                                    placeholder="Add any terms, conditions, or messages to include in the proposal PDF"
-                                /> */}
 
                             <JoditEditor
                                 config={joditConfig}
@@ -605,7 +459,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData, customerId
                                 type="submit"
                                 className={` p-3 sm:flex-1 bg-linear-to-r from-red-600 to-red-600 text-white rounded-xl ${loading ? "cursor-not-allowed" : "cursor-pointer"}`}
                             >
-                                {data?.proposalsData?.length > 0
+                                {data
                                     ? "Update Proposal"
                                     : "Create Proposal"}
                             </button>

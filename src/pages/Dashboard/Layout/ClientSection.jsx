@@ -92,6 +92,7 @@ export default function ClientSection() {
                 .includes(q)
         );
     });
+    
     const handleCreate = async () => {
         const newErrors = {};
 

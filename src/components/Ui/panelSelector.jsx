@@ -31,15 +31,6 @@ const PanelSelector = ({
         setActiveIndex(selectPanel.length);
     };
 
-    // const handleChange = (index, key, value) => {
-    //     setActiveIndex(index);
-
-    //     setSelectPanel(prev => {
-    //         const copy = [...prev];
-    //         copy[index] = { ...copy[index], [key]: value };
-    //         return copy;
-    //     });
-    // };
     const handleChange = (index, key, value) => {
         setActiveIndex(index);
 
@@ -110,7 +101,8 @@ const PanelSelector = ({
             </div>
 
             {selectPanel.map((panel, index) => (
-                <React.Fragment key={index}>
+                <React.Fragment key={panel?.panelId}>
+
                     <div  className="flex items-center justify-between mb-3">
                         <h4 className="ml-2 text-base font-semibold text-red-600">
                             Panel {index + 1}
@@ -184,6 +176,7 @@ const PanelSelector = ({
                                 </label>
 
                                 <select
+                                    key={index}
                                     required
                                     value={panel.constructiveId}
                                     onChange={(e) =>
@@ -215,6 +208,7 @@ const PanelSelector = ({
                                 </label>
 
                                 <select
+                                    key={index}
                                     required
                                     value={panel.wattId}
                                     onChange={(e) =>
@@ -243,6 +237,7 @@ const PanelSelector = ({
                                     Quantity
                                 </label>
                                 <input
+                                   key={index}
                                     type="number"
                                     min={1}
                                     required
@@ -266,6 +261,7 @@ const PanelSelector = ({
                                     <div className="relative">
                                         <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                                         <input
+                                          key={index}
                                             type="number"
                                             name="rate"
                                             value={panel.rate}
@@ -307,6 +303,7 @@ const PanelSelector = ({
                                             Price Panel
                                         </label>
                                         <input
+                                           key={index}
                                             name="totalPrice"
                                             value={panel?.totalPrice}
                                             onChange={(e) =>
@@ -325,6 +322,7 @@ const PanelSelector = ({
                                             Gst Amount
                                         </label>
                                         <input
+                                           key={index}
                                             name="gstAmount"
                                             value={panel?.gstAmount}
                                             onChange={(e) =>
