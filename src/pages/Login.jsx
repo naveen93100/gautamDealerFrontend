@@ -235,13 +235,13 @@ const Login = () => {
           navigate("/admin");
         }
 
-      } else if (loginType === "sales") {
-        // Sales login uses userId + password
-        let res = await axios.post(`${import.meta.env.VITE_SERVER_ADDRESS}/api/sales/login`, data, { withCredentials: true });
-        if (res?.data?.success) {
-          login(res?.data?.data, res?.data?.token);
-          navigate("/sales/salesdashbord");
-        }
+      // } else if (loginType === "sales") {
+      //   // Sales login uses userId + password
+      //   let res = await axios.post(`${import.meta.env.VITE_SERVER_ADDRESS}/api/sales/login`, data, { withCredentials: true });
+      //   if (res?.data?.success) {
+      //     login(res?.data?.data, res?.data?.token);
+      //     navigate("/sales/salesdashbord");
+      //   }
       }
 
     } catch (er) {
@@ -399,14 +399,14 @@ const Login = () => {
                   Admin Login
                 </span>
               )}
-              {loginType !== "sales" && (
+              {/* {loginType !== "sales" && (
                 <span onClick={() => switchLoginType("sales")} className="text-red-700 cursor-pointer hover:underline text-sm">
                   Sales Login
                 </span>
-              )}
+              )} */}
             </div>
 
-            <span onClick={() => navigate("/salesdashbord")} className="text-red-400 cursor-pointer text-2xl">Sales Login</span>
+            {/* <span onClick={() => navigate("/salesdashbord")} className="text-red-400 cursor-pointer text-2xl">Sales Login</span> */}
           </div>
 
         </form>
