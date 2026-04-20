@@ -37,7 +37,7 @@ const MainPage = ({ printP }) => {
     const { state } = useLocation();
     const { user } = useAuth()
     const proposalDatas = state
-    console.log(proposalDatas)
+
     const navigate = useNavigate();
 
     if (!proposalDatas) return <Navigate to='/dashboard' />;
@@ -52,7 +52,6 @@ const MainPage = ({ printP }) => {
         companyLogo: user?.profileImg,
         address: user?.address,
     }
-    console.log(data)
 
 
     const customerData = {
@@ -74,8 +73,6 @@ const MainPage = ({ printP }) => {
         tax: proposalDatas?.tax
     }
 
-    //  console.log("proposalsData : ",proposalsData)
-
 
     return (
 
@@ -96,9 +93,9 @@ const MainPage = ({ printP }) => {
                 </button>
 
                 <PdfComp bg={pages[0]}>
-                    <div className="absolute scale-150 top-[8mm] left-[22mm]  w-40 h-25  overflow-hidden flex items-center justify-center">
+                    <div className="absolute scale-150 top-[11mm] left-[22mm]  w-45 h-25  flex items-center justify-center">
                         {data?.companyLogo ?
-                            <img loading='lazy' src={data?.companyLogo} alt="" className=' w-2/2 object-cover ' />
+                            <img loading='lazy' src={data?.companyLogo} alt="" className=' w-2/3 object-cover ' />
                             :
                              <h1 className='uppercase'>{data?.companyName}</h1> 
                          } 
@@ -353,7 +350,7 @@ const MainPage = ({ printP }) => {
                 </PdfComp>
 
                 <PdfComp bg={pages[9]}>
-                    <div className="absolute text-red-500 scale-150 top-[8mm] left-[22mm]  w-40 h-25  overflow-hidden flex items-center justify-center">
+                    <div className="absolute text-red-500 scale-150 top-[11mm] left-[22mm]  w-45 h-25   flex items-center justify-center">
                         {/* <img loading='lazy' src={data?.companyLogo} alt="" className='w-2/3 object-cover ' /> */}
                         {data?.companyLogo ?
                             <img loading='lazy' src={data?.companyLogo} alt="" className=' w-2/3 object-cover ' />

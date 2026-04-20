@@ -1,14 +1,13 @@
 import { IndianRupee, Mail, MessageCircle, Phone, Sun, User, X } from 'lucide-react';
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import toast from 'react-hot-toast';
 import { apiCall } from '../../services/api';
 import PanelSelector from './panelSelector';
 import JoditEditor from 'jodit-react';
 import { useAuth } from '../../Context/AuthContext';
 
-const CreatePannelPropsal = ({ onClose, proposalData, data = {} , customerId}) => {
-  // console.log("data : ", data);
-  // console.log(data?.name)
+const CreatePannelPropsal = ({ onClose, proposalData, data = {}, customerId }) => {
+  console.log("d:", data);
 
   const [loading, setLoading] = useState(false);
   // const { user, token } = useAuth();
@@ -19,15 +18,10 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} , customerId}) =
   const [activeIndex, setActiveIndex] = useState(0);
   const [createPanelData, setCreatePanelData] = useState({
     customerName: "",
-    // email: "",
-    // phone: "",
-    // address: "",
     gst: 5
   })
 
   const dealerId = JSON.parse(localStorage.getItem("userData"))?.id;
-  // console.log(dealerId);
-
 
   const [selectPanel, setSelectPanel] = useState(
     [{
@@ -41,9 +35,9 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} , customerId}) =
       gstAmount: 0
     }]
   )
-  // console.log("selected panel : ", selectPanel)
 
-  const joditConfig = {
+
+  const joditConfig = useMemo(()=>({
     readonly: false,
     height: 400,
     resize: true,
@@ -54,7 +48,7 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} , customerId}) =
     buttons: "bold,italic,underline,|,ul,ol,|,table,link,image,|,align,left,center,right,justify,|,brush,eraser,|,paragraph,fontsize,|,undo,redo",
     allowHTML: true,
     useClasses: true,
-  }
+  }),[]);
 
   const [Body, setBody] = useState(`
        <h3><strong>Payment Terms</strong></h3>
@@ -134,6 +128,8 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} , customerId}) =
 
   }
 
+
+
   useEffect(() => {
     const fetchPanel = async () => {
       toast.dismiss();
@@ -194,26 +190,33 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} , customerId}) =
     e.preventDefault();
     try {
 
-      const payload = {
-        selectedPanel: selectPanel, termsAndConditions: Body, ...createPanelData, dealerId , customerId
+      let payload;
+      if (data) {
+        payload = {
+          selectedPanel: selectPanel, termsAndConditions: Body, ...createPanelData, propId:data?._id
+        }
+      }
+      else {
+        payload = {
+          selectedPanel: selectPanel, termsAndConditions: Body, ...createPanelData, dealerId, customerId
+        }
       }
 
-      if ( !payload?.gst) {
+      if (!payload?.gst) {
         return alert("fields are required: GST.");
-
+      
       }
-
 
       selectPanel.map((panel) => {
-        // console.log("panel ", panel)
         if (!panel?.panelId || !panel?.technologyId || !panel?.constructiveId || !panel?.wattId || !panel?.rate) {
           return alert("Please fill in all panel details: Panel Type, Technology, Constructive Type, Panel Watt, and Rate per Panel.");
         }
       })
-      if (!data || data?.panelData.length === 0) {
+
+      if (!data) {
         var panelPropsal = await apiCall("post", "/api/dealer/create-solarPanel-proposal", payload)
       } else {
-        var panelPropsal = await apiCall("put", "/api/dealer/updatePanelProposal", payload)
+        var panelPropsal = await apiCall("put", "/api/dealer/edit-solarPanel-proposal", payload)
       }
       toast.success(panelPropsal?.data?.message);
       setTimeout(() => {
@@ -231,12 +234,9 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} , customerId}) =
     if (!data) {
 
       setCreatePanelData({
-        // customerName: "",
-        // email: "",
-        // phone: "",
-        // address: "",
         gst: 5
       });
+
       setSelectPanel(
         [{
           panelId: "",
@@ -253,10 +253,6 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} , customerId}) =
       return;
     }
     setCreatePanelData({
-      // customerName: data?.name || "",
-      // email: data?.email || "",
-      // phone: data?.phone || "",
-      // address: data?.address || "",
       gst: data?.gst || 5
     });
 
@@ -271,7 +267,7 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} , customerId}) =
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full min-h-[90vh] overflow-hidden">
-      
+
         <div className="bg-[#d40202] p-4 text-white relative">
           <button
             onClick={() => {
@@ -298,7 +294,7 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} , customerId}) =
 
         <form>
           <div className="p-6 overflow-y-auto max-h-[calc(90vh-50px)]">
-       
+
 
             <PanelSelector
               selectPanel={selectPanel}
@@ -318,22 +314,6 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} , customerId}) =
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-
-                {/* <div>
-                  <label className="block text-sm  mt-4 font-medium mb-2">Unit Price <i className="fa-solid fa-rupee-sign text-red-600"></i> </label>
-                  <div className="relative">
-                    <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="number"
-                      name="rate"
-                      value={panel.rate}
-                      onChange={e => handleChange(index, "rate", e.target.value)}
-                      className="w-full pl-11 pr-4 py-3 border rounded-xl focus:ring-2"
-                      placeholder="Enter Panel Price"
-                    />
-                  </div>
-                </div> */}
 
                 <div>
                   <label className="block text-sm font-medium mb-2">GST* (%)</label>
@@ -358,8 +338,10 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} , customerId}) =
               <JoditEditor
                 config={joditConfig}
                 value={Body}
-                onBlur={(c) => setBody(c)}
+                onBlur={(d)=>setBody(e)}
               />
+
+
             </section>
 
             <div className="items-center justify-center bg-gray-50 flex gap-3 mt-5">
@@ -380,16 +362,7 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {} , customerId}) =
 
               </button>
             </div>
-
-
-
-
-
           </div>
-
-
-
-
         </form>
       </div >
     </div >
