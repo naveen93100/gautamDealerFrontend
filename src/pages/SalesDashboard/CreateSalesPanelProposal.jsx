@@ -432,7 +432,7 @@ const CreateSalesPanelProposal = ({ onClose }) => {
         capacity: "",
         gst: 8.9,
     });
- const [body, setBody] = useState(`
+    const [body, setBody] = useState(`
          <h3><strong>Payment Terms</strong></h3>
               <ul>
               <li><strong>20% advance</strong> at the time of order confirmation.</li>
@@ -476,7 +476,6 @@ const CreateSalesPanelProposal = ({ onClose }) => {
               </em>
               </p>
   `);
-
 
     const updateField = (key, value) => {
         setForm((prev) => ({ ...prev, [key]: value }));

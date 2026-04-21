@@ -11,7 +11,7 @@ const AdminSidebar = ({ sidebarOpen }) => {
     const menuItems = [
         { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, path: "/admin" },
         { id: "panel", label: "Panel Data", icon: Package, path: "/admin/panel" },
-        // { id: "customers", label: "Customers", icon: Users, path: "/admin/customers" },
+        { id: "sales", label: "Create sales Account", icon: Users, path: "/admin/sales" },
     ];
 
     useEffect(() => {

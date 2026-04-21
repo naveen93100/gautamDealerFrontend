@@ -267,6 +267,8 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4 font-sans">
+
+   
       <div className="bg-white p-8 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] w-full shadow-gray-400 max-w-md border border-gray-300">
 
         {/* Brand Logo Section */}

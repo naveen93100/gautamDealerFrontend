@@ -26,6 +26,7 @@ import ClientPanelHistory from "./pages/Dashboard/Layout/ClientPanelHistory";
 // sales proposal
 import SalesDashBoard from "./pages/SalesDashboard/SalesDashBoard";
 import SalesClientPanelHistory from "./pages/SalesDashboard/SalesClientPanelHistory";
+import SalesPersonList from "./pages/Dashboard/SalesAdmin/SalesPersonList";
 
 const App = () => {
     const navigate = useNavigate();
@@ -60,6 +61,7 @@ const App = () => {
                     element={<PanelWatt />}
                 />
                 <Route path="dealer" element={<DealerList />} />
+                <Route path="sales" element={<SalesPersonList />} />
             </Route>
             {/* <Route path="users" element={<AdminUsers />} /> */}
 
