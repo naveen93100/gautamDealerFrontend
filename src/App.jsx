@@ -61,7 +61,7 @@ const App = () => {
                     element={<PanelWatt />}
                 />
                 <Route path="dealer" element={<DealerList />} />
-                <Route path="sales" element={<SalesPersonList />} />
+                <Route path="sales" element={<SalesPersonList/>}/>
             </Route>
             {/* <Route path="users" element={<AdminUsers />} /> */}
 
@@ -88,13 +88,11 @@ const App = () => {
             {/* <Route path='test' element={<AdminDashboard />} /> */}
 
             {/* sales porposal router  */}
-            <Route>
-                <Route path="salesdashbord" element={<SalesDashBoard />} />
+                <Route path="/salesdashbord" element={<SalesDashBoard />} />
                 <Route
-                    path="salesclient-history"
+                    path="/salesclient-history"
                     element={<SalesClientPanelHistory />}
                 />
-            </Route>
         </Routes>
     );
 };

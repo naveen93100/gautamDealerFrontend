@@ -10,8 +10,10 @@ export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(null);
 
     const login = (userData, token) => {
-        localStorage.setItem('token', token);
-        localStorage.setItem('userData', JSON.stringify(userData));
+        // localStorage.setItem('token', token);
+        // localStorage.setItem('userData', JSON.stringify(userData));
+        if(userData) localStorage.setItem('userData', JSON.stringify(userData));
+        if(token) localStorage.setItem('token', token);
         setUser(userData);
         setToken(token);
     }
@@ -24,8 +26,15 @@ export const AuthProvider = ({ children }) => {
     }
 
     useEffect(() => {
-        let d = localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')) : null;
-        let t = localStorage.getItem('token') ? localStorage.getItem('token') : null;
+
+        const rawUser = localStorage.getItem('userData');
+        const rawToken = localStorage.getItem('token');
+const d = rawUser && rawUser !== "Undefined" ? JSON.parse(rawUser) : null;
+const t = rawToken && rawToken !== "Undefined" ? rawToken : null;
+
+        console.log("User Data:", localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')) : null);
+        // let d = localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')) : null;
+        // let t = localStorage.getItem('token') ? localStorage.getItem('token') : null;
 
         if (!d && !t) return;
 

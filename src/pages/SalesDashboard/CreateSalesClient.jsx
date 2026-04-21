@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { apiCall } from "../../services/api";
 
 const PALETTE = [
     {
@@ -177,19 +178,63 @@ export default function CreateSalesClient() {
         return e;
     };
 
-    const handleCreate = () => {
+    // const handleCreate = async () => {
+    //     const errs = validate();
+    //     if (Object.keys(errs).length) {
+    //         setErrors(errs);
+    //         toast.error("Please fill all fields");
+    //         return;
+    //     }
+    //     setClients((p) => [{ ...form, _id: Date.now().toString() }, ...p]);
+    //     toast.success("Client created successfully");
+    //     resetForm();
+    //     setShowModal(false);
+
+    //     try {
+    //         const  response = await apiCall("Post", "/api/sales/create-client", form);
+    //         if(response.success){
+    //             toast.success("Client created successfully");
+    //             setClients((p) => [{ ...response.client }, ...p]);
+    //             resetForm();
+    //             setShowModal(false);
+    //         } else {
+    //             toast.error(response.message || "Failed to create client");
+    //         }
+    //     } catch (error) {
+    //         toast.error("An error occurred while creating the client");
+    //     }
+    // };
+
+    const handleCreate = async () => {
         const errs = validate();
+
         if (Object.keys(errs).length) {
             setErrors(errs);
             toast.error("Please fill all fields");
             return;
         }
-        setClients((p) => [{ ...form, _id: Date.now().toString() }, ...p]);
-        toast.success("Client created successfully");
-        resetForm();
-        setShowModal(false);
-    };
 
+        try {
+            const response = await apiCall(
+                "POST",
+                "/api/sales/create-client",
+                form,
+            );
+
+            if (response?.success) {
+                toast.success("Client created successfully");
+
+                setClients((prev) => [response.client, ...prev]);
+
+                resetForm();
+                setShowModal(false);
+            } else {
+                toast.error(response?.message || "Failed to create client");
+            }
+        } catch (error) {
+            toast.error("An error occurred while creating the client");
+        }
+    };
     const handleEdit = (c) => {
         setIsEdit(true);
         setSelectedClient(c);
@@ -478,7 +523,39 @@ export default function CreateSalesClient() {
 
                         {/* Form body */}
                         <div className="px-6 py-5">
-                            <Field
+                            {Field({
+                                fkey: "name",
+                                label: "Full Name",
+                                placeholder: "Enter full name",
+                            })}
+                            {Field({
+                                fkey: "email",
+                                label: "Email Address",
+                                placeholder: "Enter email",
+                            })}
+                            {Field({
+                                fkey: "phone",
+                                label: "Phone Number",
+                                placeholder: "Enter mobile number",
+                            })}
+
+                            {Field({
+                                fkey: "address",
+                                label: "Address",
+                                placeholder: "Enter address",
+                            })}
+                            {Field({
+                                fkey: "companyName",
+                                label: "Company Name",
+                                placeholder: "Enter Company Name",
+                            })}
+                            {Field({
+                                fkey: "gstNumber",
+                                label: "GST Number",
+                                placeholder: "Enter GST Number",
+                            })}
+
+                            {/* <Field
                                 fkey="name"
                                 label="Full Name"
                                 placeholder="Enter full name"
@@ -508,7 +585,7 @@ export default function CreateSalesClient() {
                                 fkey="gstNumbar"
                                 label="GST Number"
                                 placeholder="Enter GST Number"
-                            />
+                            /> */}
 
                             <div className="flex gap-2.5 mt-2">
                                 <button
@@ -551,8 +628,3 @@ export default function CreateSalesClient() {
         </div>
     );
 }
-
-
-
-
-
