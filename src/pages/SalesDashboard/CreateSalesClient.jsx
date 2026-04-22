@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Mail,
     Phone,
@@ -13,6 +13,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { apiCall } from "../../services/api";
+import { useAuth } from "../../Context/AuthContext";
 
 const PALETTE = [
     {
@@ -59,65 +60,10 @@ const PALETTE = [
     },
 ];
 
-const DUMMY_CLIENTS = [
-    {
-        _id: "1",
-        name: "Rahul Sharma",
-        email: "rahul.sharma@gmail.com",
-        phone: "9876543210",
-        address: "12, MG Road, Delhi",
-        compnayName: "xyz",
-        gstNumbar: "27ABCDE1234F1Z5",
-    },
-    {
-        _id: "2",
-        name: "Priya Mehta",
-        email: "priya.mehta@yahoo.com",
-        phone: "9812345678",
-        address: "45, Bandra West, Mumbai",
-        compnayName: "xyz",
-        gstNumbar: "27ABCDE1234F1Z5",
-    },
-    {
-        _id: "3",
-        name: "Amit Verma",
-        email: "amit.verma@outlook.com",
-        phone: "9988776655",
-        address: "78, Koramangala, Bangalore",
-        compnayName: "xyz",
-        gstNumbar: "27ABCDE1234F1Z5",
-    },
-    {
-        _id: "4",
-        name: "Sneha Patel",
-        email: "sneha.patel@gmail.com",
-        phone: "9765432109",
-        address: "23, C.G. Road, Ahmedabad",
-        compnayName: "xyz",
-        gstNumbar: "27ABCDE1234F1Z5",
-    },
-    {
-        _id: "5",
-        name: "Vikram Singh",
-        email: "vikram.singh@rediffmail.com",
-        phone: "9654321098",
-        address: "56, Hazratganj, Lucknow",
-        compnayName: "xyz",
-        gstNumbar: "27ABCDE1234F1Z5",
-    },
-    {
-        _id: "6",
-        name: "Ananya Joshi",
-        email: "ananya.joshi@gmail.com",
-        phone: "9543210987",
-        address: "89, Park Street, Kolkata",
-        compnayName: "xyz",
-        gstNumbar: "27ABCDE1234F1Z5",
-    },
-];
 
-const initials = (name = "") =>
-    name
+
+const initials = (fullName = "") =>
+    fullName
         .trim()
         .split(" ")
         .filter(Boolean)
@@ -127,20 +73,21 @@ const initials = (name = "") =>
         .toUpperCase();
 
 export default function CreateSalesClient() {
+    const { user, loginType } = useAuth();
     const navigate = useNavigate();
-    const [clients, setClients] = useState(DUMMY_CLIENTS);
+    const [clients, setClients] = useState([]);
     const [search, setSearch] = useState("");
     const [showModal, setShowModal] = useState(false);
     const [errors, setErrors] = useState({});
     const [isEdit, setIsEdit] = useState(false);
     const [selectedClient, setSelectedClient] = useState(null);
     const [form, setForm] = useState({
-        name: "",
+        fullName: "",
         email: "",
         phone: "",
         address: "",
-        gstNumbar: "",
-        compnayName: "",
+        gstNumber: "",
+        companyName: "",
     });
 
     const resetForm = () => {
@@ -157,11 +104,13 @@ export default function CreateSalesClient() {
         setIsEdit(false);
     };
 
+  
+
     const filtered = clients.filter((c) => {
         const q = search.trim().toLowerCase();
         return (
             !q ||
-            [c.name, c.email, c.phone, c.address].some((v) =>
+            [c.fullName, c.email, c.phone, c.address].some((v) =>
                 String(v || "")
                     .toLowerCase()
                     .includes(q),
@@ -169,101 +118,126 @@ export default function CreateSalesClient() {
         );
     });
 
-    const validate = () => {
-        const e = {};
-        if (!form.name.trim()) e.name = "Full name is required";
-        if (!form.email.trim()) e.email = "Email is required";
-        if (!form.phone.trim()) e.phone = "Phone is required";
-        if (!form.address.trim()) e.address = "Address is required";
-        return e;
-    };
 
-    // const handleCreate = async () => {
-    //     const errs = validate();
-    //     if (Object.keys(errs).length) {
-    //         setErrors(errs);
-    //         toast.error("Please fill all fields");
-    //         return;
-    //     }
-    //     setClients((p) => [{ ...form, _id: Date.now().toString() }, ...p]);
-    //     toast.success("Client created successfully");
-    //     resetForm();
-    //     setShowModal(false);
-
-    //     try {
-    //         const  response = await apiCall("Post", "/api/sales/create-client", form);
-    //         if(response.success){
-    //             toast.success("Client created successfully");
-    //             setClients((p) => [{ ...response.client }, ...p]);
-    //             resetForm();
-    //             setShowModal(false);
-    //         } else {
-    //             toast.error(response.message || "Failed to create client");
-    //         }
-    //     } catch (error) {
-    //         toast.error("An error occurred while creating the client");
-    //     }
-    // };
+    useEffect(() => {
+        const fetchSalesCleints = async () => {
+            try {
+                const response = await apiCall(
+                    "GET",
+                    `/api/sales/get-client/${user?._id}`,
+                );
+                if (response?.data?.success) {
+                    setClients(response?.data?.sales || []);
+                } else {
+                    toast.error(
+                        response?.data?.message || "Failed to fetch clients",
+                    );
+                }
+            } catch (error) {
+                console.log(error);
+                toast.error("An error occurred while fetching clients");
+            }
+        };
+        if (user?._id) {
+            fetchSalesCleints();
+        }
+    }, [user?._id]);
 
     const handleCreate = async () => {
-        const errs = validate();
+    
+        const paylod = {
+            fullName: form.fullName,
+            email: form.email,
+            phone: form.phone,
+            address: form.address,
+            companyName: form.companyName,
+            gstin: form.gstNumber,
+            salesId: user._id,
+        };
 
-        if (Object.keys(errs).length) {
-            setErrors(errs);
-            toast.error("Please fill all fields");
-            return;
-        }
-
+        // console.log("show the payload when i create the sales client", paylod);
         try {
             const response = await apiCall(
                 "POST",
                 "/api/sales/create-client",
-                form,
+                paylod,
             );
 
-            if (response?.success) {
+            if (response?.data?.success) {
                 toast.success("Client created successfully");
 
-                setClients((prev) => [response.client, ...prev]);
+                setClients((prev) => [response.data.client, ...prev]);
 
                 resetForm();
                 setShowModal(false);
             } else {
-                toast.error(response?.message || "Failed to create client");
+                toast.error(
+                    response?.data?.message || "Failed to create client",
+                );
             }
         } catch (error) {
-            toast.error("An error occurred while creating the client");
+            toast.error(
+                error?.response?.data?.message ||
+                    "An error occurred while creating client",
+            );
         }
     };
+
     const handleEdit = (c) => {
         setIsEdit(true);
         setSelectedClient(c);
         setForm({
-            name: c.name || "",
+            fullName: c.fullName || "",
             email: c.email || "",
             phone: c.phone || "",
             address: c.address || "",
-            compnayName: c.compnayName || "",
-            gstNumbar: c.gstNumbar || "",
+            companyName: c.companyName || "",
+            gstNumber: c.gstin || "",
         });
         setShowModal(true);
     };
 
-    const handleUpdate = () => {
-        const errs = validate();
-        if (Object.keys(errs).length) {
-            setErrors(errs);
-            toast.error("Please fill all fields");
-            return;
+    const handleUpdate = async () => {
+    
+        try {
+            const paylod = {
+                fullName: form.fullName,
+                email: form.email,
+                phone: form.phone,
+                address: form.address,
+                companyName: form.companyName,
+                gstin: form.gstNumber,
+                salesId: user._id,
+                clientId: selectedClient._id,
+            };
+            // console.log(
+            //     "show the payload when i update the sales client",
+            //     paylod,
+            // );
+
+            const response = await apiCall(
+                "PATCH",
+                "/api/sales/update-client/",
+                paylod,
+            );
+            if (response?.data?.success) {
+                toast.success("Client updated successfully");
+                setClients((p) =>
+                    p.map((item) =>
+                        item._id === selectedClient._id
+                            ? { ...item, ...response.data.client }
+                            : item,
+                    ),
+                );
+                setShowModal(false);
+                resetForm();
+            }
+        } catch (error) {
+            toast.error(
+                error?.response?.data?.message ||
+                    "An error occurred while updating client",
+            );
         }
-        setClients((p) =>
-            p.map((item) =>
-                item._id === selectedClient._id ? { ...item, ...form } : item,
-            ),
-        );
-        toast.success("Client updated successfully");
-        setShowModal(false);
-        resetForm();
     };
 
     const Field = ({ fkey, label, placeholder }) => {
@@ -353,7 +327,7 @@ export default function CreateSalesClient() {
                         const col = PALETTE[i % PALETTE.length];
                         return (
                             <div
-                                key={c._id}
+                                key={i}
                                 onClick={() =>
                                     navigate("/salesclient-history", {
                                         state: { clientId: c._id },
@@ -376,12 +350,12 @@ export default function CreateSalesClient() {
                                             text-xs font-bold text-white shrink-0
                                             shadow-md ring-4 ${col.ring}`}
                                         >
-                                            {initials(c.name)}
+                                            {initials(c?.fullName) || "N/A"}
                                         </div>
 
                                         <div className="flex-1 min-w-0">
                                             <p className="text-sm font-semibold text-gray-800 truncate leading-tight">
-                                                {c.name || "—"}
+                                                {c?.fullName || "—"}
                                             </p>
                                             <span
                                                 className={`inline-block mt-0.5 text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full ${col.badge}`}
@@ -408,53 +382,100 @@ export default function CreateSalesClient() {
                                     <div className="border-t border-gray-100 mb-3.5" />
 
                                     <div className="space-y-2.5">
-                                        {c.email && (
+                                        {c?.email && (
                                             <div className="flex items-center gap-2.5">
                                                 <div className="w-6 h-6 rounded-md bg-gray-50 flex items-center justify-center shrink-0">
-                                                    <Mail className="w-3.5 h-3.5 text-gray-400" />
+                                                    <svg width="0" height="0">
+                                                        <linearGradient
+                                                            id="gmailGradient"
+                                                            x1="0%"
+                                                            y1="0%"
+                                                            x2="100%"
+                                                            y2="100%"
+                                                        >
+                                                            <stop
+                                                                offset="0%"
+                                                                stopColor="#4285F4"
+                                                            />
+                                                            <stop
+                                                                offset="35%"
+                                                                stopColor="#EA4335"
+                                                            />
+                                                            <stop
+                                                                offset="70%"
+                                                                stopColor="#FBBC05"
+                                                            />
+                                                            <stop
+                                                                offset="100%"
+                                                                stopColor="#34A853"
+                                                            />
+                                                        </linearGradient>
+                                                    </svg>
+
+                                                    <Mail
+                                                        className="w-3.5 h-3.5"
+                                                        style={{
+                                                            stroke: "url(#gmailGradient)",
+                                                        }}
+                                                    />
                                                 </div>
                                                 <span className="text-xs text-gray-500 truncate">
-                                                    {c.email}
+                                                    <span className="text-black text-lx">
+                                                        Email :
+                                                    </span>{" "}
+                                                    {c?.email}
                                                 </span>
                                             </div>
                                         )}
-                                        {c.phone && (
+                                        {c?.phone && (
                                             <div className="flex items-center gap-2.5">
                                                 <div className="w-6 h-6 rounded-md bg-gray-50 flex items-center justify-center shrink-0">
-                                                    <Phone className="w-3.5 h-3.5 text-gray-400" />
+                                                    <Phone className="w-3.5 h-3.5 text-green-600" />
                                                 </div>
                                                 <span className="text-xs text-gray-500">
-                                                    {c.phone}
+                                                    <span className="text-black text-lx">
+                                                        Phone :
+                                                    </span>{" "}
+                                                    {c?.phone}
                                                 </span>
                                             </div>
                                         )}
-                                        {c.address && (
+                                        {c?.address && (
                                             <div className="flex items-center gap-2.5">
                                                 <div className="w-6 h-6 rounded-md bg-gray-50 flex items-center justify-center shrink-0">
-                                                    <MapPin className="w-3.5 h-3.5 text-gray-400" />
+                                                    <MapPin className="w-3.5 h-3.5 text-red-600" />
                                                 </div>
                                                 <span className="text-xs text-gray-500 line-clamp-1">
-                                                    {c.address}
+                                                    <span className="text-black text-lx">
+                                                        Address :
+                                                    </span>{" "}
+                                                    {c?.address}
                                                 </span>
                                             </div>
                                         )}
-                                        {c.compnayName && (
+                                        {c?.companyName && (
                                             <div className="flex items-center gap-2.5">
                                                 <div className="w-6 h-6 rounded-md bg-gray-50 flex items-center justify-center shrink-0">
-                                                    <Building2 className="w-3.5 h-3.5 text-gray-400" />
+                                                    <Building2 className="w-3.5 h-3.5 text-blue-600" />
                                                 </div>
                                                 <span className="text-xs text-gray-500 line-clamp-1">
-                                                    {c.compnayName}
+                                                    <span className="text-black text-lx">
+                                                        Company :
+                                                    </span>{" "}
+                                                    {c?.companyName}
                                                 </span>
                                             </div>
                                         )}
-                                        {c.gstNumbar && (
+                                        {c?.gstin && (
                                             <div className="flex items-center gap-2.5">
                                                 <div className="w-6 h-6 rounded-md bg-gray-50 flex items-center justify-center shrink-0">
-                                                    <Receipt className="w-3.5 h-3.5 text-gray-400" />
+                                                    <Receipt className="w-3.5 h-3.5 text-blue-600" />
                                                 </div>
-                                                <span className="text-xs text-gray-500 line-clamp-1">
-                                                    {c.gstNumbar}
+                                                <span className="text-xs text-gray-500 line-clamp-1 hover:text-blue-500 transition-colors duration-150">
+                                                    <span className="text-black text-lx">
+                                                        GSTIN :
+                                                    </span>{" "}
+                                                    {c?.gstin}
                                                 </span>
                                             </div>
                                         )}
@@ -485,7 +506,7 @@ export default function CreateSalesClient() {
                     }
                 >
                     <div
-                        className="bg-white rounded-3xl w-full max-w-sm shadow-2xl overflow-hidden"
+                        className="bg-white rounded-3xl w-full max-w-3xl shadow-2xl overflow-hidden max-h-[90dvh] flex flex-col"
                         style={{
                             animation:
                                 "slideUp 0.22s cubic-bezier(0.34,1.56,0.64,1)",
@@ -522,78 +543,48 @@ export default function CreateSalesClient() {
                         </div>
 
                         {/* Form body */}
-                        <div className="px-6 py-5">
-                            {Field({
-                                fkey: "name",
-                                label: "Full Name",
-                                placeholder: "Enter full name",
-                            })}
-                            {Field({
-                                fkey: "email",
-                                label: "Email Address",
-                                placeholder: "Enter email",
-                            })}
-                            {Field({
-                                fkey: "phone",
-                                label: "Phone Number",
-                                placeholder: "Enter mobile number",
-                            })}
+                        <div className="px-6 py-5 flex-1 overflow-y-auto">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {Field({
+                                    fkey: "fullName",
+                                    label: "Full Name",
+                                    placeholder: "Enter full name",
+                                })}
+                                {Field({
+                                    fkey: "email",
+                                    label: "Email Address",
+                                    placeholder: "Enter email",
+                                })}
+                                {Field({
+                                    fkey: "phone",
+                                    label: "Phone Number",
+                                    placeholder: "Enter mobile number",
+                                })}
 
-                            {Field({
-                                fkey: "address",
-                                label: "Address",
-                                placeholder: "Enter address",
-                            })}
-                            {Field({
-                                fkey: "companyName",
-                                label: "Company Name",
-                                placeholder: "Enter Company Name",
-                            })}
-                            {Field({
-                                fkey: "gstNumber",
-                                label: "GST Number",
-                                placeholder: "Enter GST Number",
-                            })}
+                                {Field({
+                                    fkey: "address",
+                                    label: "Address",
+                                    placeholder: "Enter address",
+                                })}
+                                {Field({
+                                    fkey: "companyName",
+                                    label: "Company Name",
+                                    placeholder: "Enter Company Name",
+                                })}
+                                {Field({
+                                    fkey: "gstNumber",
+                                    label: "GST Number",
+                                    placeholder: "Enter GST Number",
+                                })}
+                            </div>
 
-                            {/* <Field
-                                fkey="name"
-                                label="Full Name"
-                                placeholder="Enter full name"
-                            />
-                            <Field
-                                fkey="email"
-                                label="Email Address"
-                                placeholder="Enter email"
-                            />
-                            <Field
-                                fkey="phone"
-                                label="Phone Number"
-                                placeholder="Enter mobile number"
-                            />
-                            <Field
-                                fkey="address"
-                                label="Address"
-                                placeholder="Enter address"
-                            />
-                            <Field
-                                fkey="compnayName"
-                                label="Company Name"
-                                placeholder="Enter Company Name"
-                            />
-
-                            <Field
-                                fkey="gstNumbar"
-                                label="GST Number"
-                                placeholder="Enter GST Number"
-                            /> */}
-
-                            <div className="flex gap-2.5 mt-2">
+                            <div className="flex gap-3 mt-5">
                                 <button
                                     onClick={() => {
                                         setShowModal(false);
                                         resetForm();
                                     }}
-                                    className="flex-1 py-2.5 text-sm font-semibold border border-gray-200 rounded-xl
+                                    className="flex-1 py-3 text-sm font-semibold border border-gray-200 rounded-xl
                                         text-gray-500 hover:bg-gray-50 hover:border-gray-300 transition-all"
                                 >
                                     Cancel
@@ -602,7 +593,7 @@ export default function CreateSalesClient() {
                                     onClick={
                                         isEdit ? handleUpdate : handleCreate
                                     }
-                                    className={`flex-1 py-2.5 rounded-xl text-sm font-semibold text-white
+                                    className={`flex-1 py-3 rounded-xl text-sm font-semibold text-white
                                         transition-all duration-200 shadow-md active:scale-[0.97]
                                         ${
                                             isEdit

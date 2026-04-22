@@ -150,6 +150,10 @@ const SalesClientPanelHistory = () => {
                     {createSalesPanelProp && (
                         <CreateSalesPanelProposal
                             onClose={() => setCreateSalesPanelProp(false)}
+                            // proposalData={fetchProposal}
+                            // data={select}
+                            // setData={setSelect}
+                            // customerId={customerId}
                         />
                     )}
                 </div>

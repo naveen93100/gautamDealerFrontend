@@ -284,6 +284,7 @@ const Login = () => {
         try {
             toast.dismiss();
             setLoading(true);
+            console.log("Login:", loginType);
 
             if (loginType === "dealer") {
                 let res = await axios.post(
@@ -291,7 +292,7 @@ const Login = () => {
                     data,
                 );
                 if (res?.data?.success) {
-                    login(res?.data?.data, res?.data?.token);
+                    login(res?.data?.data, res?.data?.token ,"dealer");
                     navigate("/dashboard");
                 }
             } else if (loginType === "admin") {
@@ -310,7 +311,7 @@ const Login = () => {
                     { withCredentials: true },
                 );
                 if (res?.data?.success) {
-                    login(res?.data?.data, res?.data?.token);
+                    login(res?.data?.data, res?.data?.token , "sales");
                     navigate("/salesdashbord");
                 }
             }

@@ -7,7 +7,6 @@ import JoditEditor from 'jodit-react';
 import { useAuth } from '../../Context/AuthContext';
 
 const CreatePannelPropsal = ({ onClose, proposalData, data = {}, customerId }) => {
-  console.log("d:", data);
 
   const [loading, setLoading] = useState(false);
   // const { user, token } = useAuth();

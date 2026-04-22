@@ -8,31 +8,39 @@ export const AuthProvider = ({ children }) => {
 
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
+    const [loginType, setLoginType] = useState(null);
 
-    const login = (userData, token) => {
+    const login = (userData, token, type) => {
         // localStorage.setItem('token', token);
         // localStorage.setItem('userData', JSON.stringify(userData));
         if(userData) localStorage.setItem('userData', JSON.stringify(userData));
         if(token) localStorage.setItem('token', token);
+        if(type) localStorage.setItem('loginType', type);
         setUser(userData);
         setToken(token);
+        setLoginType(type);
     }
 
     const logout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('userData');
+        localStorage.removeItem('loginType');
         setUser(null);
         setToken(null);
+        setLoginType(null);
     }
 
     useEffect(() => {
 
         const rawUser = localStorage.getItem('userData');
         const rawToken = localStorage.getItem('token');
-const d = rawUser && rawUser !== "Undefined" ? JSON.parse(rawUser) : null;
-const t = rawToken && rawToken !== "Undefined" ? rawToken : null;
+        const rawLoginType = localStorage.getItem('loginType');
 
-        console.log("User Data:", localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')) : null);
+        const d = rawUser && rawUser !== "Undefined" ? JSON.parse(rawUser) : null;
+        const t = rawToken && rawToken !== "Undefined" ? rawToken : null;
+        const lt = rawLoginType && rawLoginType !== "Undefined" ? rawLoginType : null;
+
+        // console.log("User Data:", localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')) : null);
         // let d = localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')) : null;
         // let t = localStorage.getItem('token') ? localStorage.getItem('token') : null;
 
@@ -40,12 +48,13 @@ const t = rawToken && rawToken !== "Undefined" ? rawToken : null;
 
         setUser(d);
         setToken(t);
+        setLoginType(lt);
 
     }, []);
 
     return (
 
-        <AuthContext.Provider value={{ user, login, logout, token, setUser }}>
+        <AuthContext.Provider value={{ user, login, logout, token, setUser, loginType }}>
             {children}
         </AuthContext.Provider>
     )

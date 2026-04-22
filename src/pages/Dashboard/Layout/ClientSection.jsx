@@ -92,7 +92,7 @@ export default function ClientSection() {
                 .includes(q)
         );
     });
-    
+
     const handleCreate = async () => {
         const newErrors = {};
 
@@ -325,23 +325,74 @@ export default function ClientSection() {
 
                                 {/* Info rows */}
                                 <div className="space-y-1.5">
+                                    {/* Put this once in parent component (top of return) */}
+                                    <svg
+                                        width="0"
+                                        height="0"
+                                        className="absolute"
+                                    >
+                                        <defs>
+                                            <linearGradient
+                                                id="gmailGradient"
+                                                x1="0%"
+                                                y1="0%"
+                                                x2="100%"
+                                                y2="100%"
+                                            >
+                                                <stop
+                                                    offset="0%"
+                                                    stopColor="#4285F4"
+                                                />{" "}
+                                                {/* Blue */}
+                                                <stop
+                                                    offset="45%"
+                                                    stopColor="#EA4335"
+                                                />{" "}
+                                                {/* Red */}
+                                                <stop
+                                                    offset="75%"
+                                                    stopColor="#FBBC05"
+                                                />{" "}
+                                                {/* Yellow */}
+                                                <stop
+                                                    offset="100%"
+                                                    stopColor="#34A853"
+                                                />{" "}
+                                                {/* Green */}
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
                                     {c.email && (
                                         <div className="flex items-center gap-2 text-xs text-gray-500">
-                                            <Mail className="w-4 h-4 text-gray-400 shrink-0" />
+                                            <Mail
+                                                className="w-4 h-4 shrink-0"
+                                                style={{
+                                                    stroke: "url(#gmailGradient)",
+                                                }}
+                                            />
                                             <span className="truncate">
+                                                <span className="text-black text-[0.875rem] font-medium">
+                                                    Email :
+                                                </span>{" "}
                                                 {c.email}
                                             </span>
                                         </div>
                                     )}
                                     {c.phone && (
                                         <div className="flex items-center gap-2 text-xs text-gray-500">
-                                            <Phone className="w-4 h-4 text-gray-400 shrink-0" />
+                                            <Phone className="w-4 h-4 text-green-600 shrink-0" />
+                                            <span className="text-black text-[0.875rem] font-medium">
+                                                Phone :
+                                            </span>{" "}
                                             <span>{c.phone}</span>
                                         </div>
                                     )}
                                     {c.address && (
                                         <div className="flex items-center gap-2 text-xs text-gray-500">
-                                            <MapPin className="w-4 h-4 text-gray-400 shrink-0" />
+                                            <MapPin className="w-4 h-4 text-red-600 shrink-0" />
+                                            <span className="text-black text-[0.875rem] font-medium">
+                                                Address :
+                                            </span>{" "}
                                             <span>{c.address}</span>
                                         </div>
                                     )}
