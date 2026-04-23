@@ -330,7 +330,7 @@ export default function CreateSalesClient() {
                                 key={i}
                                 onClick={() =>
                                     navigate("/salesclient-history", {
-                                        state: { clientId: c._id },
+                                        state: { clientId: c._id , clientName: c.fullName},
                                     })
                                 }
                                 className={`group relative bg-white rounded-2xl border border-gray-100

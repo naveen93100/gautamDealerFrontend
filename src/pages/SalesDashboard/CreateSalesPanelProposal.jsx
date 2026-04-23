@@ -204,9 +204,9 @@ import SalesPanelSelector from './SalesPanelSelector';
 import JoditEditor from 'jodit-react';
 import { useAuth } from '../../Context/AuthContext';
 
-const CreateSalesPanelProposal = ({ onClose, proposalData, data = {}, setData }) => {
-    console.log("DATA ",data)
-
+const CreateSalesPanelProposal = ({ onClose, proposalData, data = null, setData , clientId }) => {
+    // console.log("DATA ",data)
+const {loginType, user}=useAuth();
   const [loading, setLoading] = useState(false);
   // const { user, token } = useAuth();
   const [panelData, setPanelData] = useState();
@@ -219,7 +219,12 @@ const CreateSalesPanelProposal = ({ onClose, proposalData, data = {}, setData })
     gst: 5
   })
 
-  const dealerId = JSON.parse(localStorage.getItem("userData"))?.id;
+
+
+  // const dealerId = JSON.parse(localStorage.getItem("userData"))?.id;
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+  const salesId = userData?._id;
+
 
   const [selectPanel, setSelectPanel] = useState(
     [{
@@ -461,12 +466,13 @@ const CreateSalesPanelProposal = ({ onClose, proposalData, data = {}, setData })
       let payload;
       if (data) {
         payload = {
-          selectedPanel: selectPanel, termsAndConditions: Body, ...createPanelData, propId:data?._id
+          selectedPanels: selectPanel, termsAndConditions: Body, ...createPanelData, propId:data?._id
         }
       }
       else {
         payload = {
-          selectedPanel: selectPanel, termsAndConditions: Body, ...createPanelData, dealerId
+          selectedPanels: selectPanel, termsAndConditions: Body ,gst: createPanelData?.gst , salesId,clientId 
+
         }
       }
 
@@ -481,15 +487,19 @@ const CreateSalesPanelProposal = ({ onClose, proposalData, data = {}, setData })
         }
       })
 
+      console.log("payload : ", payload)
+
       if (!data) {
-        var panelPropsal = await apiCall("post", "/api/dealer/create-solarPanel-proposal", payload)
+        var panelPropsal = await apiCall("POST", "/api/sales/create-proposal", payload);
+        console.log("panelPropsal : ", panelPropsal);
       } else {
-        var panelPropsal = await apiCall("put", "/api/dealer/edit-solarPanel-proposal", payload)
+        console.log("this one is working")
+        // var panelPropsal = await apiCall("put", "/api/dealer/edit-solarPanel-proposal", payload)
       }
       toast.success(panelPropsal?.data?.message);
       setTimeout(() => {
         onClose(false);
-        proposalData()
+        // proposalData()
       }, 1000)
 
     } catch (error) {
@@ -522,6 +532,7 @@ const CreateSalesPanelProposal = ({ onClose, proposalData, data = {}, setData })
               <p className="text-red-100 text-sm mt-1">
                 {!data || data?.panelData?.length === 0 ? "Create" : "Update"}  a detailed panel proposal for your customer
               </p>
+           
             </div>
           </div>
         </div>
@@ -607,4 +618,4 @@ const CreateSalesPanelProposal = ({ onClose, proposalData, data = {}, setData })
 
 
 
-export default CreateSalesPanelProposal;
+export default React.memo(CreateSalesPanelProposal);

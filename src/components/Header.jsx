@@ -8,7 +8,8 @@ import '../pages/Dashboard/index.css'
 
 const Header = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const {logout}=useAuth();
+    const {logout, loginType}=useAuth();
+  
     const navigate=useNavigate();
 
     const handleLogout=()=>{
@@ -16,6 +17,17 @@ const Header = () => {
          toast.success("Logout")
          navigate('/login');
     }
+
+
+
+    const welcomeMessages = {
+        admin: 'Welcome Admin Dashboard',
+        sales : 'Welcome Sales Dashboard',
+        dealer : 'Welcome Dealer Dashboard',
+    }
+
+
+
 
     return (
         // <header className="  dont-print bg-linear-to-br from-red-600 via-red-700 to-red-600 text-white shadow-2xl overflow-hidden">
@@ -31,7 +43,9 @@ const Header = () => {
                         </div>
                         <div>
                             <h1 className="text-sm sm:text-2xl  font-bold tracking-tight">
-                                Proposal Dashboard
+                              {
+                                welcomeMessages[loginType] || 'Welcome Dashboard'
+                              }
                             </h1>
                             <p className="text-xs sm:text-sm  opacity-90 font-light">
                                 Powered by Gautam Solar

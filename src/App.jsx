@@ -27,6 +27,7 @@ import ClientPanelHistory from "./pages/Dashboard/Layout/ClientPanelHistory";
 import SalesDashBoard from "./pages/SalesDashboard/SalesDashBoard";
 import SalesClientPanelHistory from "./pages/SalesDashboard/SalesClientPanelHistory";
 import SalesPersonList from "./pages/Dashboard/SalesAdmin/SalesPersonList";
+import SalesProposalView from "./pages/SalesDashboard/SalesProposalView";
 
 const App = () => {
     const navigate = useNavigate();
@@ -93,6 +94,8 @@ const App = () => {
                     path="/salesclient-history"
                     element={<SalesClientPanelHistory />}
                 />
+
+                <Route path="/sales-panel-proposal-view" element={<SalesProposalView/>}/>
         </Routes>
     );
 };
