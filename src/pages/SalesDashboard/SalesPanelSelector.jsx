@@ -100,13 +100,13 @@ const SalesPanelSelector = ({
                 const quantity = Number(item.quantity || 0);
                 const rate = Number(item.rate || 0);
                 const watt = Number(panelWatt ? panelWatt[0]?.watt : 1);
-                const amount = watt * quantity * rate;
+                // const amount = watt * quantity * rate;
                 // const amount = quantity * rate;
-                const gstAmount = (amount * gst) / 100;
+                const gstAmount = item?.gstAmount
 
                 return {
                     ...item,
-                    totalPrice: amount,
+                    totalPrice: item?.totalPrice,
                     gstAmount,
                 };
             }),
@@ -117,6 +117,7 @@ const SalesPanelSelector = ({
         e.preventDefault();
         setSelectPanel((prev) => prev.filter((_, i) => i !== index));
     };
+
 
     return (
         <section className="mb-6">

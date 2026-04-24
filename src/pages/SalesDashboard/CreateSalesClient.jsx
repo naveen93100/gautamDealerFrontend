@@ -296,13 +296,13 @@ export default function CreateSalesClient() {
                         setShowModal(true);
                     }}
                     className="group flex items-center justify-center gap-2
-                        bg-linear-to-br from-[#D85A30] to-[#993C1D]
-                        hover:from-[#e06338] hover:to-[#b04520]
+                        bg-linear-to-br from-[#970f0f] to-[#d30909]
+                        hover:from-[#a20000] hover:to-[#a20000]
                         text-white text-sm font-semibold
                         px-5 py-2.5 rounded-xl
                         shadow-md shadow-[#D85A30]/30
                         hover:shadow-lg hover:shadow-[#D85A30]/40
-                        transition-all duration-200 active:scale-[0.97]"
+                        transition-all duration-200 active:scale-[0.97] cursor-pointer"
                 >
                     <UserPlus className="w-4 h-4 shrink-0 transition-transform group-hover:scale-110" />
                     Create Sales Client

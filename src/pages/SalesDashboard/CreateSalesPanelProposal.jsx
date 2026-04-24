@@ -35,35 +35,35 @@
 //               <li>Net metering licensing and documentation will be handled by our team.</li>
 //               <li>Any applicable net metering charges will be charged separately.</li>
 //               </ul>
-  
+
 //               <h3><strong>Mode of Payments</strong></h3>
 //               <p>
 //               Kindly transfer the advance amount through any of the following modes: <br>
 //               <strong>Bank Transfer:</strong> [Bank Account Number] <br>
 //               <strong>UPI:</strong> [UPI ID]
 //               </p>
-  
+
 //               <br>
-  
+
 //               <h3 style="background-color:#a20000; color:#fff; display:inline-block;">
 //               <strong>Terms and Conditions:</strong>
 //               </h3>
-  
+
 //               <p><strong>A) Scope &amp; Design Basis:</strong></p>
 //               <p>
 //               The proposal is prepared based on a standard system/design configuration. Any changes or deviations in scope, layout, specifications, or quantities may result in additional costs.
 //               </p>
-  
+
 //               <p><strong>B) Validity of Quotation:</strong></p>
 //               <p>
 //               This quotation is valid for <strong>7 days</strong> from the date of issue.
 //               </p>
-  
+
 //               <p><strong>C) WARRANTY:</strong></p>
 //               <p>
 //               <strong>5 Year warranty</strong> on Solar System.
 //               </p>
-  
+
 //               <p style="font-size: 14px; color: #555;">
 //               <em>
 //                   The above warranties cover manufacturing defects, premature material degradation, and equipment failures.
@@ -71,7 +71,7 @@
 //               </p>
 //   `);
 
- 
+
 
 //     const totalWatt = Number(form.capacity || 0) * 1000;
 
@@ -204,9 +204,8 @@ import SalesPanelSelector from './SalesPanelSelector';
 import JoditEditor from 'jodit-react';
 import { useAuth } from '../../Context/AuthContext';
 
-const CreateSalesPanelProposal = ({ onClose, proposalData, data = null, setData , clientId }) => {
-    // console.log("DATA ",data)
-const {loginType, user}=useAuth();
+const CreateSalesPanelProposal = ({ onClose, data = null, setData, clientId }) => {
+  const { loginType, user } = useAuth();
   const [loading, setLoading] = useState(false);
   // const { user, token } = useAuth();
   const [panelData, setPanelData] = useState();
@@ -221,7 +220,6 @@ const {loginType, user}=useAuth();
 
 
 
-  // const dealerId = JSON.parse(localStorage.getItem("userData"))?.id;
   const userData = JSON.parse(localStorage.getItem("userData") || "{}");
   const salesId = userData?._id;
 
@@ -240,7 +238,7 @@ const {loginType, user}=useAuth();
   )
 
 
-  const joditConfig = useMemo(()=>({
+  const joditConfig = useMemo(() => ({
     readonly: false,
     height: 400,
     resize: true,
@@ -251,7 +249,7 @@ const {loginType, user}=useAuth();
     buttons: "bold,italic,underline,|,ul,ol,|,table,link,image,|,align,left,center,right,justify,|,brush,eraser,|,paragraph,fontsize,|,undo,redo",
     allowHTML: true,
     useClasses: true,
-  }),[]);
+  }), []);
 
   const [Body, setBody] = useState(`
       <div style="font-family: Arial, sans-serif; font-size: 14px; line-height: 1.6;">
@@ -363,15 +361,11 @@ const {loginType, user}=useAuth();
   </table>
 
 </div>
-`)
+  `)
 
 
   const handleClose = () => {
     setCreatePanelData({
-      // customerName: "",
-      // email: "",
-      // phone: "",
-      // address: "",
       gst: 5
     })
 
@@ -400,8 +394,26 @@ const {loginType, user}=useAuth();
     }))
 
   }
-  
 
+
+  useState(() => {
+    if (!data) return;
+    setSelectPanel(() => {
+      return data?.selectedPanels.map((item) => (
+        {
+          constructiveId: item?.constructiveId?._id,
+          panelId: item?.panelId?._id,
+          quantity: item?.quantity, 
+          rate: item?.rate,
+          gstAmount: item?.gstAmount,
+          technologyId: item?.technologyId?._id,
+          totalPrice: item?.totalPrice, 
+          wattId: item?.wattId?._id
+        }))
+    })
+    setCreatePanelData((p) => ({ ...p, gst: data?.gst }))
+    setPanelData(data?.selectedPanels);
+  }, [data]);
 
   useEffect(() => {
     const fetchPanel = async () => {
@@ -412,7 +424,6 @@ const {loginType, user}=useAuth();
             isActive: true
           }
         });
-        // console.log("apiData : ", apiData)
         setPanelData(apiData?.data?.data);
 
       } catch (error) {
@@ -458,6 +469,8 @@ const {loginType, user}=useAuth();
 
   }, [selectPanel[activeIndex]?.constructiveId]);
 
+
+
   const handleSubmit = async (e) => {
     toast.dismiss();
     e.preventDefault();
@@ -466,35 +479,32 @@ const {loginType, user}=useAuth();
       let payload;
       if (data) {
         payload = {
-          selectedPanels: selectPanel, termsAndConditions: Body, ...createPanelData, propId:data?._id
+          selectedPanels: selectPanel, termsAndConditions: Body, ...createPanelData, propId: data?._id
         }
       }
       else {
         payload = {
-          selectedPanels: selectPanel, termsAndConditions: Body ,gst: createPanelData?.gst , salesId,clientId 
+          selectedPanels: selectPanel, termsAndConditions: Body, gst: createPanelData?.gst, salesId, clientId
 
         }
       }
 
       if (!payload?.gst) {
         return alert("fields are required: GST.");
-      
+
       }
 
       selectPanel.map((panel) => {
         if (!panel?.panelId || !panel?.technologyId || !panel?.constructiveId || !panel?.wattId || !panel?.rate) {
-          return alert("Please fill in all panel details: Panel Type, Technology, Constructive Type, Panel Watt, and Rate per Panel.");
+          return alert("Please fill in all panel details: Panel Type, Technology, Constructive Type, Panel Watt, and Rate per Panel.")
         }
       })
 
-      console.log("payload : ", payload)
 
       if (!data) {
         var panelPropsal = await apiCall("POST", "/api/sales/create-proposal", payload);
-        console.log("panelPropsal : ", panelPropsal);
       } else {
-        console.log("this one is working")
-        // var panelPropsal = await apiCall("put", "/api/dealer/edit-solarPanel-proposal", payload)
+        var panelPropsal = await apiCall("PUT", "/api/sales/update-proposal", payload)
       }
       toast.success(panelPropsal?.data?.message);
       setTimeout(() => {
@@ -503,7 +513,12 @@ const {loginType, user}=useAuth();
       }, 1000)
 
     } catch (error) {
-      alert(error?.response?.data?.message || error?.message);
+      let er = (error?.response?.data?.message || error?.message);
+      er.forEach((err) => {
+        toast.error(err.message);
+      });
+
+      // alert(JSON.stringify(error?.response?.data?.message || error?.message));
     }
   }
 
@@ -532,7 +547,7 @@ const {loginType, user}=useAuth();
               <p className="text-red-100 text-sm mt-1">
                 {!data || data?.panelData?.length === 0 ? "Create" : "Update"}  a detailed panel proposal for your customer
               </p>
-           
+
             </div>
           </div>
         </div>
@@ -583,7 +598,7 @@ const {loginType, user}=useAuth();
               <JoditEditor
                 config={joditConfig}
                 value={Body}
-                onBlur={(d)=>setBody(e)}
+                onBlur={(d) => setBody(d)}
               />
 
 
