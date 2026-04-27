@@ -21,39 +21,52 @@ const SalesClientPanelHistory = () => {
     const clientId = location.state?.clientId;
     const clientName = location.state?.clientName;
 
+    const [showdeleteModal, setShowDeleteModal] = useState(false);
+    const [selectedDeleteProposalId, setSelectedDeleteProposalId] =
+        useState(null);
+
     const navigate = useNavigate();
     const bgColor = "#a20000";
-
 
     const [proposals, setProposals] = useState([]);
 
     useEffect(() => {
         const fetchProposal = async () => {
             try {
-                let res = await apiCall('GET', `/api/sales/get-proposals/${clientId}`);
+                let res = await apiCall(
+                    "GET",
+                    `/api/sales/get-proposals/${clientId}`,
+                );
                 if (res?.data?.success) {
                     setProposals(res?.data?.data || []);
                 }
             } catch (er) {
                 console.log(er);
             }
-        }
+        };
         fetchProposal();
     }, []);
 
-    const handleDeleteProposal=async(id)=>{
-         try {
-            let res=await apiCall('DELETE',`/api/sales/delete-proposal/${id}`);
-            if(res?.data?.success){
-                setProposals((prev)=>prev.filter(i=>i?._id!==id))
-                toast.success(res?.data?.message); 
-            }
-         } catch (er) {
-             toast.error(er?.response?.data?.message);
-             console.log(er)
-         }
-    }
+    const handleDeleteProposal = async () => {
+        try {
+            let res = await apiCall(
+                "DELETE",
+                `/api/sales/delete-proposal/${selectedDeleteProposalId}`,
+            );
 
+            if (res?.data?.success) {
+                setProposals((prev) =>
+                    prev.filter((i) => i?._id !== selectedDeleteProposalId),
+                );
+                toast.success(res?.data?.message);
+            }
+        } catch (er) {
+            toast.error(er?.response?.data?.message || "Delete failed");
+        } finally {
+            setShowDeleteModal(false);
+            setSelectedDeleteProposalId(null);
+        }
+    };
     return (
         <div className="min-h-screen bg-linear-to-br from-red-50 via-orange-50 to-white pb-10">
             {/* Header */}
@@ -73,7 +86,9 @@ const SalesClientPanelHistory = () => {
 
                     <div className="bg-white/10 border border-white/20 px-6 py-3 rounded-2xl">
                         <p className="text-xs text-red-100">Client Name</p>
-                        <p className="text-sm font-semibold">{clientName || "N/A"}</p>
+                        <p className="text-sm font-semibold">
+                            {clientName || "N/A"}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -92,7 +107,7 @@ const SalesClientPanelHistory = () => {
 
                         <button
                             onClick={() => {
-                                setSelectSalesProposal(null)
+                                setSelectSalesProposal(null);
                                 setCreateSalesPanelProp(true);
                                 // clientId && setSelectSales(clientId);
                             }}
@@ -110,7 +125,9 @@ const SalesClientPanelHistory = () => {
                                 {/* Panel Proposals */}
                                 Total Created Proposals:
                             </h2>
-                            <p className="text-2xl font-bold">{proposals.length}</p>
+                            <p className="text-2xl font-bold">
+                                {proposals.length}
+                            </p>
 
                             <PanelsTopLeft
                                 className="absolute right-5 top-5 opacity-20"
@@ -121,58 +138,116 @@ const SalesClientPanelHistory = () => {
 
                     {/* Proposal List */}
                     <div className="space-y-5">
-                        {proposals.length > 0 && proposals.map((item) => (
-                            <div
-                                key={item?._id}
-                                className="bg-gray-50 border border-gray-200 rounded-3xl p-6 shadow-md hover:shadow-lg transition"
-                            >
-                                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
-                                    {/* Left */}
-                                    <div>
-                                        <div className="flex items-center gap-3 text-sm font-semibold text-gray-800">
-                                            <FileText
-                                                className="text-red-600"
-                                                size={20}
-                                            />
-                                            Proposal Type:
-                                            <span className="text-[#a20000]">
-                                                Panel Proposal
-                                            </span>
+                        {proposals.length > 0 &&
+                            proposals.map((item) => (
+                                <div
+                                    key={item?._id}
+                                    className="bg-gray-50 border border-gray-200 rounded-3xl p-6 shadow-md hover:shadow-lg transition"
+                                >
+                                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+                                        {/* Left */}
+                                        <div>
+                                            <div className="flex items-center gap-3 text-sm font-semibold text-gray-800">
+                                                <FileText
+                                                    className="text-red-600"
+                                                    size={20}
+                                                />
+                                                Proposal Type:
+                                                <span className="text-[#a20000]">
+                                                    Panel Proposal
+                                                </span>
+                                            </div>
+
+                                            <p className="text-sm text-gray-500 mt-3">
+                                                Date:{" "}
+                                                {new Date(
+                                                    item?.createdAt,
+                                                ).toLocaleString()}
+                                            </p>
                                         </div>
 
-                                        <p className="text-sm text-gray-500 mt-3">
-                                            Date: {new Date(item?.createdAt).toLocaleString()}
-                                        </p>
-                                    </div>
+                                        {/* Actions */}
+                                        <div className="flex flex-wrap gap-3">
+                                            <button
+                                                onClick={() => {
+                                                    setSelectedDeleteProposalId(
+                                                        item?._id,
+                                                    );
+                                                    setShowDeleteModal(true);
+                                                }}
+                                                className="flex items-center gap-2 px-5 cursor-pointer py-2.5 rounded-xl border border-red-400 text-red-600 hover:bg-red-50 font-medium text-sm"
+                                            >
+                                                <Trash2 size={16} />
+                                                Delete
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    setCreateSalesPanelProp(
+                                                        true,
+                                                    );
+                                                    setSelectSalesProposal(
+                                                        item,
+                                                    );
+                                                }}
+                                                className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-orange-400 cursor-pointer text-orange-600 hover:bg-orange-50 font-medium text-sm"
+                                            >
+                                                <Pencil size={16} />
+                                                Edit
+                                            </button>
 
-                                    {/* Actions */}
-                                    <div className="flex flex-wrap gap-3">
-                                        <button onClick={()=>handleDeleteProposal(item?._id)} className="flex items-center gap-2 px-5 cursor-pointer py-2.5 rounded-xl border border-red-400 text-red-600 hover:bg-red-50 font-medium text-sm">
-                                            <Trash2 size={16} />
-                                            Delete
-                                        </button>
-
-                                        <button onClick={()=>{
-                                             setCreateSalesPanelProp(true);
-                                             setSelectSalesProposal(item)
-                                        }} className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-orange-400 cursor-pointer text-orange-600 hover:bg-orange-50 font-medium text-sm">
-                                            <Pencil size={16} />
-                                            Edit
-                                        </button>
-
-                                        <button onClick={() => {
-                                            navigate('/sales-panel-proposal-view', { state: item });
-                                        }} className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-blue-400 cursor-pointer text-blue-600 hover:bg-blue-50 font-medium text-sm">
-                                            <Download size={16} />
-                                            Download
-                                        </button>
+                                            <button
+                                                onClick={() => {
+                                                    navigate(
+                                                        "/sales-panel-proposal-view",
+                                                        { state: item },
+                                                    );
+                                                }}
+                                                className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-blue-400 cursor-pointer text-blue-600 hover:bg-blue-50 font-medium text-sm"
+                                            >
+                                                <Download size={16} />
+                                                Download
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
                     </div>
                 </div>
                 <div>
+                    {/* delete proposal modal  */}
+                    {showdeleteModal && (
+                        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+                            <div className="bg-white rounded-2xl p-6 w-87.5 shadow-xl">
+                                <h2 className="text-lg font-semibold text-gray-800">
+                                    Delete Proposal
+                                </h2>
+
+                                <p className="text-sm text-gray-500 mt-2">
+                                    Are you sure you want to delete this
+                                    proposal? This action cannot be undone.
+                                </p>
+
+                                <div className="flex justify-end gap-3 mt-6">
+                                    <button
+                                        onClick={() =>
+                                            setShowDeleteModal(false)
+                                        }
+                                        className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300"
+                                    >
+                                        Cancel
+                                    </button>
+
+                                    <button
+                                        onClick={handleDeleteProposal}
+                                        className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600"
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     {createSalesPanelProp && (
                         <CreateSalesPanelProposal
                             onClose={() => setCreateSalesPanelProp(false)}
