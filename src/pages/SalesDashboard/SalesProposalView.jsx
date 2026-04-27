@@ -26,18 +26,18 @@ const SalesProposalView = () => {
 
 
   const pages = [
-    "/panelimg/p1.jpeg",
-    "/panelimg/p2.jpg.jpeg",
-    "/panelimg/p3.jpg.jpeg",
-    "/panelimg/p4.jpg.jpeg",
-    "/panelimg/p5.jpg.jpeg",
-    "/panelimg/p6.jpg.jpeg",
-    "/panelimg/p7.jpg.jpeg",
-    "/panelimg/p8.jpg.jpeg",
-    "/panelimg/table.jpg.jpeg",
-    "/panelimg/term&Condition.jpeg",
+    "/panelimg/oldImg/p1.jpeg",
+    "/panelimg/oldImg/p2.jpg.jpeg",
+    "/panelimg/oldImg/p3.jpg.jpeg",
+    "/panelimg/oldImg/p4.jpg.jpeg",
+    "/panelimg/oldImg/p5.jpg.jpeg",
+    "/panelimg/oldImg/p6.jpg.jpeg",
+    "/panelimg/oldImg/p7.jpg.jpeg",
+    "/panelimg/oldImg/p8.jpg.jpeg",
+    "/panelimg/oldImg/table.jpg.jpeg",
+    "/panelimg/oldImg/term&Condition.jpeg",
     ...wattImages,
-    "/panelimg/p9.jpg.jpeg",
+    "/panelimg/oldImg/p9.jpg.jpeg",
 
   ]
 

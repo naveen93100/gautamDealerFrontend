@@ -10,8 +10,8 @@ const PanelPropsalView = () => {
     const location = useLocation();
     const proposalDatas = location?.state;
     const { user } = useAuth()
-    
-      
+
+
     const data = {
         firstName: user?.firstName,
         lastName: user?.lastName,
@@ -50,7 +50,7 @@ const PanelPropsalView = () => {
     //     "/panelimg/p9.jpg.jpeg",
     // ]
 
-    const pages=[
+    const pages = [
         "/panelimg/p1.jpeg",
         "/panelimg/p2.jpg.jpeg",
         "/panelimg/p3.jpg.jpeg",
@@ -61,7 +61,7 @@ const PanelPropsalView = () => {
         "/panelimg/p7.jpg.jpeg",
     ]
 
-    
+
 
     const panelData = {
         gst: panelProposal?.gst,
@@ -87,14 +87,12 @@ const PanelPropsalView = () => {
 
 
             <PdfComp bg={pages[0]}>
-                <div className="absolute top-[10mm] left-[19mm]  w-[15rem] h-[10rem] flex items-center justify-center">
-                    <div className=''>
-                    {data?.companyLogo ?
-                        <img loading='lazy' src={data?.companyLogo} alt="img" className=' w-full h-40 object-contain' />
-                        :
-                        <h1 className='uppercase'>{data?.companyName}</h1>
-                    }
-                    </div>
+                <div className="absolute top-[10mm] left-[19mm] w-[40mm]  flex items-center justify-center">
+                    {data?.companyLogo ? (
+                        <img src={data?.companyLogo} className="logo object-contain w-auto" />
+                    ) : (
+                        <h1>{data?.companyName}</h1>
+                    )}
                 </div>
 
                 <div className="absolute top-[8mm] right-[6mm]  text-end">
@@ -155,10 +153,10 @@ const PanelPropsalView = () => {
             </PdfComp>
 
             <PdfComp bg={pages[1]}>
-                <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
+                <div className="absolute text-red-500 scale-150 top-[6mm] right-[20mm]  overflow-hidden max-w-30  flex items-center justify-center">
                     {/* <img loading='lazy' src={data?.companyLogo} alt="" className=' object-cover w-22' /> */}
                     {data?.companyLogo ?
-                        <img loading='lazy' src={data?.companyLogo} alt="" className=' object-cover w-22' />
+                        <img loading='lazy' src={data?.companyLogo} alt="" className=' object-contain ' />
                         :
                         <h1 className='uppercase'>{data?.companyName}</h1>
                     }
@@ -193,7 +191,7 @@ const PanelPropsalView = () => {
                         <h1 className='uppercase'>{data?.companyName}</h1>
                     }
                 </div> */}
-              <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
+                <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
                     {data?.companyLogo ?
                         <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
                         :
@@ -260,12 +258,12 @@ const PanelPropsalView = () => {
                                 }
 
 
-                            <tr className="bg-gray-100 font-semibold">
-                                <td colSpan={6} className="border border-gray-300 p-2 text-right">
-                                    <i class="fa-solid fa-indian-rupee-sign"></i> Total Amount
-                                </td>
-                                <td className='border border-gray-300 p-2 text-red-600 text-right'> {(panelProposal?.finalPrice).toLocaleString("en-IN")}</td>
-                            </tr>
+                                <tr className="bg-gray-100 font-semibold">
+                                    <td colSpan={6} className="border border-gray-300 p-2 text-right">
+                                        <i class="fa-solid fa-indian-rupee-sign"></i> Total Amount
+                                    </td>
+                                    <td className='border border-gray-300 p-2 text-red-600 text-right'> {(panelProposal?.finalPrice).toLocaleString("en-IN")}</td>
+                                </tr>
                             </tbody>
 
                         </table>
@@ -290,7 +288,7 @@ const PanelPropsalView = () => {
                 </div>
             </PdfComp>
 
-           
+
 
             {/* <PdfComp bg={pages[8]}>
                 <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
@@ -405,11 +403,11 @@ const PanelPropsalView = () => {
                     );
                 })
             }
-             <PdfComp bg={pages[pages.length-1]}>
+            <PdfComp bg={pages[pages.length - 1]}>
             </PdfComp>
 
 
-              {/* <PdfComp bg={pages[7]}>
+            {/* <PdfComp bg={pages[7]}>
                 <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
                     {data?.companyLogo ?
                         <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />

@@ -12,6 +12,12 @@
     background: white;
   }
 
+  .logo {
+    width: 40mm !important;   /* or 120px */
+    height: auto !important;
+    max-width: 100% !important;
+  }
+
   /* hide everything else */
   .dont-print {
     display: none !important;
