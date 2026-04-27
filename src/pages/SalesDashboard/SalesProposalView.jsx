@@ -257,7 +257,7 @@ const SalesProposalView = () => {
 
               <tr className="bg-gray-100 font-semibold">
                 <td colSpan={6} className="border border-gray-300 p-2 text-right">
-                  <i class="fa-solid fa-indian-rupee-sign"></i> Total Amount
+                  <i className="fa-solid fa-indian-rupee-sign"></i> Total Amount
                 </td>
                 <td className='border border-gray-300 p-2 text-red-600 text-right'> {(state?.finalPrice).toLocaleString("en-IN")}</td>
               </tr>
