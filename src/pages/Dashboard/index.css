@@ -3,8 +3,6 @@
   margin: 0;
 }
 
-
-
 @media print {
   body {
     margin: 0;
@@ -13,28 +11,28 @@
   }
 
   .logo {
-    width: 40mm !important;   /* or 120px */
+    width: 40mm !important;   
     height: auto !important;
     max-width: 100% !important;
   }
 
-  /* hide everything else */
+
   .dont-print {
     display: none !important;
     visibility: hidden;
   }
 
-  /* each section becomes a PDF page */
   .print-this {
     display: block;
     visibility: visible;
     margin: 0;
     padding: 0;
-    /* page-break-after: always; */
-    /* break-after: page; */
+
   }
   img {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
 }
+
+

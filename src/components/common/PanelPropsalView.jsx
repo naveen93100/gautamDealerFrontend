@@ -22,14 +22,14 @@ const PanelPropsalView = () => {
         contactNumber: user?.contactNumber,
         companyLogo: user?.profileImg,
         address: user?.address,
-    }
+    };
 
     const customerData = {
         name: proposalDatas?.name,
         email: proposalDatas?.email,
         phone: proposalDatas?.phone,
         address: proposalDatas?.address,
-    }
+    };
 
     const panelProposal = proposalDatas;
 
@@ -370,70 +370,72 @@ const PanelPropsalView = () => {
 
                     </div>
                 </div>
-            </PdfComp>
+        
+            </PdfComp >
 
-            <PdfComp bg={pages[5]}>
-                <div className="absolute top-[2mm] right-[11mm] flex items-center justify-center w-52 h-30">
-                    {data?.companyLogo ?
-                        <img src={data?.companyLogo}
-                            className='logo-img'
+    <PdfComp bg={pages[5]}>
+        <div className="absolute top-[2mm] right-[11mm] flex items-center justify-center w-52 h-30">
+            {data?.companyLogo ?
+                <img src={data?.companyLogo}
+                    className='logo-img'
 
 
-                            style={{ width: "120px", height: 'auto', filter: 'contrast(1.2)' }}
-                        />
-                        :
-                        <h1>{data?.companyName}</h1>
-                    }
-                </div>
-
-                <div className='pt-10 '>
-                    <div
-                        className=" pdf-content max-w-none space-y-3 ml-5 mt-52"
-                        dangerouslySetInnerHTML={{ __html: panelData?.termsAndConditions }}
-                    >
-                    </div>
-                </div>
-            </PdfComp>
-
-            {
-                panelProposal?.selectedPanels?.flatMap(panel => panel?.watt?.imgWatt || [])?.map((item, index) => {
-                    const pageIndex = 6 + index;
-                    if (!pages[pageIndex]) return null;
-                    return (
-                        <PdfComp key={index} bg={pages[pageIndex]}>
-                            <div className="absolute top-[40mm] left-[20mm] w-[170mm]"></div>
-                        </PdfComp>
-                    );
-                })
+                    style={{ width: "120px", height: 'auto', filter: 'contrast(1.2)' }}
+                />
+                :
+                <h1>{data?.companyName}</h1>
             }
-
-            <PdfComp bg={pages[pages.length - 1]} >
-  <div className="absolute top-[7mm]  left-[4mm] w-[90mm] h-40 flex items-center justify-center">
-                    {data?.companyLogo ? (
-                        <img
-                            className='logo-img'
-                            src={data.companyLogo}
-                            onLoad={handleImageLoad}
-                            style={imgStyle}
-                        />
-                    ) : (
-                        <h1>{data?.companyName}</h1>
-                    )}
-                </div>
-
-                <div className="absolute top-[8mm] right-[6mm] text-end">
-                    <div>
-                        <span>{data.companyName}</span><br />
-                        <span>{data.email}</span><br />
-                        <span>{data.contactNumber}</span><br />
-                        <span>{data.gstin}</span><br />
-                        <span className='text-xs'>{data.address}</span>
-                    </div>
-                </div>
-                
-            </PdfComp>
-
         </div>
+
+        <div className='pt-10 '>
+            <div
+                className=" pdf-content max-w-none space-y-3 ml-5 mt-52"
+                dangerouslySetInnerHTML={{ __html: panelData?.termsAndConditions }}
+            >
+            </div>
+        </div>
+    </PdfComp>
+
+{
+    panelProposal?.selectedPanels?.flatMap(panel => panel?.watt?.imgWatt || [])?.map((item, index) => {
+        const pageIndex = 6 + index;
+        if (!pages[pageIndex]) return null;
+        return (
+            <PdfComp key={index} bg={pages[pageIndex]}>
+                <div className="absolute top-[40mm] left-[20mm] w-[170mm]"></div>
+                <div className="absolute top-[40mm] left-[20mm] w-[170mm]"></div>
+            </PdfComp>
+        );
+    })
+}
+
+<PdfComp bg={pages[pages.length - 1]} >
+    <div className="absolute top-[7mm]  left-[4mm] w-[90mm] h-40 flex items-center justify-center">
+        {data?.companyLogo ? (
+            <img
+                className='logo-img'
+                src={data.companyLogo}
+                onLoad={handleImageLoad}
+                style={imgStyle}
+            />
+        ) : (
+            <h1>{data?.companyName}</h1>
+        )}
+    </div>
+
+    <div className="absolute top-[8mm] right-[6mm] text-end">
+        <div>
+            <span>{data.companyName}</span><br />
+            <span>{data.email}</span><br />
+            <span>{data.contactNumber}</span><br />
+            <span>{data.gstin}</span><br />
+            <span className='text-xs'>{data.address}</span>
+        </div>
+    </div>
+
+</PdfComp>
+
+        </div >
     )
 }
 
