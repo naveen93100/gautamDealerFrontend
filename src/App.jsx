@@ -28,6 +28,7 @@ import SalesDashBoard from "./pages/SalesDashboard/SalesDashBoard";
 import SalesClientPanelHistory from "./pages/SalesDashboard/SalesClientPanelHistory";
 import SalesPersonList from "./pages/Dashboard/SalesAdmin/SalesPersonList";
 import SalesProposalView from "./pages/SalesDashboard/SalesProposalView";
+import TestingProposalView from "./components/common/TestingProposalView";
 
 const App = () => {
     const navigate = useNavigate();
@@ -79,7 +80,8 @@ const App = () => {
             <Route path="preview-proposal" element={<MainPage />} />
 
             {/* solar panel */}
-            <Route path="viewPanelProposal" element={<PanelPropsalView />} />
+            {/* <Route path="viewPanelProposal" element={<PanelPropsalView />} /> */}
+            <Route path="viewPanelProposal" element={<TestingProposalView />} />
             {/* client panel history  */}
             <Route
                 path="clientpanel-history"

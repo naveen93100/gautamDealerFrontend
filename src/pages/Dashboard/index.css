@@ -1,4 +1,4 @@
-/* @page {
+@page {
   size: A4;
   margin: 0;
 }
@@ -8,6 +8,12 @@
     margin: 0;
     padding: 0;
     background: white;
+  }
+
+  .logo {
+    width: 40mm !important;   
+    height: auto !important;
+    max-width: 100% !important;
   }
 
 
@@ -27,43 +33,6 @@
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
-} */
-
-
-@page {
-  size: A4;
-  margin: 0;
 }
 
-@media print {
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: white;
-    width: 210mm;
-    height: 297mm;
-  }
 
-  /* 🔥 VERY IMPORTANT */
-  * {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-
-  .dont-print {
-    display: none !important;
-    visibility: hidden !important;
-  }
-
-  .print-this {
-    display: block !important;
-    visibility: visible !important;
-  }
-
-  /* ✅ Safer image rules */
-  img {
-    max-width: 100% !important;
-    height: auto !important;
-    display: block !important;
-  }
-}

@@ -31,9 +31,23 @@ const PanelPropsalView = () => {
 
     const panelProposal = proposalDatas;
 
-    const wattImages =
-        panelProposal?.selectedPanels?.flatMap((p) => p?.watt?.imgWatt || []) ||
-        [];
+    const wattImages = panelProposal?.selectedPanels?.flatMap(p => p?.watt?.imgWatt || []) || [];
+
+
+    // const pages = [
+    //     "/panelimg/p1.jpeg",
+    //     "/panelimg/p2.jpg.jpeg",
+    //     "/panelimg/p3.jpg.jpeg",
+    //     "/panelimg/p4.jpg.jpeg",
+    //     "/panelimg/p5.jpg.jpeg",
+    //     "/panelimg/p6.jpg.jpeg",
+    //     "/panelimg/p7.jpg.jpeg",
+    //     "/panelimg/p8.jpg.jpeg",
+    //     "/panelimg/table.jpg.jpeg",
+    //     "/panelimg/term&Condition.jpeg",
+    //     ...wattImages,
+    //     "/panelimg/p9.jpg.jpeg",
+    // ]
 
     const pages = [
         "/panelimg/p1.jpeg",
@@ -44,7 +58,9 @@ const PanelPropsalView = () => {
         "/panelimg/p6.jpg.jpeg",
         ...wattImages,
         "/panelimg/p7.jpg.jpeg",
-    ];
+    ]
+
+
 
     const panelData = {
         gst: panelProposal?.gst,
@@ -69,37 +85,12 @@ const PanelPropsalView = () => {
             </button>
 
             <PdfComp bg={pages[0]}>
-                <div
-                    //  className="absolute top-[10mm] left-[19mm]  w-60 h-40 flex items-center justify-center"
-                    style={{
-                        position: "absolute",
-                        width: "95mm",
-                        top: "8mm",
-                        left: "5mm",
-                        height: "40mm",
-                        alignItems: "center",
-                        justifyContent: "center",
-                    }}
-                >
-                    <div className="">
-                        {data?.companyLogo ? (
-                            <img
-                                loading="eager"
-                                src={data?.companyLogo}
-                                alt="img"
-                                style={{
-                                    maxHeight: "150px",
-                                    width: "auto",
-                                    margin: "0 auto",
-                                    display: "block",
-                                    filter: "contrast(1.1)",
-                                   
-                                }}
-                            />
-                        ) : (
-                            <h1 className="uppercase">{data?.companyName}</h1>
-                        )}
-                    </div>
+                <div className="absolute top-[10mm] left-[19mm] w-[40mm]  flex items-center justify-center">
+                    {data?.companyLogo ? (
+                        <img src={data?.companyLogo} className="logo object-contain w-auto" />
+                    ) : (
+                        <h1>{data?.companyName}</h1>
+                    )}
                 </div>
 
                 <div className="absolute top-[8mm] right-[6mm]  text-end">
@@ -158,18 +149,13 @@ const PanelPropsalView = () => {
             </PdfComp>
 
             <PdfComp bg={pages[1]}>
-                <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
+                <div className="absolute text-red-500 scale-150 top-[6mm] right-[20mm]  overflow-hidden max-w-30  flex items-center justify-center">
                     {/* <img loading='lazy' src={data?.companyLogo} alt="" className=' object-cover w-22' /> */}
-                    {data?.companyLogo ? (
-                        <img
-                            loading="lazy"
-                            src={data?.companyLogo}
-                            alt=""
-                            className=" object-cover w-22"
-                        />
-                    ) : (
-                        <h1 className="uppercase">{data?.companyName}</h1>
-                    )}
+                    {data?.companyLogo ?
+                        <img loading='lazy' src={data?.companyLogo} alt="" className=' object-contain ' />
+                        :
+                        <h1 className='uppercase'>{data?.companyName}</h1>
+                    }
                 </div>
             </PdfComp>
 
@@ -212,16 +198,11 @@ const PanelPropsalView = () => {
                     }
                 </div> */}
                 <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
-                    {data?.companyLogo ? (
-                        <img
-                            loading="lazy"
-                            src={data?.companyLogo}
-                            alt=""
-                            className="object-cover w-22"
-                        />
-                    ) : (
-                        <h1 className="uppercase">{data?.companyName}</h1>
-                    )}
+                    {data?.companyLogo ?
+                        <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
+                        :
+                        <h1 className='uppercase'>{data?.companyName}</h1>
+                    }
                 </div>
                 <div className="absolute top-[75mm] px-4 w-full">
                     <div className=" overflow-x-auto ">
@@ -355,19 +336,10 @@ const PanelPropsalView = () => {
                                 )}
 
                                 <tr className="bg-gray-100 font-semibold">
-                                    <td
-                                        colSpan={6}
-                                        className="border border-gray-300 p-2 text-right"
-                                    >
-                                        <i className="fa-solid fa-indian-rupee-sign"></i>{" "}
-                                        Total Amount
+                                    <td colSpan={6} className="border border-gray-300 p-2 text-right">
+                                        <i class="fa-solid fa-indian-rupee-sign"></i> Total Amount
                                     </td>
-                                    <td className="border border-gray-300 p-2 text-red-600 text-right">
-                                        {" "}
-                                        {(panelProposal?.finalPrice).toLocaleString(
-                                            "en-IN",
-                                        )}
-                                    </td>
+                                    <td className='border border-gray-300 p-2 text-red-600 text-right'> {(panelProposal?.finalPrice).toLocaleString("en-IN")}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -398,9 +370,111 @@ const PanelPropsalView = () => {
                 </div>
             </PdfComp>
 
-            {panelProposal?.selectedPanels
-                ?.flatMap((panel) => panel?.watt?.imgWatt || [])
-                ?.map((item, index) => {
+
+
+            {/* <PdfComp bg={pages[8]}>
+                <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
+                    {data?.companyLogo ?
+                        <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
+                        :
+                        <h1 className='uppercase'>{data?.companyName}</h1>
+                    }
+                </div>
+                <div className='absolute top-[75mm] px-4 w-full'>
+                    <div className=" overflow-x-auto ">
+                        <table className="mx-auto w-[90%] border border-gray-400">
+                            <thead>
+                                <tr className=" bg-red-800 text-white text-xs text-left">
+                                    <th className="p-3  text-xs border border-gray-400">S.No</th>
+                                    <th className="p-3 border border-gray-400">Panel Watt </th>
+                                    <th className="p-3 border border-gray-400">Panel Type</th>
+                                    <th className="p-3 border border-gray-400">Technology</th>
+                                    <th className="p-3 border border-gray-400">Constructive Type</th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody className="text-sm">
+
+                                {
+                                    panelProposal?.selectedPanels?.map((panel, idx) => (
+                                        // console.log("panel : ", panel),
+                                        <tr>
+                                            <td className="border border-gray-300 p-2 text-center">{idx + 1}</td>
+                                            <td className="border border-gray-300 p-2 text-center">{panel?.watt?.watt} wp</td>
+                                            <td className="border border-gray-300 p-2 text-center">{panel?.panelType?.panelType}</td>
+                                            <td className="border border-gray-300 p-2 text-center">{panel?.technology?.technologyPanel}</td>
+                                            <td className="border border-gray-300 p-2 text-center">{panel?.constructive?.constructiveType}</td>
+
+                                        </tr>
+                                    ))
+                                }
+                            </tbody>
+                        </table>
+
+                        <table className="mx-auto w-[90%] border mt-10">
+                            <thead>
+                                <tr className=" bg-red-800 text-white text-xs text-left">
+                                    <th className="p-3  text-xs border border-gray-400">S.No</th>
+                                    <th className="p-3  text-xs border border-gray-400">Item Description</th>
+                                    <th className="p-3 text-xs "> <span className='flex flex-row'><IndianRupee className='' />Rate/Watt </span> </th>
+                                    <th className="p-3 text-xs border border-gray-400">Quantity</th>
+                                    <th className="p-3 text-xs border border-gray-400"> <span className='flex flex-row'><IndianRupee className='' /> Amount </span> </th>
+                                    <th className="p-3 text-xs border border-gray-400"> <span className='flex flex-row'><IndianRupee className='' /> GST {panelData?.gst}% </span></th>
+                                    <th className="p-3 text-xs border border-gray-400"> <span className='flex flex-row'><IndianRupee className='' /> Amount + Gst</span></th>
+                                </tr>
+                            </thead>
+
+                            <tbody className="text-sm">
+                                {
+                                    panelProposal?.selectedPanels?.map((panel, idx) => (
+                                        // console.log("panel : ", panel),
+                                        <tr>
+                                            <td className="border border-gray-300 p-2 text-center">{idx + 1}</td>
+                                            <td className="border border-gray-300 p-2 text-center ">{`${panel?.watt?.watt}Wp Gautam Solar ,${panel?.panelType?.panelType},${panel?.technology?.technologyPanel},${panel?.constructive?.constructiveType}`}</td>
+                                            <td className="border border-gray-300 p-2 text-center">{panel?.rate.toLocaleString()}</td>
+                                            <td className="border border-gray-300 p-2 text-center">{panel?.quantity.toLocaleString()}</td>
+                                            <td className="border border-gray-300 p-2 text-center"> {panel?.totalPrice.toLocaleString()}</td>
+                                            <td className="border border-gray-300 p-2 text-center"> {panel?.gstAmount.toLocaleString()}</td>
+                                            <td className="border border-gray-300 p-2 text-center"> {(panel?.totalPrice + panel?.gstAmount).toLocaleString()}</td>
+                                        </tr>
+                                    ))
+                                }
+                            </tbody>
+
+
+                            <tr className="bg-gray-100 font-semibold">
+                                <td colSpan={6} className="border border-gray-300 p-2 text-right">
+                                    <i class="fa-solid fa-indian-rupee-sign"></i> Total Amount
+                                </td>
+                                <td className='border border-gray-300 p-2 text-red-600 text-right'> {(panelProposal?.finalPrice).toLocaleString("en-IN")}</td>
+                            </tr>
+
+                        </table>
+                    </div>
+                </div >
+            </PdfComp >
+
+            <PdfComp bg={pages[9]}>
+                <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
+                    {data?.companyLogo ?
+                        <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
+                        :
+                        <h1 className='uppercase'>{data?.companyName}</h1>
+                    }
+                </div>
+                <div className='pt-10 '>
+                    <div
+                        className=" max-w-none space-y-3 ml-5 mt-52"
+                        dangerouslySetInnerHTML={{ __html: panelData?.termsAndConditions }}
+                    >
+                    </div>
+                </div>
+
+            </PdfComp> */}
+
+            {
+                panelProposal?.selectedPanels?.flatMap(panel => panel?.watt?.imgWatt || [])?.map((item, index) => {
                     const pageIndex = 6 + index;
                     if (!pages[pageIndex]) return null;
                     return (
@@ -408,10 +482,64 @@ const PanelPropsalView = () => {
                             <div className="absolute top-[40mm] left-[20mm] w-[170mm]"></div>
                         </PdfComp>
                     );
-                })}
-            <PdfComp bg={pages[pages.length - 1]}></PdfComp>
-        </div>
-    );
-};
+                })
+            }
+            <PdfComp bg={pages[pages.length - 1]}>
+            </PdfComp>
+
+
+            {/* <PdfComp bg={pages[7]}>
+                <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
+                    {data?.companyLogo ?
+                        <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
+                        :
+                        <h1 className='uppercase'>{data?.companyName}</h1>
+                    }
+                </div>
+            </PdfComp> */}
+
+            {/* <PdfComp bg={pages[pages.length - 1]}>
+                <div className="absolute text-red-500 scale-150 top-[8mm] left-[22mm]  w-40 h-25  overflow-hidden flex items-center justify-center">
+                    {data?.companyLogo ?
+                        <img loading='lazy' src={data?.companyLogo} alt="" className=' w-2/3 object-cover ' />
+                        :
+                        <h1 className='uppercase'>{data?.companyName}</h1>
+                    }
+                </div>
+
+                <div className="absolute top-[5mm] right-[7mm]  text-end">
+                    <div className='text-white'>
+
+                        <span className='capitalize inline-block text-lg'>
+                            {data.companyName}
+                        </span>
+
+                        <br />
+                        <span className=' inline-block text-md'>
+                            {data.email}
+                        </span>
+                        <br />
+                        <span className='capitalize inline-block text-md'>
+                            {data.contactNumber}
+                        </span>
+                        <br />
+                        <span className='capitalize inline-block text-md'>
+                            {data.gstin}
+                        </span>
+                        <br />
+                        <span className='capitalize max-w-96  inline-block text-xs'>
+                            {data.address}
+                        </span>
+                        <br />
+
+                    </div>
+                </div>
+            </PdfComp> */}
+
+        </div >
+    )
+}
+
+
 
 export default PanelPropsalView;

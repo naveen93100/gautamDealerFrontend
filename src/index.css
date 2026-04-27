@@ -1,15 +1,24 @@
 @import "tailwindcss";
 /* 📄 Ensure each page prints as a full A4 sheet */
-@page {
-  size: A4;
-  margin: 0; 
-  /* remove browser default margins */
-}
+
+/* * {
+  color: rgb(0, 0, 0);
+} */
 
 @media print {
+  @page {
+    size: A4;
+    margin: 0; 
+  }
   body {
     margin: 0;
     padding: 0;
+  }
+
+  .logo {
+    width: 40mm !important;   /* or 120px */
+    height: auto !important;
+    max-width: 100% !important;
   }
 
   /* Every .pdf-page SHOULD become one printed page */
@@ -70,3 +79,6 @@
     scrollbar-width: none;
   }
 }
+
+
+
