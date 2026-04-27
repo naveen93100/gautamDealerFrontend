@@ -143,6 +143,7 @@ const ClientPanelHistory = () => {
             });
         }
     };
+    
     const handleEdit = (item) => {
         setSelect(item);
 

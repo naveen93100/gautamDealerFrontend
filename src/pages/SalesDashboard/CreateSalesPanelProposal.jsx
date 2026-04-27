@@ -252,7 +252,7 @@ const CreateSalesPanelProposal = ({ onClose, data = null, setData, clientId }) =
   }), []);
 
   const [Body, setBody] = useState(`
-      <div style="font-family: Arial, sans-serif; font-size: 14px; line-height: 1.6;">
+      <div style="font-family: Arial, sans-serif; font-size: 14px;">
 
   <p><strong>Payment Terms:</strong></p>
   <ul>
@@ -310,52 +310,58 @@ const CreateSalesPanelProposal = ({ onClose, data = null, setData, clientId }) =
 
 <div style="font-family: Arial, sans-serif; font-size: 14px;">
 
-  <h3 style="text-align: center; text-decoration: underline;">
+  <h3 style="text-align: center; text-decoration: underline; margin-bottom: 8px;">
     Bank A/C Details
   </h3>
 
-  <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+  <table style="width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed;">
     
     <tr>
-      <td style="border: 1px solid #000; font-weight: bold; width: 30%;">
+      <td style="border: 1px solid #000; font-weight: bold; width: 30%; padding: 6px; box-sizing: border-box;">
         Bank A/c Detail
       </td>
-      <td style="border: 1px solid #000; width: 5%;"></td>
-      <td style="border: 1px solid #000;"></td>
+      <td style="border: 1px solid #000; width: 5%; padding: 6px; box-sizing: border-box;"></td>
+      <td style="border: 1px solid #000; padding: 6px; box-sizing: border-box;"></td>
     </tr>
 
     <tr>
-      <td style="border: 1px solid #000;">Beneficiary Name</td>
-      <td style="border: 1px solid #000; text-align: center;">:</td>
-      <td style="border: 1px solid #000;">Gautam Solar Pvt. Ltd.</td>
+      <td style="border: 1px solid #000; padding: 6px;">Beneficiary Name</td>
+      <td style="border: 1px solid #000; text-align: center; padding: 6px;">:</td>
+      <td style="border: 1px solid #000; padding: 6px; word-break: break-word;">
+        Gautam Solar Pvt. Ltd.
+      </td>
     </tr>
 
-    <!-- Bank Name -->
     <tr>
-      <td style="border: 1px solid #000;">Bank Name</td>
-      <td style="border: 1px solid #000; text-align: center;">:</td>
-      <td style="border: 1px solid #000;">Axis Bank Ltd.</td>
+      <td style="border: 1px solid #000; padding: 6px;">Bank Name</td>
+      <td style="border: 1px solid #000; text-align: center; padding: 6px;">:</td>
+      <td style="border: 1px solid #000; padding: 6px; word-break: break-word;">
+        Axis Bank Ltd.
+      </td>
     </tr>
 
-    <!-- Bank Address -->
     <tr>
-      <td style="border: 1px solid #000;">Bank Address</td>
-      <td style="border: 1px solid #000; text-align: center;">:</td>
-      <td style="border: 1px solid #000;">
+      <td style="border: 1px solid #000; padding: 6px;">Bank Address</td>
+      <td style="border: 1px solid #000; text-align: center; padding: 6px;">:</td>
+      <td style="border: 1px solid #000; padding: 6px; word-break: break-word;">
         Okhla Phase-1, New Delhi, 110020
       </td>
     </tr>
 
     <tr>
-      <td style="border: 1px solid #000;">Bank Account No.</td>
-      <td style="border: 1px solid #000; text-align: center;">:</td>
-      <td style="border: 1px solid #000;">925030038328269</td>
+      <td style="border: 1px solid #000; padding: 6px;">Bank Account No.</td>
+      <td style="border: 1px solid #000; text-align: center; padding: 6px;">:</td>
+      <td style="border: 1px solid #000; padding: 6px; word-break: break-word;">
+        925030038328269
+      </td>
     </tr>
 
     <tr>
-      <td style="border: 1px solid #000;">IFS Code</td>
-      <td style="border: 1px solid #000; text-align: center;">:</td>
-      <td style="border: 1px solid #000;">UTIB0001609</td>
+      <td style="border: 1px solid #000; padding: 6px;">IFS Code</td>
+      <td style="border: 1px solid #000; text-align: center; padding: 6px;">:</td>
+      <td style="border: 1px solid #000; padding: 6px; word-break: break-word;">
+        UTIB0001609
+      </td>
     </tr>
 
   </table>

@@ -1,16 +1,20 @@
 import { ArrowLeft, Download, IndianRupee } from 'lucide-react';
-import React from 'react'
+import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import PdfComp from '../../components/common/PdfComp';
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 const SalesProposalView = () => {
   const { state } = useLocation();
-  const navigate=useNavigate();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false)
+
 
   const data = {
-    email:state?.salesId?.email,
-    name:state?.salesId?.name,
-    phone:state?.salesId?.phone
+    email: state?.salesId?.email,
+    name: state?.salesId?.name,
+    phone: state?.salesId?.phone
   }
 
   const customerData = {
@@ -26,20 +30,132 @@ const SalesProposalView = () => {
 
 
   const pages = [
-    "/panelimg/oldImg/p1.jpeg",
-    "/panelimg/oldImg/p2.jpg.jpeg",
-    "/panelimg/oldImg/p3.jpg.jpeg",
-    "/panelimg/oldImg/p4.jpg.jpeg",
-    "/panelimg/oldImg/p5.jpg.jpeg",
-    "/panelimg/oldImg/p6.jpg.jpeg",
-    "/panelimg/oldImg/p7.jpg.jpeg",
-    "/panelimg/oldImg/p8.jpg.jpeg",
-    "/panelimg/oldImg/table.jpg.jpeg",
-    "/panelimg/oldImg/term&Condition.jpeg",
+    "/salesPanel/001.png",
+    "/salesPanel/002.png",
+    "/salesPanel/003.png",
+    "/salesPanel/004.png",
+    "/salesPanel/005.png",
+    "/salesPanel/006.png",
     ...wattImages,
-    "/panelimg/oldImg/p9.jpg.jpeg",
+    "/salesPanel/007.png",
 
   ]
+
+  const applyContrastToRegion = (canvas, rect, contrast = 50) => {
+    const ctx = canvas.getContext("2d");
+
+    const imageData = ctx.getImageData(
+      rect.x,
+      rect.y,
+      rect.width,
+      rect.height
+    );
+
+    const data = imageData.data;
+    const factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
+
+    for (let i = 0; i < data.length; i += 4) {
+      data[i] = factor * (data[i] - 128) + 128;
+      data[i + 1] = factor * (data[i + 1] - 128) + 128;
+      data[i + 2] = factor * (data[i + 2] - 128) + 128;
+    }
+
+    ctx.putImageData(imageData, rect.x, rect.y);
+  };
+
+  const handleDownload = async () => {
+    try {
+      setLoading(true)
+      const elements = document.querySelectorAll(".pdf-page");
+      const pdf = new jsPDF("p", "mm", "a4");
+
+      for (let i = 0; i < elements.length; i++) {
+        const el = elements[i];
+
+        const canvas = await html2canvas(el, {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: "#ffffff",
+          logging: false,
+        });
+
+        const logo = el.querySelector(".logo-img");
+
+        if (logo) {
+          const canvasRect = el.getBoundingClientRect();
+          const logoRect = logo.getBoundingClientRect();
+
+          const scaleX = canvas.width / canvasRect.width;
+          const scaleY = canvas.height / canvasRect.height;
+
+          const rect = {
+            x: (logoRect.left - canvasRect.left) * scaleX,
+            y: (logoRect.top - canvasRect.top) * scaleY,
+            width: logoRect.width * scaleX,
+            height: logoRect.height * scaleY,
+          };
+
+          applyContrastToRegion(canvas, rect, 50);
+        }
+
+        const imgData = canvas.toDataURL("image/jpeg", 1.0);
+
+        if (i !== 0) pdf.addPage();
+        pdf.addImage(imgData, "JPEG", 0, 0, 210, 297);
+      }
+
+      pdf.save("proposal.pdf");
+    } catch (er) {
+      console.log(er)
+    }
+    finally {
+      setLoading(false)
+    }
+  };
+
+  const cell = {
+    border: "1px solid #D1D5DB",
+    padding: "8px",
+    textAlign: "center"
+  };
+
+  const th = {
+    border: "1px solid #9CA3AF",
+    padding: "12px"
+  };
+
+  {/* COMMON TD STYLE */ }
+  const td = {
+    border: "1px solid #d1d5db",
+    padding: "6px",
+    textAlign: "center",
+  };
+
+  const [imgStyle, setImgStyle] = useState({
+    width: "160px",
+    height: "auto",
+  });
+
+  const handleImageLoad = (e) => {
+    const img = e.target;
+    const w = img.naturalWidth;
+    const h = img.naturalHeight;
+
+    // Compare with your "second image" size
+    if (w >= 292 && h >= 283) {
+      setImgStyle({
+        width: "150px", // reduced width
+        height: "auto",
+        filter: 'contrast(1.2)'
+      });
+    } else {
+      setImgStyle({
+        width: "200px",
+        height: "auto",
+        filter: 'contrast(1.2)'
+      });
+    }
+  };
 
 
   return (
@@ -51,280 +167,209 @@ const SalesProposalView = () => {
         <ArrowLeft /> Go Back
       </button>
       <button
-        onClick={() => window.print()}
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-medium px-5 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 print:hidden"
+        onClick={handleDownload}
+        disabled={loading}
+        className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 rounded-full text-white
+        ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-red-600"}
+    `}
       >
-        <Download className="w-5 h-5" />
-        Download
+        {loading ? (
+          <>
+            <span className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></span>
+            Generating...
+          </>
+        ) : (
+          <>
+            <Download className="w-5 h-5" />
+            Download
+          </>
+        )}
       </button>
 
-
       <PdfComp bg={pages[0]}>
-        <div className="absolute top-[10mm] left-[19mm]  w-[15rem] h-[10rem] flex items-center justify-center">
-          <div className=''>
-            {/* {data?.companyLogo ?
-                        <img loading='lazy' src={data?.companyLogo} alt="img" className=' w-full h-40 object-contain' />
-                        :
-                        <h1 className='uppercase'>{data?.companyName}</h1>
-                    } */}
-          </div>
-        </div>
-
-        <div className="absolute top-[8mm] right-[6mm]  text-end">
-          <div className='text-white'>
-            <span className=' inline-block text-md'>
+        {/* <div className="absolute top-[15mm] left-[6mm] text-start">
+          <div style={{ color: "#000000" }}>
+            <span className="inline-block text-lg capitalize">
               {data.name}
             </span>
             <br />
-            <span className='capitalize inline-block text-md'>
+            <span className="inline-block text-lg capitalize">
               {data.phone}
             </span>
             <br />
-            <span className='capitalize max-w-96  inline-block text-xs'>
+            <span className="inline-block text-lg capitalize max-w-96">
               {data.email}
             </span>
           </div>
-        </div>
+        </div> */}
 
-        <div className="absolute text-black  top-[189mm] right-[90mm] min-w-96  font-medium ">
-          <span className='capitalize inline-block font-semibold'>
+        <div className="absolute top-[189mm] right-[90mm] min-w-96 font-medium space-y-0.5">
+          <span className="text-xs font-semibold block capitalize">
             {customerData.name}
           </span>
-          <br />
-          <span className='text-[14px] font-semibold'>
+          <span className="text-xs font-semibold block">
             {customerData.address}
           </span>
-          <br />
-          <span className='text-sm font-semibold'>
+          <span className="text-xs font-semibold block">
             {customerData.phone}
           </span>
-          <br />
-          <span className='text-sm font-semibold'>
+          <span className="text-xs font-semibold block">
             {customerData.email}
           </span>
-          <span className='text-sm font-semibold'>
+          <span className="text-xs font-semibold block">
             {customerData.gstin}
           </span>
-          <span className='text-sm font-semibold'>
+          <span className="text-xs font-semibold block">
             {customerData.companyName}
           </span>
-          <br />
         </div>
       </PdfComp>
 
-      <PdfComp bg={pages[1]}>
-        <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
-          {/* <img loading='lazy' src={data?.companyLogo} alt="" className=' object-cover w-22' /> */}
-          {/* {data?.companyLogo ?
-            <img loading='lazy' src={data?.companyLogo} alt="" className=' object-cover w-22' />
-            :
-            <h1 className='uppercase'>{data?.companyName}</h1>
-          } */}
-        </div>
-      </PdfComp>
+      {/* Empty pages (logo section) */}
+      {[1, 2, 3].map((pageIdx) => (
+        <PdfComp key={pageIdx} bg={pages[pageIdx]}>
+          <div className="absolute top-[5mm] right-[20mm] w-[120px] h-[60px] flex items-center justify-center overflow-hidden">
+            {/* Logo here if needed */}
+          </div>
+        </PdfComp>
+      ))}
 
-      <PdfComp bg={pages[2]}>
-        <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
-          {/* {data?.companyLogo ?
-            <img loading='lazy' src={data?.companyLogo} alt="" className=' object-cover w-22' />
-            :
-            <h1 className='uppercase'>{data?.companyName}</h1>
-          } */}
-        </div>
-      </PdfComp>
-
-      <PdfComp bg={pages[3]}>
-        <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
-          {/* {data?.companyLogo ?
-            <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
-            :
-            <h1 className='uppercase'>{data?.companyName}</h1>
-          } */}
-        </div>
-      </PdfComp>
-
+      {/* TABLE PAGE */}
       <PdfComp bg={pages[4]}>
-        {/* <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
-                    {data?.companyLogo ?
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
-                        :
-                        <h1 className='uppercase'>{data?.companyName}</h1>
-                    }
-                </div> */}
-      </PdfComp>
+        <div className="absolute top-[75mm] px-4 w-full">
+          <div className="overflow-x-auto">
 
-      <PdfComp bg={pages[5]}>
-        <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center ">
-          {/* {data?.companyLogo ?
-            <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
-            :
-            <h1 className='uppercase'>{data?.companyName}</h1>
-          } */}
-        </div>
-      </PdfComp>
-
-      <PdfComp bg={pages[6]}>
-        <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
-          {/* {data?.companyLogo ?
-            <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
-            :
-            <h1 className='uppercase'>{data?.companyName}</h1>
-          } */}
-        </div>
-      </PdfComp>
-
-      <PdfComp bg={pages[7]}>
-        <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
-          {/* {data?.companyLogo ?
-            <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
-            :
-            <h1 className='uppercase'>{data?.companyName}</h1>
-          } */}
-        </div>
-      </PdfComp>
-
-      <PdfComp bg={pages[8]}>
-        <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
-          {/* {data?.companyLogo ?
-            <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
-            :
-            <h1 className='uppercase'>{data?.companyName}</h1>
-          } */}
-        </div>
-        <div className='absolute top-[75mm] px-4 w-full'>
-          <div className=" overflow-x-auto ">
-            <table className="mx-auto w-[90%] border border-gray-400">
+            {/* PANEL TABLE */}
+            <table style={{ width: "90%", margin: "auto", border: "1px solid #9ca3af", borderCollapse: "collapse" }}>
               <thead>
-                <tr className=" bg-red-800 text-white text-xs text-left">
-                  <th className="p-3  text-xs border border-gray-400">S.No</th>
-                  <th className="p-3 border border-gray-400">Panel Watt </th>
-                  <th className="p-3 border border-gray-400">Panel Type</th>
-                  <th className="p-3 border border-gray-400">Technology</th>
-                  <th className="p-3 border border-gray-400">Constructive Type</th>
-
+                <tr style={{ backgroundColor: "#991b1b", color: "#ffffff", fontSize: "12px", textAlign: "left" }}>
+                  {["S.No", "Panel Watt", "Panel Type", "Technology", "Constructive Type"].map((h, i) => (
+                    <th key={i} style={{ padding: "8px", border: "1px solid #9ca3af" }}>{h}</th>
+                  ))}
                 </tr>
               </thead>
 
-              <tbody className="text-sm">
-
-                {
-                  state?.selectedPanels?.map((panel, idx) => (
-                    // console.log("panel : ", panel),
-                    <tr key={idx}>
-                      <td className="border border-gray-300 p-2 text-center">{idx + 1}</td>
-                      <td className="border border-gray-300 p-2 text-center">{panel?.wattId?.watt} wp</td>
-                      <td className="border border-gray-300 p-2 text-center">{panel?.panelId?.panelType}</td>
-                      <td className="border border-gray-300 p-2 text-center">{panel?.technologyId?.technologyPanel}</td>
-                      <td className="border border-gray-300 p-2 text-center">{panel?.constructiveId?.constructiveType}</td>
-
-                    </tr>
-                  ))
-                }
+              <tbody style={{ fontSize: "14px" }}>
+                {state?.selectedPanels?.map((panel, idx) => (
+                  <tr key={idx}>
+                    <td style={td}>{idx + 1}</td>
+                    <td style={td}>{panel?.wattId?.watt} wp</td>
+                    <td style={td}>{panel?.panelId?.panelType}</td>
+                    <td style={td}>{panel?.technologyId?.technologyPanel}</td>
+                    <td style={td}>{panel?.constructiveId?.constructiveType}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
 
-            <table className="mx-auto w-[90%] border mt-10">
+            {/* PRICING TABLE */}
+            <table style={{ width: "90%", margin: "40px auto 0", border: "1px solid #9ca3af", borderCollapse: "collapse" }}>
               <thead>
-                <tr className=" bg-red-800 text-white text-xs text-left">
-                  <th className="p-2  text-xs border border-gray-400">S.No</th>
-                  <th className="p-2  text-xs border border-gray-400">Item Description</th>
-                  <th className="p-2 text-xs "> <span className='flex flex-row'><IndianRupee size={20} />Rate/Watt </span> </th>
-                  <th className="p-2 text-xs border border-gray-400">Quantity</th>
-                  <th className="p-2 text-xs border border-gray-400"> <span className='flex flex-row'><IndianRupee size={20} /> Amount </span> </th>
-                  <th className="p-2 text-xs border border-gray-400"> <span className='flex flex-row'><IndianRupee size={20} /> GST {state?.gst}% </span></th>
-                  <th className="p-2 text-xs border border-gray-400"> <span className='flex flex-row'><IndianRupee size={20} /> Amount + Gst</span></th>
+                <tr style={{ backgroundColor: "#991b1b", color: "#ffffff", fontSize: "12px" }}>
+                  {[
+                    "S.No",
+                    "Item Description",
+                    "₹ Rate/Watt",
+                    "Quantity",
+                    "₹ Amount",
+                    `₹ GST ${state?.gst}%`,
+                    "₹ Amount + GST",
+                  ].map((h, i) => (
+                    <th key={i} style={{ padding: "8px", border: "1px solid #9ca3af" }}>{h}</th>
+                  ))}
                 </tr>
               </thead>
 
-              <tbody className="text-sm">
-                {
-                  state?.selectedPanels?.map((panel, idx) => (
-                    // console.log("panel : ", panel),
-                    <tr key={idx}>
-                      <td className="border border-gray-300 p-2 text-center text-xs">{idx + 1}</td>
-                      <td className="border border-gray-300 p-2 text-center text-xs ">{`${panel?.wattId?.watt}Wp Gautam Solar ,${panel?.panelId?.panelType},${panel?.technologyId?.technologyPanel},${panel?.constructiveId?.constructiveType}`}</td>
-                      <td className="border border-gray-300 p-2 text-center text-xs">{panel?.rate.toLocaleString()}</td>
-                      <td className="border border-gray-300 p-2 text-center text-xs">{panel?.quantity.toLocaleString()}</td>
-                      <td className="border border-gray-300 p-2 text-center text-xs"> {panel?.totalPrice.toLocaleString()}</td>
-                      <td className="border border-gray-300 p-2 text-center text-xs"> {panel?.gstAmount.toLocaleString()}</td>
-                      <td className="border border-gray-300 p-2 text-center text-xs"> {(panel?.totalPrice + panel?.gstAmount).toLocaleString()}</td>
-                    </tr>
-                  ))
-                }
+              <tbody style={{ fontSize: "12px" }}>
+                {state?.selectedPanels?.map((panel, idx) => (
+                  <tr key={idx}>
+                    <td style={td}>{idx + 1}</td>
+                    <td style={td}>
+                      {`${panel?.wattId?.watt}Wp Gautam Solar, ${panel?.panelId?.panelType}, ${panel?.technologyId?.technologyPanel}, ${panel?.constructiveId?.constructiveType}`}
+                    </td>
+                    <td style={td}>{panel?.rate.toLocaleString()}</td>
+                    <td style={td}>{panel?.quantity.toLocaleString()}</td>
+                    <td style={td}>{panel?.totalPrice.toLocaleString()}</td>
+                    <td style={td}>{panel?.gstAmount.toLocaleString()}</td>
+                    <td style={td}>
+                      {(panel?.totalPrice + panel?.gstAmount).toLocaleString()}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
 
-             <tbody>
-
-              <tr className="bg-gray-100 font-semibold">
-                <td colSpan={6} className="border border-gray-300 p-2 text-right">
-                  <i className="fa-solid fa-indian-rupee-sign"></i> Total Amount
-                </td>
-                <td className='border border-gray-300 p-2 text-red-600 text-right'> {(state?.finalPrice).toLocaleString("en-IN")}</td>
-              </tr>
-             </tbody>
-
+              <tbody>
+                <tr style={{ backgroundColor: "#f3f4f6", fontWeight: "600" }}>
+                  <td colSpan={6} style={{ ...td, textAlign: "right" }}>
+                    ₹ Total Amount
+                  </td>
+                  <td style={{ ...td, color: "#dc2626", textAlign: "right" }}>
+                    {state?.finalPrice.toLocaleString("en-IN")}
+                  </td>
+                </tr>
+              </tbody>
             </table>
+
           </div>
-        </div >
-      </PdfComp >
-
-      <PdfComp bg={pages[9]}>
-        <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
-          {/* {data?.companyLogo ?
-            <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
-            :
-            <h1 className='uppercase'>{data?.companyName}</h1>
-          } */}
         </div>
-        <div className='pt-10 '>
+
+        {/* SALES PERSON HEADER */}
+        <div className="absolute bottom-[15mm] left-[10mm] w-[90%]">
           <div
-            className=" max-w-none space-y-3 ml-5 mt-52"
-            dangerouslySetInnerHTML={{ __html: state?.termsAndConditions }}
+            style={{
+              border: "1px solid #9ca3af",
+              padding: "10px",
+              borderRadius: "4px",
+              backgroundColor: "#f9fafb"
+            }}
           >
+            <h3
+              style={{
+                margin: 0,
+                marginBottom: "6px",
+                fontSize: "14px",
+                color: "#991b1b"
+              }}
+            >
+              Sales Person Details
+            </h3>
+
+            <div style={{ fontSize: "12px", lineHeight: "1.6" }}>
+              <div><strong>Name : </strong> {data?.name}</div>
+              <div><strong>Phone : </strong> {data?.phone}</div>
+              <div><strong>Email : </strong> {data?.email}</div>
+            </div>
           </div>
         </div>
-
       </PdfComp>
-      {
-        state?.selectedPanels?.flatMap(panel => panel?.wattId?.imgWatt || [])?.map((item, index) => {
-          const pageIndex = 10 + index;
+
+      {/* TERMS */}
+      <PdfComp bg={pages[5]}>
+        <div style={{ paddingTop: "40px", paddingLeft: "30px", paddingRight: "30px" }}>
+          <div
+            style={{ marginTop: "260px" }}
+            dangerouslySetInnerHTML={{ __html: state?.termsAndConditions }}
+          />
+        </div>
+      </PdfComp>
+
+      {/* DYNAMIC IMAGE PAGES */}
+      {state?.selectedPanels
+        ?.flatMap((panel) => panel?.wattId?.imgWatt || [])
+        ?.map((_, index) => {
+          const pageIndex = 6 + index;
           if (!pages[pageIndex]) return null;
+
           return (
             <PdfComp key={index} bg={pages[pageIndex]}>
-              <div className="absolute top-[40mm] left-[20mm] w-[170mm]">
-              </div>
+              {/* <div className="absolute top-[40mm] left-[20mm] w-[170mm]" /> */}
             </PdfComp>
           );
-        })
-      }
+        })}
 
+      {/* LAST PAGE */}
       <PdfComp bg={pages[pages.length - 1]}>
-        <div className="absolute text-red-500 scale-150 top-[8mm] left-[22mm]  w-40 h-25  overflow-hidden flex items-center justify-center">
-          {/* <img loading='lazy' src={data?.companyLogo} alt="" className='w-2/3 object-cover ' /> */}
-          {/* {data?.companyLogo ?
-            <img loading='lazy' src={data?.companyLogo} alt="" className=' w-2/3 object-cover ' />
-            :
-            <h1 className='uppercase'>{data?.companyName}</h1>
-          } */}
-        </div>
 
-        <div className="absolute top-[5mm] right-[7mm]  text-end">
-          <div className='text-white'>
-            <span className='capitalize inline-block text-md'>
-              {data.name}
-            </span>
-            <br />
-            <span className=' inline-block text-md'>
-              {data.email}
-            </span>
-            <br />
-            <span className='capitalize max-w-96  inline-block text-xs'>
-              {data.phone}
-            </span>
-            <br />
-
-          </div>
-        </div>
       </PdfComp>
 
     </div >

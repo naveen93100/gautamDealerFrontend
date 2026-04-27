@@ -66,7 +66,14 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {}, customerId }) =
 
             <br>
 
-            <h3 style="background-color:#a20000; color:#fff; display:inline-block;">
+            <h3 style="background-color:#a20000;
+  color:#fff;
+  padding:1px 10px;
+  font-weight:bold;
+  line-height:1.3;
+  margin-top:1px;
+  width:300px;
+  border-radius:10px;">
             <strong>Terms and Conditions:</strong>
             </h3>
 

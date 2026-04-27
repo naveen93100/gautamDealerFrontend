@@ -82,3 +82,18 @@
 
 
 
+
+.pdf-content * {
+  line-height: 1.5 !important;   /* 👈 prevents clipping */
+}
+
+.pdf-content span,
+.pdf-content strong,
+.pdf-content b {
+  display: inline-block;         /* 👈 fixes background cut */
+  padding: 2px 4px;              /* 👈 gives breathing space */
+}
+
+.pdf-content p {
+  margin: 6px 0;
+}

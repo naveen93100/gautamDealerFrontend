@@ -80,8 +80,8 @@ const App = () => {
             <Route path="preview-proposal" element={<MainPage />} />
 
             {/* solar panel */}
-            {/* <Route path="viewPanelProposal" element={<PanelPropsalView />} /> */}
-            <Route path="viewPanelProposal" element={<TestingProposalView />} />
+            <Route path="viewPanelProposal" element={<PanelPropsalView />} />
+            {/* <Route path="viewPanelProposal" element={<TestingProposalView />} /> */}
             {/* client panel history  */}
             <Route
                 path="clientpanel-history"

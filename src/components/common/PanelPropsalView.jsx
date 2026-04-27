@@ -1,16 +1,17 @@
 import { ArrowLeft, Download, IndianRupee } from 'lucide-react';
-
 import { useLocation, useNavigate } from 'react-router-dom'
 import PdfComp from './PdfComp';
 import { useAuth } from '../../Context/AuthContext';
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import { useState } from 'react';
 
 const PanelPropsalView = () => {
     const navigate = useNavigate();
-
     const location = useLocation();
     const proposalDatas = location?.state;
-    const { user } = useAuth()
-
+    const { user } = useAuth();
+    const [loading, setLoading] = useState(false)
 
     const data = {
         firstName: user?.firstName,
@@ -34,34 +35,16 @@ const PanelPropsalView = () => {
 
     const wattImages = panelProposal?.selectedPanels?.flatMap(p => p?.watt?.imgWatt || []) || [];
 
-
-    // const pages = [
-    //     "/panelimg/p1.jpeg",
-    //     "/panelimg/p2.jpg.jpeg",
-    //     "/panelimg/p3.jpg.jpeg",
-    //     "/panelimg/p4.jpg.jpeg",
-    //     "/panelimg/p5.jpg.jpeg",
-    //     "/panelimg/p6.jpg.jpeg",
-    //     "/panelimg/p7.jpg.jpeg",
-    //     "/panelimg/p8.jpg.jpeg",
-    //     "/panelimg/table.jpg.jpeg",
-    //     "/panelimg/term&Condition.jpeg",
-    //     ...wattImages,
-    //     "/panelimg/p9.jpg.jpeg",
-    // ]
-
     const pages = [
         "/panelimg/p1.jpeg",
-        "/panelimg/p2.jpg.jpeg",
-        "/panelimg/p3.jpg.jpeg",
-        "/panelimg/p4.jpg.jpeg",
-        "/panelimg/p5.jpg.jpeg",
-        "/panelimg/p6.jpg.jpeg",
+        "/panelimg/p2.jpeg",
+        "/panelimg/p3.jpeg",
+        "/panelimg/p4.jpeg",
+        "/panelimg/p5.jpeg",
+        "/panelimg/p6.jpeg",
         ...wattImages,
-        "/panelimg/p7.jpg.jpeg",
+        "/panelimg/p7.jpeg",
     ]
-
-
 
     const panelData = {
         gst: panelProposal?.gst,
@@ -69,327 +52,348 @@ const PanelPropsalView = () => {
         termsAndConditions: panelProposal?.termsAndConditions
     }
 
+    const applyContrastToRegion = (canvas, rect, contrast = 50) => {
+        const ctx = canvas.getContext("2d");
+
+        const imageData = ctx.getImageData(
+            rect.x,
+            rect.y,
+            rect.width,
+            rect.height
+        );
+
+        const data = imageData.data;
+        const factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
+
+        for (let i = 0; i < data.length; i += 4) {
+            data[i] = factor * (data[i] - 128) + 128;
+            data[i + 1] = factor * (data[i + 1] - 128) + 128;
+            data[i + 2] = factor * (data[i + 2] - 128) + 128;
+        }
+
+        ctx.putImageData(imageData, rect.x, rect.y);
+    };
+
+    const handleDownload = async () => {
+        try {
+            setLoading(true)
+            const elements = document.querySelectorAll(".pdf-page");
+            const pdf = new jsPDF("p", "mm", "a4");
+
+            for (let i = 0; i < elements.length; i++) {
+                const el = elements[i];
+
+                const canvas = await html2canvas(el, {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: "#ffffff",
+                    logging: false,
+                });
+
+                const logo = el.querySelector(".logo-img");
+
+                if (logo) {
+                    const canvasRect = el.getBoundingClientRect();
+                    const logoRect = logo.getBoundingClientRect();
+
+                    const scaleX = canvas.width / canvasRect.width;
+                    const scaleY = canvas.height / canvasRect.height;
+
+                    const rect = {
+                        x: (logoRect.left - canvasRect.left) * scaleX,
+                        y: (logoRect.top - canvasRect.top) * scaleY,
+                        width: logoRect.width * scaleX,
+                        height: logoRect.height * scaleY,
+                    };
+
+                    applyContrastToRegion(canvas, rect, 50);
+                }
+
+                const imgData = canvas.toDataURL("image/jpeg", 1.0);
+
+                if (i !== 0) pdf.addPage();
+                pdf.addImage(imgData, "JPEG", 0, 0, 210, 297);
+            }
+
+            pdf.save("proposal.pdf");
+        } catch (er) {
+            console.log(er)
+        }
+        finally {
+            setLoading(false)
+        }
+    };
+
+    const cell = {
+        border: "1px solid #D1D5DB",
+        padding: "8px",
+        textAlign: "center"
+    };
+
+    const th = {
+        border: "1px solid #9CA3AF",
+        padding: "12px"
+    };
+
+    const [imgStyle, setImgStyle] = useState({
+        width: "160px",
+        height: "auto",
+    });
+
+    const handleImageLoad = (e) => {
+        const img = e.target;
+        const w = img.naturalWidth;
+        const h = img.naturalHeight;
+
+        // Compare with your "second image" size
+        if (w >= 292 && h >= 283) {
+            setImgStyle({
+                width: "150px", // reduced width
+                height: "auto",
+                filter: 'contrast(1.2)'
+            });
+        } else {
+            setImgStyle({
+                width: "200px",
+                height: "auto",
+                filter: 'contrast(1.2)'
+            });
+        }
+    };
+
     return (
-        <div className="flex min-h-screen flex-col gap-6 bg-gray-200 ">
+        <div className="flex min-h-screen flex-col gap-6 bg-gray-200">
+
             <button
                 onClick={() => navigate(-1)}
-                className=" fixed bottom-6 left-18 z-50 flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white font-medium px-5 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 print:hidden  "
+                className="fixed bottom-6 left-18 z-50 flex items-center gap-2 bg-gray-600 text-white px-5 py-3 rounded-full"
             >
                 <ArrowLeft /> Go Back
             </button>
+
             <button
-                onClick={() => window.print()}
-                className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-medium px-5 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 print:hidden"
+                onClick={handleDownload}
+                disabled={loading}
+                className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 rounded-full text-white
+        ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-red-600"}
+    `}
             >
-                <Download className="w-5 h-5" />
-                Download
+                {loading ? (
+                    <>
+                        <span className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></span>
+                        Generating...
+                    </>
+                ) : (
+                    <>
+                        <Download className="w-5 h-5" />
+                        Download
+                    </>
+                )}
             </button>
 
-
             <PdfComp bg={pages[0]}>
-                <div className="absolute top-[10mm] left-[19mm] w-[40mm]  flex items-center justify-center">
+                <div className="absolute top-[7mm]  left-[4mm] w-[90mm] h-40 flex items-center justify-center">
                     {data?.companyLogo ? (
-                        <img src={data?.companyLogo} className="logo object-contain w-auto" />
+                        <img
+                            className='logo-img'
+                            src={data.companyLogo}
+                            onLoad={handleImageLoad}
+                            style={imgStyle}
+                        />
                     ) : (
                         <h1>{data?.companyName}</h1>
                     )}
                 </div>
 
-                <div className="absolute top-[8mm] right-[6mm]  text-end">
-                    <div className='text-white'>
-
-                        <span className='capitalize inline-block text-lg'>
-                            {data.companyName}
-                        </span>
-
-                        <br />
-                        <span className=' inline-block text-md'>
-                            {data.email}
-                        </span>
-                        <br />
-                        <span className='capitalize inline-block text-md'>
-                            {data.contactNumber}
-                        </span>
-                        <br />
-                        <span className='capitalize inline-block text-md'>
-                            {data.gstin}
-                        </span>
-                        <br />
-                        <span className='capitalize max-w-96  inline-block text-xs'>
-                            {data.address}
-                        </span>
-                        <br />
-
+                <div className="absolute top-[8mm] right-[6mm] text-end">
+                    <div>
+                        <span>{data.companyName}</span><br />
+                        <span>{data.email}</span><br />
+                        <span>{data.contactNumber}</span><br />
+                        <span>{data.gstin}</span><br />
+                        <span className='text-xs'>{data.address}</span>
                     </div>
                 </div>
 
-                <div className="absolute text-black  top-[189mm] right-[90mm] min-w-96  font-medium ">
-                    <span className='capitalize inline-block font-semibold'>
-                        {customerData.name}
-                    </span>
-                    <br />
-                    <span className='text-[14px] font-semibold'>
-                        {customerData.address}
-                    </span>
-                    <br />
-                    <span className='text-sm font-semibold'>
-                        {customerData.phone}
-                    </span>
-                    <br />
-                    <span className='text-sm font-semibold'>
-                        {customerData.email}
-                    </span>
-                    <br />
-                    {/* <span className='inline-block text-sm font-semibold'>
-                        For
-                        {' '}
-                        <span className='text-red-800'>
-                             {`${proposalsData?.orderCapacity / 1000} kW`} 
-                        </span>
-                         {' '}
-                        Solar Power Plant
-                    </span> */}
+                <div className="absolute top-[189mm] left-[17mm]">
+                    <span>{customerData.name}</span><br />
+                    <span>{customerData.address}</span><br />
+                    <span>{customerData.phone}</span><br />
+                    <span>{customerData.email}</span>
                 </div>
             </PdfComp>
 
             <PdfComp bg={pages[1]}>
-                <div className="absolute text-red-500 scale-150 top-[6mm] right-[20mm]  overflow-hidden max-w-30  flex items-center justify-center">
-                    {/* <img loading='lazy' src={data?.companyLogo} alt="" className=' object-cover w-22' /> */}
+                <div className="absolute top-[2mm] right-[11mm] flex items-center justify-center w-52 h-30">
                     {data?.companyLogo ?
-                        <img loading='lazy' src={data?.companyLogo} alt="" className=' object-contain ' />
+                        <img src={data?.companyLogo}
+                            className='logo-img'
+                            style={{ width: "120px", height: 'auto', filter: 'contrast(1.2)' }}
+                        />
                         :
-                        <h1 className='uppercase'>{data?.companyName}</h1>
+                        <h1>{data?.companyName}</h1>
                     }
                 </div>
             </PdfComp>
 
             <PdfComp bg={pages[2]}>
-                <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
+                <div className="absolute top-[2mm] right-[11mm] flex items-center justify-center w-52 h-30">
                     {data?.companyLogo ?
-                        <img loading='lazy' src={data?.companyLogo} alt="" className=' object-cover w-22' />
+                        <img src={data?.companyLogo}
+                            className='logo-img'
+
+                            style={{ width: "120px", height: 'auto', filter: 'contrast(1.2)' }}
+                        />
                         :
-                        <h1 className='uppercase'>{data?.companyName}</h1>
+                        <h1>{data?.companyName}</h1>
                     }
                 </div>
             </PdfComp>
 
             <PdfComp bg={pages[3]}>
-                <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
+                <div className="absolute top-[2mm] right-[11mm] flex items-center justify-center w-52 h-30">
                     {data?.companyLogo ?
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
+                        <img src={data?.companyLogo}
+                            className='logo-img'
+
+                            style={{ width: "120px", height: 'auto', filter: 'contrast(1.2)' }}
+                        />
                         :
-                        <h1 className='uppercase'>{data?.companyName}</h1>
+                        <h1>{data?.companyName}</h1>
                     }
                 </div>
             </PdfComp>
 
             <PdfComp bg={pages[4]}>
-                {/* <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
+                <div className="absolute top-[2mm] right-[11mm] flex items-center justify-center w-52 h-30">
                     {data?.companyLogo ?
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
+                        <img src={data?.companyLogo}
+                            className='logo-img'
+
+
+                            style={{ width: "120px", height: 'auto', filter: 'contrast(1.2)' }}
+                        />
                         :
-                        <h1 className='uppercase'>{data?.companyName}</h1>
-                    }
-                </div> */}
-                <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
-                    {data?.companyLogo ?
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
-                        :
-                        <h1 className='uppercase'>{data?.companyName}</h1>
+                        <h1>{data?.companyName}</h1>
                     }
                 </div>
+
                 <div className='absolute top-[75mm] px-4 w-full'>
-                    <div className=" overflow-x-auto ">
-                        <table className="mx-auto w-[90%] border border-gray-400">
-                            <thead>
-                                <tr className=" bg-red-800 text-white text-xs text-left">
-                                    <th className="p-3  text-xs border border-gray-400">S.No</th>
-                                    <th className="p-3 border border-gray-400">Panel Watt </th>
-                                    <th className="p-3 border border-gray-400">Panel Type</th>
-                                    <th className="p-3 border border-gray-400">Technology</th>
-                                    <th className="p-3 border border-gray-400">Constructive Type</th>
+                    <div className="overflow-x-auto">
 
+                        {/* TABLE 1 */}
+                        <table
+                            className="mx-auto w-[90%]"
+                            style={{ border: "1px solid #9CA3AF" }}
+                        >
+                            <thead>
+                                <tr
+                                    style={{
+                                        backgroundColor: "#991B1B", // red-800
+                                        color: "#FFFFFF",
+                                        fontSize: "12px",
+                                        textAlign: "left"
+                                    }}
+                                >
+                                    <th style={{ padding: "12px", border: "1px solid #9CA3AF" }}>S.No</th>
+                                    <th style={{ padding: "12px", border: "1px solid #9CA3AF" }}>Panel Watt</th>
+                                    <th style={{ padding: "12px", border: "1px solid #9CA3AF" }}>Panel Type</th>
+                                    <th style={{ padding: "12px", border: "1px solid #9CA3AF" }}>Technology</th>
+                                    <th style={{ padding: "12px", border: "1px solid #9CA3AF" }}>Constructive Type</th>
                                 </tr>
                             </thead>
 
-                            <tbody className="text-sm">
-                                {
-                                    panelProposal?.selectedPanels?.map((panel, idx) => (
-                                        // console.log("panel : ", panel),
-                                        <tr key={idx}>
-                                            <td className="border border-gray-300 p-2 text-center">{idx + 1}</td>
-                                            <td className="border border-gray-300 p-2 text-center">{panel?.watt?.watt} wp</td>
-                                            <td className="border border-gray-300 p-2 text-center">{panel?.panelType?.panelType}</td>
-                                            <td className="border border-gray-300 p-2 text-center">{panel?.technology?.technologyPanel}</td>
-                                            <td className="border border-gray-300 p-2 text-center">{panel?.constructive?.constructiveType}</td>
-
-                                        </tr>
-                                    ))
-                                }
+                            <tbody style={{ fontSize: "14px" }}>
+                                {panelProposal?.selectedPanels?.map((panel, idx) => (
+                                    <tr key={idx}>
+                                        <td style={cell}>{idx + 1}</td>
+                                        <td style={cell}>{panel?.watt?.watt} wp</td>
+                                        <td style={cell}>{panel?.panelType?.panelType}</td>
+                                        <td style={cell}>{panel?.technology?.technologyPanel}</td>
+                                        <td style={cell}>{panel?.constructive?.constructiveType}</td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
 
-                        <table className="mx-auto w-[90%] border mt-10">
+                        {/* TABLE 2 */}
+                        <table
+                            className="mx-auto w-[90%] mt-10"
+                            style={{ border: "1px solid #9CA3AF" }}
+                        >
                             <thead>
-                                <tr className=" bg-red-800 text-white text-xs text-left">
-                                    <th className="p-3  text-xs border border-gray-400">S.No</th>
-                                    <th className="p-3  text-xs border border-gray-400">Item Description</th>
-                                    <th className="p-3 text-xs "> <span className='flex flex-row'><IndianRupee className='' />Rate/Watt </span> </th>
-                                    <th className="p-3 text-xs border border-gray-400">Quantity</th>
-                                    <th className="p-3 text-xs border border-gray-400"> <span className='flex flex-row'><IndianRupee className='' /> Amount </span> </th>
-                                    <th className="p-3 text-xs border border-gray-400"> <span className='flex flex-row'><IndianRupee className='' /> GST {panelData?.gst}% </span></th>
-                                    <th className="p-3 text-xs border border-gray-400"> <span className='flex flex-row'><IndianRupee className='' /> Amount + Gst</span></th>
+                                <tr
+                                    style={{
+                                        backgroundColor: "#991B1B",
+                                        color: "#FFFFFF",
+                                        fontSize: "12px",
+                                        textAlign: "left"
+                                    }}
+                                >
+                                    <th style={th}>S.No</th>
+                                    <th style={th}>Item Description</th>
+                                    <th style={th}>₹ Rate/Watt</th>
+                                    <th style={th}>Quantity</th>
+                                    <th style={th}>₹ Amount</th>
+                                    <th style={th}>₹ GST {panelData?.gst}%</th>
+                                    <th style={th}>₹ Amount + GST</th>
                                 </tr>
                             </thead>
 
-                            <tbody className="text-sm">
-                                {
-                                    panelProposal?.selectedPanels?.map((panel, idx) => (
-                                        <tr key={idx}>
-                                            <td className="border border-gray-300 p-2 text-center">{idx + 1}</td>
-                                            <td className="border border-gray-300 p-2 text-center ">{`${panel?.watt?.watt}Wp Gautam Solar ,${panel?.panelType?.panelType},${panel?.technology?.technologyPanel},${panel?.constructive?.constructiveType}`}</td>
-                                            <td className="border border-gray-300 p-2 text-center">{panel?.rate.toLocaleString()}</td>
-                                            <td className="border border-gray-300 p-2 text-center">{panel?.quantity.toLocaleString()}</td>
-                                            <td className="border border-gray-300 p-2 text-center"> {panel?.totalPrice.toLocaleString()}</td>
-                                            <td className="border border-gray-300 p-2 text-center"> {panel?.gstAmount.toLocaleString()}</td>
-                                            <td className="border border-gray-300 p-2 text-center"> {(panel?.totalPrice + panel?.gstAmount).toLocaleString()}</td>
-                                        </tr>
-                                    ))
-                                }
+                            <tbody style={{ fontSize: "14px" }}>
+                                {panelProposal?.selectedPanels?.map((panel, idx) => (
+                                    <tr key={idx}>
+                                        <td style={cell}>{idx + 1}</td>
+                                        <td style={cell}>
+                                            {`${panel?.watt?.watt}Wp Gautam Solar, ${panel?.panelType?.panelType}, ${panel?.technology?.technologyPanel}, ${panel?.constructive?.constructiveType}`}
+                                        </td>
+                                        <td style={cell}>{panel?.rate.toLocaleString()}</td>
+                                        <td style={cell}>{panel?.quantity.toLocaleString()}</td>
+                                        <td style={cell}>{panel?.totalPrice.toLocaleString()}</td>
+                                        <td style={cell}>{panel?.gstAmount.toLocaleString()}</td>
+                                        <td style={cell}>
+                                            {(panel?.totalPrice + panel?.gstAmount).toLocaleString()}
+                                        </td>
+                                    </tr>
+                                ))}
 
-
-                                <tr className="bg-gray-100 font-semibold">
-                                    <td colSpan={6} className="border border-gray-300 p-2 text-right">
-                                        <i class="fa-solid fa-indian-rupee-sign"></i> Total Amount
+                                <tr style={{ backgroundColor: "#F3F4F6", fontWeight: "600" }}>
+                                    <td colSpan={6} style={{ ...cell, textAlign: "right" }}>
+                                        Total Amount
                                     </td>
-                                    <td className='border border-gray-300 p-2 text-red-600 text-right'> {(panelProposal?.finalPrice).toLocaleString("en-IN")}</td>
+                                    <td style={{ ...cell, color: "#DC2626", textAlign: "right" }}>
+                                        {panelProposal?.finalPrice.toLocaleString("en-IN")}
+                                    </td>
                                 </tr>
                             </tbody>
-
                         </table>
+
                     </div>
-                </div >
+                </div>
             </PdfComp>
 
             <PdfComp bg={pages[5]}>
-                <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
+                <div className="absolute top-[2mm] right-[11mm] flex items-center justify-center w-52 h-30">
                     {data?.companyLogo ?
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
+                        <img src={data?.companyLogo}
+                            className='logo-img'
+
+
+                            style={{ width: "120px", height: 'auto', filter: 'contrast(1.2)' }}
+                        />
                         :
-                        <h1 className='uppercase'>{data?.companyName}</h1>
+                        <h1>{data?.companyName}</h1>
                     }
                 </div>
+
                 <div className='pt-10 '>
                     <div
-                        className=" max-w-none space-y-3 ml-5 mt-52"
+                        className=" pdf-content max-w-none space-y-3 ml-5 mt-52"
                         dangerouslySetInnerHTML={{ __html: panelData?.termsAndConditions }}
                     >
                     </div>
                 </div>
             </PdfComp>
-
-
-
-            {/* <PdfComp bg={pages[8]}>
-                <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
-                    {data?.companyLogo ?
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
-                        :
-                        <h1 className='uppercase'>{data?.companyName}</h1>
-                    }
-                </div>
-                <div className='absolute top-[75mm] px-4 w-full'>
-                    <div className=" overflow-x-auto ">
-                        <table className="mx-auto w-[90%] border border-gray-400">
-                            <thead>
-                                <tr className=" bg-red-800 text-white text-xs text-left">
-                                    <th className="p-3  text-xs border border-gray-400">S.No</th>
-                                    <th className="p-3 border border-gray-400">Panel Watt </th>
-                                    <th className="p-3 border border-gray-400">Panel Type</th>
-                                    <th className="p-3 border border-gray-400">Technology</th>
-                                    <th className="p-3 border border-gray-400">Constructive Type</th>
-
-                                </tr>
-                            </thead>
-
-                            <tbody className="text-sm">
-
-                                {
-                                    panelProposal?.selectedPanels?.map((panel, idx) => (
-                                        // console.log("panel : ", panel),
-                                        <tr>
-                                            <td className="border border-gray-300 p-2 text-center">{idx + 1}</td>
-                                            <td className="border border-gray-300 p-2 text-center">{panel?.watt?.watt} wp</td>
-                                            <td className="border border-gray-300 p-2 text-center">{panel?.panelType?.panelType}</td>
-                                            <td className="border border-gray-300 p-2 text-center">{panel?.technology?.technologyPanel}</td>
-                                            <td className="border border-gray-300 p-2 text-center">{panel?.constructive?.constructiveType}</td>
-
-                                        </tr>
-                                    ))
-                                }
-                            </tbody>
-                        </table>
-
-                        <table className="mx-auto w-[90%] border mt-10">
-                            <thead>
-                                <tr className=" bg-red-800 text-white text-xs text-left">
-                                    <th className="p-3  text-xs border border-gray-400">S.No</th>
-                                    <th className="p-3  text-xs border border-gray-400">Item Description</th>
-                                    <th className="p-3 text-xs "> <span className='flex flex-row'><IndianRupee className='' />Rate/Watt </span> </th>
-                                    <th className="p-3 text-xs border border-gray-400">Quantity</th>
-                                    <th className="p-3 text-xs border border-gray-400"> <span className='flex flex-row'><IndianRupee className='' /> Amount </span> </th>
-                                    <th className="p-3 text-xs border border-gray-400"> <span className='flex flex-row'><IndianRupee className='' /> GST {panelData?.gst}% </span></th>
-                                    <th className="p-3 text-xs border border-gray-400"> <span className='flex flex-row'><IndianRupee className='' /> Amount + Gst</span></th>
-                                </tr>
-                            </thead>
-
-                            <tbody className="text-sm">
-                                {
-                                    panelProposal?.selectedPanels?.map((panel, idx) => (
-                                        // console.log("panel : ", panel),
-                                        <tr>
-                                            <td className="border border-gray-300 p-2 text-center">{idx + 1}</td>
-                                            <td className="border border-gray-300 p-2 text-center ">{`${panel?.watt?.watt}Wp Gautam Solar ,${panel?.panelType?.panelType},${panel?.technology?.technologyPanel},${panel?.constructive?.constructiveType}`}</td>
-                                            <td className="border border-gray-300 p-2 text-center">{panel?.rate.toLocaleString()}</td>
-                                            <td className="border border-gray-300 p-2 text-center">{panel?.quantity.toLocaleString()}</td>
-                                            <td className="border border-gray-300 p-2 text-center"> {panel?.totalPrice.toLocaleString()}</td>
-                                            <td className="border border-gray-300 p-2 text-center"> {panel?.gstAmount.toLocaleString()}</td>
-                                            <td className="border border-gray-300 p-2 text-center"> {(panel?.totalPrice + panel?.gstAmount).toLocaleString()}</td>
-                                        </tr>
-                                    ))
-                                }
-                            </tbody>
-
-
-                            <tr className="bg-gray-100 font-semibold">
-                                <td colSpan={6} className="border border-gray-300 p-2 text-right">
-                                    <i class="fa-solid fa-indian-rupee-sign"></i> Total Amount
-                                </td>
-                                <td className='border border-gray-300 p-2 text-red-600 text-right'> {(panelProposal?.finalPrice).toLocaleString("en-IN")}</td>
-                            </tr>
-
-                        </table>
-                    </div>
-                </div >
-            </PdfComp >
-
-            <PdfComp bg={pages[9]}>
-                <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
-                    {data?.companyLogo ?
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
-                        :
-                        <h1 className='uppercase'>{data?.companyName}</h1>
-                    }
-                </div>
-                <div className='pt-10 '>
-                    <div
-                        className=" max-w-none space-y-3 ml-5 mt-52"
-                        dangerouslySetInnerHTML={{ __html: panelData?.termsAndConditions }}
-                    >
-                    </div>
-                </div>
-
-            </PdfComp> */}
 
             {
                 panelProposal?.selectedPanels?.flatMap(panel => panel?.watt?.imgWatt || [])?.map((item, index) => {
@@ -397,68 +401,40 @@ const PanelPropsalView = () => {
                     if (!pages[pageIndex]) return null;
                     return (
                         <PdfComp key={index} bg={pages[pageIndex]}>
-                            <div className="absolute top-[40mm] left-[20mm] w-[170mm]">
-                            </div>
+                            <div className="absolute top-[40mm] left-[20mm] w-[170mm]"></div>
                         </PdfComp>
                     );
                 })
             }
-            <PdfComp bg={pages[pages.length - 1]}>
-            </PdfComp>
 
-
-            {/* <PdfComp bg={pages[7]}>
-                <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
-                    {data?.companyLogo ?
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
-                        :
-                        <h1 className='uppercase'>{data?.companyName}</h1>
-                    }
-                </div>
-            </PdfComp> */}
-
-            {/* <PdfComp bg={pages[pages.length - 1]}>
-                <div className="absolute text-red-500 scale-150 top-[8mm] left-[22mm]  w-40 h-25  overflow-hidden flex items-center justify-center">
-                    {data?.companyLogo ?
-                        <img loading='lazy' src={data?.companyLogo} alt="" className=' w-2/3 object-cover ' />
-                        :
-                        <h1 className='uppercase'>{data?.companyName}</h1>
-                    }
+            <PdfComp bg={pages[pages.length - 1]} >
+  <div className="absolute top-[7mm]  left-[4mm] w-[90mm] h-40 flex items-center justify-center">
+                    {data?.companyLogo ? (
+                        <img
+                            className='logo-img'
+                            src={data.companyLogo}
+                            onLoad={handleImageLoad}
+                            style={imgStyle}
+                        />
+                    ) : (
+                        <h1>{data?.companyName}</h1>
+                    )}
                 </div>
 
-                <div className="absolute top-[5mm] right-[7mm]  text-end">
-                    <div className='text-white'>
-
-                        <span className='capitalize inline-block text-lg'>
-                            {data.companyName}
-                        </span>
-
-                        <br />
-                        <span className=' inline-block text-md'>
-                            {data.email}
-                        </span>
-                        <br />
-                        <span className='capitalize inline-block text-md'>
-                            {data.contactNumber}
-                        </span>
-                        <br />
-                        <span className='capitalize inline-block text-md'>
-                            {data.gstin}
-                        </span>
-                        <br />
-                        <span className='capitalize max-w-96  inline-block text-xs'>
-                            {data.address}
-                        </span>
-                        <br />
-
+                <div className="absolute top-[8mm] right-[6mm] text-end">
+                    <div>
+                        <span>{data.companyName}</span><br />
+                        <span>{data.email}</span><br />
+                        <span>{data.contactNumber}</span><br />
+                        <span>{data.gstin}</span><br />
+                        <span className='text-xs'>{data.address}</span>
                     </div>
                 </div>
-            </PdfComp> */}
+                
+            </PdfComp>
 
-        </div >
+        </div>
     )
 }
 
-
-
-export default PanelPropsalView
+export default PanelPropsalView;
