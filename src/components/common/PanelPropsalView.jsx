@@ -35,24 +35,33 @@ const PanelPropsalView = () => {
     const wattImages = panelProposal?.selectedPanels?.flatMap(p => p?.watt?.imgWatt || []) || [];
 
 
-    const pages = [
+    // const pages = [
+    //     "/panelimg/p1.jpeg",
+    //     "/panelimg/p2.jpg.jpeg",
+    //     "/panelimg/p3.jpg.jpeg",
+    //     "/panelimg/p4.jpg.jpeg",
+    //     "/panelimg/p5.jpg.jpeg",
+    //     "/panelimg/p6.jpg.jpeg",
+    //     "/panelimg/p7.jpg.jpeg",
+    //     "/panelimg/p8.jpg.jpeg",
+    //     "/panelimg/table.jpg.jpeg",
+    //     "/panelimg/term&Condition.jpeg",
+    //     ...wattImages,
+    //     "/panelimg/p9.jpg.jpeg",
+    // ]
+
+    const pages=[
         "/panelimg/p1.jpeg",
         "/panelimg/p2.jpg.jpeg",
         "/panelimg/p3.jpg.jpeg",
         "/panelimg/p4.jpg.jpeg",
         "/panelimg/p5.jpg.jpeg",
         "/panelimg/p6.jpg.jpeg",
-        "/panelimg/p7.jpg.jpeg",
-        "/panelimg/p8.jpg.jpeg",
-        "/panelimg/table.jpg.jpeg",
-        "/panelimg/term&Condition.jpeg",
         ...wattImages,
-        "/panelimg/p9.jpg.jpeg",
-
+        "/panelimg/p7.jpg.jpeg",
     ]
 
-    // console.log("pages : ", pages);
-    // const START_PAGE = pages.length - panelProposal.selectedPanels.length;
+    
 
     const panelData = {
         gst: panelProposal?.gst,
@@ -184,37 +193,106 @@ const PanelPropsalView = () => {
                         <h1 className='uppercase'>{data?.companyName}</h1>
                     }
                 </div> */}
+              <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
+                    {data?.companyLogo ?
+                        <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
+                        :
+                        <h1 className='uppercase'>{data?.companyName}</h1>
+                    }
+                </div>
+                <div className='absolute top-[75mm] px-4 w-full'>
+                    <div className=" overflow-x-auto ">
+                        <table className="mx-auto w-[90%] border border-gray-400">
+                            <thead>
+                                <tr className=" bg-red-800 text-white text-xs text-left">
+                                    <th className="p-3  text-xs border border-gray-400">S.No</th>
+                                    <th className="p-3 border border-gray-400">Panel Watt </th>
+                                    <th className="p-3 border border-gray-400">Panel Type</th>
+                                    <th className="p-3 border border-gray-400">Technology</th>
+                                    <th className="p-3 border border-gray-400">Constructive Type</th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody className="text-sm">
+                                {
+                                    panelProposal?.selectedPanels?.map((panel, idx) => (
+                                        // console.log("panel : ", panel),
+                                        <tr key={idx}>
+                                            <td className="border border-gray-300 p-2 text-center">{idx + 1}</td>
+                                            <td className="border border-gray-300 p-2 text-center">{panel?.watt?.watt} wp</td>
+                                            <td className="border border-gray-300 p-2 text-center">{panel?.panelType?.panelType}</td>
+                                            <td className="border border-gray-300 p-2 text-center">{panel?.technology?.technologyPanel}</td>
+                                            <td className="border border-gray-300 p-2 text-center">{panel?.constructive?.constructiveType}</td>
+
+                                        </tr>
+                                    ))
+                                }
+                            </tbody>
+                        </table>
+
+                        <table className="mx-auto w-[90%] border mt-10">
+                            <thead>
+                                <tr className=" bg-red-800 text-white text-xs text-left">
+                                    <th className="p-3  text-xs border border-gray-400">S.No</th>
+                                    <th className="p-3  text-xs border border-gray-400">Item Description</th>
+                                    <th className="p-3 text-xs "> <span className='flex flex-row'><IndianRupee className='' />Rate/Watt </span> </th>
+                                    <th className="p-3 text-xs border border-gray-400">Quantity</th>
+                                    <th className="p-3 text-xs border border-gray-400"> <span className='flex flex-row'><IndianRupee className='' /> Amount </span> </th>
+                                    <th className="p-3 text-xs border border-gray-400"> <span className='flex flex-row'><IndianRupee className='' /> GST {panelData?.gst}% </span></th>
+                                    <th className="p-3 text-xs border border-gray-400"> <span className='flex flex-row'><IndianRupee className='' /> Amount + Gst</span></th>
+                                </tr>
+                            </thead>
+
+                            <tbody className="text-sm">
+                                {
+                                    panelProposal?.selectedPanels?.map((panel, idx) => (
+                                        <tr key={idx}>
+                                            <td className="border border-gray-300 p-2 text-center">{idx + 1}</td>
+                                            <td className="border border-gray-300 p-2 text-center ">{`${panel?.watt?.watt}Wp Gautam Solar ,${panel?.panelType?.panelType},${panel?.technology?.technologyPanel},${panel?.constructive?.constructiveType}`}</td>
+                                            <td className="border border-gray-300 p-2 text-center">{panel?.rate.toLocaleString()}</td>
+                                            <td className="border border-gray-300 p-2 text-center">{panel?.quantity.toLocaleString()}</td>
+                                            <td className="border border-gray-300 p-2 text-center"> {panel?.totalPrice.toLocaleString()}</td>
+                                            <td className="border border-gray-300 p-2 text-center"> {panel?.gstAmount.toLocaleString()}</td>
+                                            <td className="border border-gray-300 p-2 text-center"> {(panel?.totalPrice + panel?.gstAmount).toLocaleString()}</td>
+                                        </tr>
+                                    ))
+                                }
+
+
+                            <tr className="bg-gray-100 font-semibold">
+                                <td colSpan={6} className="border border-gray-300 p-2 text-right">
+                                    <i class="fa-solid fa-indian-rupee-sign"></i> Total Amount
+                                </td>
+                                <td className='border border-gray-300 p-2 text-red-600 text-right'> {(panelProposal?.finalPrice).toLocaleString("en-IN")}</td>
+                            </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div >
             </PdfComp>
 
             <PdfComp bg={pages[5]}>
-                <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center ">
+                <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
                     {data?.companyLogo ?
                         <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
                         :
                         <h1 className='uppercase'>{data?.companyName}</h1>
                     }
+                </div>
+                <div className='pt-10 '>
+                    <div
+                        className=" max-w-none space-y-3 ml-5 mt-52"
+                        dangerouslySetInnerHTML={{ __html: panelData?.termsAndConditions }}
+                    >
+                    </div>
                 </div>
             </PdfComp>
 
-            <PdfComp bg={pages[6]}>
-                <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
-                    {data?.companyLogo ?
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
-                        :
-                        <h1 className='uppercase'>{data?.companyName}</h1>
-                    }
-                </div>
-            </PdfComp>
-            <PdfComp bg={pages[7]}>
-                <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
-                    {data?.companyLogo ?
-                        <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
-                        :
-                        <h1 className='uppercase'>{data?.companyName}</h1>
-                    }
-                </div>
-            </PdfComp>
-            <PdfComp bg={pages[8]}>
+           
+
+            {/* <PdfComp bg={pages[8]}>
                 <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
                     {data?.companyLogo ?
                         <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
@@ -313,11 +391,11 @@ const PanelPropsalView = () => {
                     </div>
                 </div>
 
-            </PdfComp>
+            </PdfComp> */}
 
             {
                 panelProposal?.selectedPanels?.flatMap(panel => panel?.watt?.imgWatt || [])?.map((item, index) => {
-                    const pageIndex = 10 + index;
+                    const pageIndex = 6 + index;
                     if (!pages[pageIndex]) return null;
                     return (
                         <PdfComp key={index} bg={pages[pageIndex]}>
@@ -327,10 +405,22 @@ const PanelPropsalView = () => {
                     );
                 })
             }
+             <PdfComp bg={pages[pages.length-1]}>
+            </PdfComp>
 
-            <PdfComp bg={pages[pages.length - 1]}>
+
+              {/* <PdfComp bg={pages[7]}>
+                <div className="absolute text-red-500 scale-150 top-[5mm] right-[20mm] overflow-hidden max-w-30  h-18  flex items-center justify-center">
+                    {data?.companyLogo ?
+                        <img loading='lazy' src={data?.companyLogo} alt="" className='object-cover w-22' />
+                        :
+                        <h1 className='uppercase'>{data?.companyName}</h1>
+                    }
+                </div>
+            </PdfComp> */}
+
+            {/* <PdfComp bg={pages[pages.length - 1]}>
                 <div className="absolute text-red-500 scale-150 top-[8mm] left-[22mm]  w-40 h-25  overflow-hidden flex items-center justify-center">
-                    {/* <img loading='lazy' src={data?.companyLogo} alt="" className='w-2/3 object-cover ' /> */}
                     {data?.companyLogo ?
                         <img loading='lazy' src={data?.companyLogo} alt="" className=' w-2/3 object-cover ' />
                         :
@@ -365,7 +455,7 @@ const PanelPropsalView = () => {
 
                     </div>
                 </div>
-            </PdfComp>
+            </PdfComp> */}
 
         </div >
     )
