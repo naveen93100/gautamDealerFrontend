@@ -132,7 +132,6 @@ export default function ClientSection() {
                 newClient,
             );
 
-            // console.log("shoing the cretae clinet response?", res?.data);
 
             if (res?.data?.success) {
                 setClients((prev) => [newClient, ...prev]);
@@ -147,12 +146,22 @@ export default function ClientSection() {
                 setErrosr({});
                 setShowModal(false);
                 toast.success("Client created successfully");
-            } else {
-                toast.error("Failed to create client");
             }
         } catch (er) {
-            // console.log(er?.)
-            toast.error(er?.response?.data?.message);
+            // // console.log(er?.)
+            // toast.error(er?.response?.data?.message);
+            toast.dismiss()
+            const errors = er?.response?.data?.message || [];
+
+            toast.error(<div>
+                <strong>Please fix the following:</strong>
+                <ul className="mt-1">
+                    {errors.map((err, i) => (
+                        <li key={i} className="capitalize text-sm">• {err.message}</li>
+                    ))}
+                </ul>
+            </div>
+            );
         }
     };
 
@@ -218,11 +227,10 @@ export default function ClientSection() {
                     {label} <span className="text-red-700 text-lg">*</span>{" "}
                 </label>
                 <input
-                    className={`w-full border border-gray-200 rounded-xl px-3 py-2  text-sm outline-none focus:border-[#D85A30] focus:ring-2 focus:ring-[#D85A30]/20 bg-gray-50 ${
-                        hasError
+                    className={`w-full border border-gray-200 rounded-xl px-3 py-2  text-sm outline-none focus:border-[#D85A30] focus:ring-2 focus:ring-[#D85A30]/20 bg-gray-50 ${hasError
                             ? "border-red-500 focus:ring-2 focus:ring-red-300"
                             : "border-gray-200 focus:border-[#D85A30] focus:ring-2-[#D85A30]/20"
-                    }`}
+                        }`}
                     placeholder={ph}
                     value={form[key]}
                     onChange={(e) => {
@@ -458,11 +466,10 @@ export default function ClientSection() {
                                 onClick={
                                     isEdit ? handleUpdateClient : handleCreate
                                 }
-                                className={`px-5 py-2.5 rounded-xl text-sm font-semibold text-white cursor-pointer transition-all duration-200 shadow-sm hover:shadow-md active:scale-95 ${
-                                    isEdit
+                                className={`px-5 py-2.5 rounded-xl text-sm font-semibold text-white cursor-pointer transition-all duration-200 shadow-sm hover:shadow-md active:scale-95 ${isEdit
                                         ? "bg-amber-500 hover:bg-amber-600"
                                         : "bg-[#D85A30] hover:bg-[#c04e28]"
-                                }`}
+                                    }`}
                             >
                                 {isEdit ? "Update Client" : "Create Client"}
                             </button>

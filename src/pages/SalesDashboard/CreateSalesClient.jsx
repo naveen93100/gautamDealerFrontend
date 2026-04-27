@@ -104,7 +104,7 @@ export default function CreateSalesClient() {
         setIsEdit(false);
     };
 
-  
+
 
     const filtered = clients.filter((c) => {
         const q = search.trim().toLowerCase();
@@ -144,18 +144,17 @@ export default function CreateSalesClient() {
     }, [user?._id]);
 
     const handleCreate = async () => {
-    
+
         const paylod = {
             fullName: form.fullName,
-            email: form.email,
+            email: form?.email.trim()?form?.email:undefined,
             phone: form.phone,
-            address: form.address,
+            address: form?.address.trim()?form?.email:undefined,
             companyName: form.companyName,
             gstin: form.gstNumber,
             salesId: user._id,
         };
 
-        // console.log("show the payload when i create the sales client", paylod);
         try {
             const response = await apiCall(
                 "POST",
@@ -165,20 +164,23 @@ export default function CreateSalesClient() {
 
             if (response?.data?.success) {
                 toast.success("Client created successfully");
-
                 setClients((prev) => [response.data.client, ...prev]);
 
                 resetForm();
                 setShowModal(false);
-            } else {
-                toast.error(
-                    response?.data?.message || "Failed to create client",
-                );
             }
         } catch (error) {
-            toast.error(
-                error?.response?.data?.message ||
-                    "An error occurred while creating client",
+            toast.dismiss()
+            const errors = error?.response?.data?.message || [];
+
+            toast.error(<div>
+                <strong>Please fix the following:</strong>
+                <ul className="mt-1">
+                    {errors.map((err, i) => (
+                        <li key={i} className="capitalize text-sm">• {err.message}</li>
+                    ))}
+                </ul>
+            </div>
             );
         }
     };
@@ -198,13 +200,13 @@ export default function CreateSalesClient() {
     };
 
     const handleUpdate = async () => {
-    
+
         try {
             const paylod = {
-                fullName: form.fullName,
-                email: form.email,
+                fullName: form.fullName.trim()?form.fullName:undefined,
+                email: form.email.trim()?form.email:undefined,
                 phone: form.phone,
-                address: form.address,
+                address: form.address?form.address:undefined,
                 companyName: form.companyName,
                 gstin: form.gstNumber,
                 salesId: user._id,
@@ -233,9 +235,17 @@ export default function CreateSalesClient() {
                 resetForm();
             }
         } catch (error) {
-            toast.error(
-                error?.response?.data?.message ||
-                    "An error occurred while updating client",
+            toast.dismiss()
+            const errors = error?.response?.data?.message || [];
+
+            toast.error(<div>
+                <strong>Please fix the following:</strong>
+                <ul className="mt-1">
+                    {errors.map((err, i) => (
+                        <li key={i} className="capitalize text-sm">• {err.message}</li>
+                    ))}
+                </ul>
+            </div>
             );
         }
     };
@@ -252,10 +262,9 @@ export default function CreateSalesClient() {
                 </label>
                 <input
                     className={`w-full rounded-xl px-4 py-3 text-sm font-medium outline-none transition-all duration-200 bg-gray-50 border
-                        ${
-                            hasError
-                                ? "border-red-400 focus:ring-2 focus:ring-red-200 bg-red-50/30"
-                                : "border-gray-200 focus:border-[#D85A30] focus:ring-2 focus:ring-[#D85A30]/15 focus:bg-white"
+                        ${hasError
+                            ? "border-red-400 focus:ring-2 focus:ring-red-200 bg-red-50/30"
+                            : "border-gray-200 focus:border-[#D85A30] focus:ring-2 focus:ring-[#D85A30]/15 focus:bg-white"
                         }`}
                     placeholder={placeholder}
                     value={form[fkey]}
@@ -330,7 +339,7 @@ export default function CreateSalesClient() {
                                 key={i}
                                 onClick={() =>
                                     navigate("/salesclient-history", {
-                                        state: { clientId: c._id , clientName: c.fullName},
+                                        state: { clientId: c._id, clientName: c.fullName },
                                     })
                                 }
                                 className={`group relative bg-white rounded-2xl border border-gray-100
@@ -595,10 +604,9 @@ export default function CreateSalesClient() {
                                     }
                                     className={`flex-1 py-3 rounded-xl text-sm font-semibold text-white
                                         transition-all duration-200 shadow-md active:scale-[0.97]
-                                        ${
-                                            isEdit
-                                                ? "bg-linear-to-br from-amber-400 to-amber-600 shadow-amber-200 hover:shadow-amber-300 hover:shadow-lg"
-                                                : "bg-linear-to-br from-[#D85A30] to-[#993C1D] shadow-[#D85A30]/30 hover:shadow-[#D85A30]/50 hover:shadow-lg"
+                                        ${isEdit
+                                            ? "bg-linear-to-br from-amber-400 to-amber-600 shadow-amber-200 hover:shadow-amber-300 hover:shadow-lg"
+                                            : "bg-linear-to-br from-[#D85A30] to-[#993C1D] shadow-[#D85A30]/30 hover:shadow-[#D85A30]/50 hover:shadow-lg"
                                         }`}
                                 >
                                     {isEdit ? "Update Client" : "Create Client"}

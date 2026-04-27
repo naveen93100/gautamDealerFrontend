@@ -403,11 +403,11 @@ const CreateSalesPanelProposal = ({ onClose, data = null, setData, clientId }) =
         {
           constructiveId: item?.constructiveId?._id,
           panelId: item?.panelId?._id,
-          quantity: item?.quantity, 
+          quantity: item?.quantity,
           rate: item?.rate,
           gstAmount: item?.gstAmount,
           technologyId: item?.technologyId?._id,
-          totalPrice: item?.totalPrice, 
+          totalPrice: item?.totalPrice,
           wattId: item?.wattId?._id
         }))
     })
@@ -509,16 +509,21 @@ const CreateSalesPanelProposal = ({ onClose, data = null, setData, clientId }) =
       toast.success(panelPropsal?.data?.message);
       setTimeout(() => {
         onClose(false);
-        // proposalData()
       }, 1000)
 
     } catch (error) {
-      let er = (error?.response?.data?.message || error?.message);
-      er.forEach((err) => {
-        toast.error(err.message);
-      });
+      let er = (error?.response?.data?.message || []);
 
-      // alert(JSON.stringify(error?.response?.data?.message || error?.message));
+      toast.error(<div>
+        <strong>Please fix the following:</strong>
+        <ul className="mt-1">
+          {er.map((err, i) => (
+            <li key={i} className="capitalize text-sm">• {err.message}</li>
+          ))}
+        </ul>
+      </div>
+      );
+
     }
   }
 
