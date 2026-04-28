@@ -33,7 +33,7 @@ const PanelPropsalView = () => {
 
     const panelProposal = proposalDatas;
 
-    const wattImages = panelProposal?.selectedPanels?.flatMap(p => p?.watt?.imgWatt || []) || [];
+    // const wattImages = panelProposal?.selectedPanels?.flatMap(p => p?.watt?.imgWatt || []) || [];
 
     const pages = [
         "/panelimg/p1.jpeg",

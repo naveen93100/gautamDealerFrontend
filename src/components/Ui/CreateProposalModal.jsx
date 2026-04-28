@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { BiRupee } from "react-icons/bi";
 import JoditEditor from "jodit-react";
+import { useRefetchProposal } from "../../hooks/useDealerProposalMethods";
 
 const CreateProposalModal = ({ setClose, proposalData, data, setData, customerId }) => {
     const [loading, setLoading] = useState(false);
@@ -91,6 +92,8 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData, customerId
             </p>
     `);
 
+    const {refetchProposal}=useRefetchProposal()
+
     const {
         register,
         handleSubmit,
@@ -100,10 +103,6 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData, customerId
         getValues,
     } = useForm({
         defaultValues: {
-            // customerName: "",
-            // email: "",
-            // phone: "",
-            // address: "",
             orderCapacity: "",
             rate: "",
             components: [],
@@ -143,7 +142,6 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData, customerId
                 if (res?.data?.success) {
                     toast.success(res?.data?.message);
                     setClose(false);
-                    setTimeout(() => proposalData(), 1000);
                 }
             } catch (er) {
                 toast.error(er?.response?.data?.message);
@@ -171,7 +169,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData, customerId
                 );
                 if (res?.data.success) {
                     toast.success(res.data?.message);
-                    setTimeout(() => proposalData(), 1000);
+                    refetchProposal(user?.id,customerId)
                     setClose(false);
                 }
             } catch (er) {

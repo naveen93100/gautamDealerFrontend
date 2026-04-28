@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { apiCall } from "../../../services/api";
 import { useAuth } from "../../../Context/AuthContext";
 import toast from "react-hot-toast";
+import { useQuery } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 const COLOR_MAP = {
     coral: {
         bg: "bg-[#FAECE7]",
@@ -53,27 +55,31 @@ export default function ClientSection() {
     });
     const [isEdit, setIsEdit] = useState(false);
     const [selectedClient, setSelectedClient] = useState(null);
-    useEffect(() => {
-        const getClient = async () => {
-            try {
-                const res = await apiCall(
-                    "GET",
-                    `/api/dealer/get-customers?dealerId=${user?.id}`,
-                );
 
-                setClients(res?.data?.data || []);
-            } catch (error) {
-                console.log("Something went wrong:", error?.res?.data?.message);
-                setClients([]);
-            }
-        };
+    const getClient = async () => {
+        try {
+            const res = await apiCall(
+                "GET",
+                `/api/dealer/get-customers?dealerId=${user?.id}`,
+            );
 
-        if (user?.id) {
-            getClient();
+            return res?.data?.data || []
+            // setClients(res?.data?.data || []);
+        } catch (error) {
+            console.log("Something went wrong:", error?.res?.data?.message);
+            setClients([]);
         }
-    }, [user?.id]);
+    };
 
-    const filtered = clients.filter((c) => {
+    const { data, isLoading } = useQuery({
+        queryKey: ['client'],
+        queryFn: getClient,
+        staleTime: 5 * 60 * 1000,
+        refetchOnMount: false,
+        enabled:user?.id?true:false
+    })
+
+    const filtered = data?.filter((c) => {
         const q = search.trim().toLowerCase();
 
         return (
@@ -228,8 +234,8 @@ export default function ClientSection() {
                 </label>
                 <input
                     className={`w-full border border-gray-200 rounded-xl px-3 py-2  text-sm outline-none focus:border-[#D85A30] focus:ring-2 focus:ring-[#D85A30]/20 bg-gray-50 ${hasError
-                            ? "border-red-500 focus:ring-2 focus:ring-red-300"
-                            : "border-gray-200 focus:border-[#D85A30] focus:ring-2-[#D85A30]/20"
+                        ? "border-red-500 focus:ring-2 focus:ring-red-300"
+                        : "border-gray-200 focus:border-[#D85A30] focus:ring-2-[#D85A30]/20"
                         }`}
                     placeholder={ph}
                     value={form[key]}
@@ -250,6 +256,13 @@ export default function ClientSection() {
         );
     };
 
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center  w-full">
+                <Loader2 className="w-8 h-8 animate-spin text-gray-600" />
+            </div>
+        );
+    }
     return (
         <div className="mt-2">
             {/* Toolbar */}
@@ -278,12 +291,12 @@ export default function ClientSection() {
 
             {/* Cards Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filtered.length === 0 ? (
+                {filtered?.length === 0 ? (
                     <p className="col-span-3 text-center text-gray-400 py-16 text-sm bg-white rounded-2xl border border-gray-200">
                         No clients found
                     </p>
                 ) : (
-                    filtered.map((c, index) => {
+                    filtered?.map((c, index) => {
                         const colors = Object.values(COLOR_MAP);
                         const col = colors[index % colors.length];
                         return (
@@ -467,8 +480,8 @@ export default function ClientSection() {
                                     isEdit ? handleUpdateClient : handleCreate
                                 }
                                 className={`px-5 py-2.5 rounded-xl text-sm font-semibold text-white cursor-pointer transition-all duration-200 shadow-sm hover:shadow-md active:scale-95 ${isEdit
-                                        ? "bg-amber-500 hover:bg-amber-600"
-                                        : "bg-[#D85A30] hover:bg-[#c04e28]"
+                                    ? "bg-amber-500 hover:bg-amber-600"
+                                    : "bg-[#D85A30] hover:bg-[#c04e28]"
                                     }`}
                             >
                                 {isEdit ? "Update Client" : "Create Client"}

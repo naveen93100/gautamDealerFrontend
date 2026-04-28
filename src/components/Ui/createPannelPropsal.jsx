@@ -5,11 +5,12 @@ import { apiCall } from '../../services/api';
 import PanelSelector from './panelSelector';
 import JoditEditor from 'jodit-react';
 import { useAuth } from '../../Context/AuthContext';
+import { useRefetchProposal } from '../../hooks/useDealerProposalMethods';
 
 const CreatePannelPropsal = ({ onClose, proposalData, data = {}, customerId }) => {
 
   const [loading, setLoading] = useState(false);
-  // const { user, token } = useAuth();
+  const { user, token } = useAuth();
   const [panelData, setPanelData] = useState();
   const [technologyData, setTechnologyData] = useState();
   const [constructiveData, setConstructiveData] = useState();
@@ -35,6 +36,7 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {}, customerId }) =
     }]
   )
 
+  const {refetchProposal}=useRefetchProposal()
 
   const joditConfig = useMemo(()=>({
     readonly: false,
@@ -225,10 +227,8 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {}, customerId }) =
         var panelPropsal = await apiCall("put", "/api/dealer/edit-solarPanel-proposal", payload)
       }
       toast.success(panelPropsal?.data?.message);
-      setTimeout(() => {
-        onClose(false);
-        proposalData()
-      }, 1000)
+      refetchProposal(user?.id,customerId);
+      onClose(false);
 
     } catch (error) {
       alert(error?.response?.data?.message || error?.message);
