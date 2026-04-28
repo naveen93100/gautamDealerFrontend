@@ -82,10 +82,14 @@ const SalesPanelSelector = ({
                 [key]: updatedValue,
             };
 
+            const selectedWattId = copy[index].wattId;
+
+            const pWatt = panelWatt?.find(i => i._id === selectedWattId);
+
             const quantity = Number(copy[index].quantity || 0);
             const rate = Number(copy[index].rate || 0);
 
-            const watt = Number(panelWatt ? panelWatt[0]?.watt : 1);
+            const watt = Number(pWatt?.watt);
             const amount = watt * quantity * rate;
             const gstAmount = (amount * gst) / 100;
 
@@ -99,29 +103,27 @@ const SalesPanelSelector = ({
 
     
     useEffect(() => {
+        if (!gst) return
+
         setSelectPanel((prev) =>
             prev.map((item) => {
-                const quantity = Number(item.quantity || 0);
-                const rate = Number(item.rate || 0);
-                const watt = Number(panelWatt ? panelWatt[0]?.watt : 1);
-                // const amount = watt * quantity * rate;
-                // const amount = quantity * rate;
-                const gstAmount = item?.gstAmount
+                const amount = Number(item.totalPrice || 0);
+                const gstAmount = (amount * gst) / 100;
 
                 return {
                     ...item,
-                    totalPrice: item?.totalPrice,
                     gstAmount,
                 };
-            }),
+            })
         );
-    }, []);
+    }, [gst]);
 
     const handleRemove = (e, index) => {
         e.preventDefault();
         setSelectPanel((prev) => prev.filter((_, i) => i !== index));
     };
 
+    console.log(gst);
 
     return (
         <section className="mb-6">
@@ -316,25 +318,6 @@ const SalesPanelSelector = ({
                                         />
                                     </div>
                                 </div>
-                                {/* new filed */}
-                                {/* <div>
-                                                <label className="block text-sm font-medium mb-2">
-                                                    Watt per piece
-                                                </label>
-                                                <input
-                                                    name="getperwattprice"
-                                                    value={panel?.wattPerPrice}
-                                                    onChange={(e) =>
-                                                        handleChange(
-                                                            index,
-                                                            "wattPerPrice",
-                                                            e.target.value,
-                                                        )
-                                                    }
-                                                    className="w-full px-4 py-3 border rounded-xl  "
-                                                    placeholder="0"
-                                                />
-                                            </div> */}
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                                     <div>
@@ -361,6 +344,7 @@ const SalesPanelSelector = ({
                                             Gst Amount
                                         </label>
                                         <input
+
                                             key={index}
                                             name="gstAmount"
                                             value={panel?.gstAmount}

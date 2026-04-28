@@ -49,7 +49,6 @@ const App = () => {
                 />
             </Route>
 
-            {/* <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}> */}
             <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<AdminDashboard />} />
                 <Route path="panel" element={<PannelProposal />} />
@@ -65,7 +64,6 @@ const App = () => {
                 <Route path="dealer" element={<DealerList />} />
                 <Route path="sales" element={<SalesPersonList/>}/>
             </Route>
-            {/* <Route path="users" element={<AdminUsers />} /> */}
 
             <Route
                 path="/dashboard"
@@ -88,7 +86,6 @@ const App = () => {
                 element={<ClientPanelHistory />}
             />
 
-            {/* <Route path='test' element={<AdminDashboard />} /> */}
 
             {/* sales porposal router  */}
                 <Route path="/salesdashbord" element={<SalesDashBoard />} />
