@@ -33,6 +33,8 @@
 //     );
 // };
 
+
+
 import { IndianRupee } from "lucide-react";
 import React, { useEffect } from "react";
 import toast from "react-hot-toast";
@@ -94,6 +96,8 @@ const SalesPanelSelector = ({
         });
     };
 
+
+    
     useEffect(() => {
         setSelectPanel((prev) =>
             prev.map((item) => {
