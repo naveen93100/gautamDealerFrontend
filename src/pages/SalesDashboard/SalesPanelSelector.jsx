@@ -1,3 +1,40 @@
+// import { IndianRupee } from "lucide-react";
+// import React, { useEffect } from "react";
+// import toast from "react-hot-toast";
+
+// const SalesPanelSelector = ({
+//     selectPanel,
+//     setSelectPanel,
+//     panelData,
+//     technologyData,
+//     constructiveData,
+//     panelWatt,
+//     setActiveIndex,
+//     gst,
+// }) => {
+//     return (
+//         <section className="mb-6">
+//             <div className="flex items-center justify-between mb-6">
+//                 <div className="flex items-center gap-2">
+//                     <i className="fa-solid fa-solar-panel text-red-600"></i>
+//                     <h3 className="text-lg font-semibold">Panel Information</h3>
+//                 </div>
+
+//                 <div
+
+//                     className="flex items-center gap-2 border border-blue-500 text-blue-600 hover:bg-blue-50 px-4 py-2 rounded-lg transition"
+//                 >
+//                     <i className="fa-solid fa-plus text-sm"></i>
+//                     <span className="text-sm font-medium">Add More Panel</span>
+//                 </div>
+//             </div>
+
+//         </section>
+//     );
+// };
+
+
+
 import { IndianRupee } from "lucide-react";
 import React, { useEffect } from "react";
 import toast from "react-hot-toast";
@@ -63,6 +100,8 @@ const SalesPanelSelector = ({
         });
     };
 
+
+    
     useEffect(() => {
         if (!gst) return
 
