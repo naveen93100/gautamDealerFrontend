@@ -34,6 +34,8 @@ const PanelSelector = ({
     const handleChange = (index, key, value) => {
         setActiveIndex(index);
 
+        // let pWatt=panelWatt?.find(i=>i._id===value);
+
         setSelectPanel((prev) => {
             const copy = [...prev];
 
@@ -45,10 +47,14 @@ const PanelSelector = ({
                 [key]: updatedValue,
             };
 
+             const selectedWattId = copy[index].wattId;
+
+            const pWatt = panelWatt?.find(i => i._id === selectedWattId);
+
             const quantity = Number(copy[index].quantity || 0);
             const rate = Number(copy[index].rate || 0);
                 
-            const watt=Number(panelWatt?panelWatt[0]?.watt:1)
+            const watt=Number(pWatt?.watt)
             const amount = (watt*quantity) * rate;
             const gstAmount = (amount * gst) / 100;
 
@@ -60,21 +66,16 @@ const PanelSelector = ({
     };
 
     useEffect(() => {
-        setSelectPanel((prev) =>
+         setSelectPanel((prev) =>
             prev.map((item) => {
-                const quantity = Number(item.quantity || 0);
-                const rate = Number(item.rate || 0);
-                const watt=Number(panelWatt?panelWatt[0]?.watt:1)
-                const amount = (watt*quantity) * rate;
-                // const amount = quantity * rate;
-                const gstAmount = (amount * gst)/100;
+                const amount = Number(item.totalPrice || 0);
+                const gstAmount = (amount * gst) / 100;
 
                 return {
                     ...item,
-                    totalPrice: amount,
                     gstAmount,
                 };
-            }),
+            })
         );
     }, [gst]);
 
@@ -82,6 +83,7 @@ const PanelSelector = ({
         e.preventDefault();
         setSelectPanel((prev) => prev.filter((_, i) => i !== index));
     };
+
 
     return (
         <section className="mb-6">

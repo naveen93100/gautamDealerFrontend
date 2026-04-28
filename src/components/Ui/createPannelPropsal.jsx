@@ -329,6 +329,8 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {}, customerId }) =
                     onChange={handleChange}
                     className="w-full px-4 py-3 border rounded-xl focus:ring-2"
                     placeholder="GST %"
+                    type='number'
+                    min={0}
                   />
                 </div>
 

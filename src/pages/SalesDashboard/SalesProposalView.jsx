@@ -26,7 +26,7 @@ const SalesProposalView = () => {
     address: state?.clientId?.address
   }
 
-  const wattImages = state?.selectedPanels?.flatMap(p => p?.wattId?.imgWatt || []) || [];
+  // const wattImages = state?.selectedPanels?.flatMap(p => p?.wattId?.imgWatt || []) || [];
 
 
   const pages = [
@@ -36,7 +36,7 @@ const SalesProposalView = () => {
     "/salesPanel/004.png",
     "/salesPanel/005.png",
     "/salesPanel/006.png",
-    ...wattImages,
+    // ...wattImages,
     "/salesPanel/007.png",
 
   ]
@@ -353,8 +353,7 @@ const SalesProposalView = () => {
         </div>
       </PdfComp>
 
-      {/* DYNAMIC IMAGE PAGES */}
-      {state?.selectedPanels
+      {/* {state?.selectedPanels
         ?.flatMap((panel) => panel?.wattId?.imgWatt || [])
         ?.map((_, index) => {
           const pageIndex = 6 + index;
@@ -362,10 +361,9 @@ const SalesProposalView = () => {
 
           return (
             <PdfComp key={index} bg={pages[pageIndex]}>
-              {/* <div className="absolute top-[40mm] left-[20mm] w-[170mm]" /> */}
             </PdfComp>
           );
-        })}
+        })} */}
 
       {/* LAST PAGE */}
       <PdfComp bg={pages[pages.length - 1]}>

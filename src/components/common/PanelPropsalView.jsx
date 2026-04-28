@@ -42,7 +42,7 @@ const PanelPropsalView = () => {
         "/panelimg/p4.jpeg",
         "/panelimg/p5.jpeg",
         "/panelimg/p6.jpeg",
-        ...wattImages,
+        // ...wattImages,
         "/panelimg/p7.jpeg",
     ]
 
@@ -148,7 +148,7 @@ const PanelPropsalView = () => {
         // Compare with your "second image" size
         if (w >= 292 && h >= 283) {
             setImgStyle({
-                width: "150px", // reduced width
+                width: "170px",
                 height: "auto",
                 filter: 'contrast(1.2)'
             });
@@ -160,6 +160,29 @@ const PanelPropsalView = () => {
             });
         }
     };
+
+    const showDealerContactFooter=()=>{
+        //  return(
+        //     <div
+        //             className="absolute bottom-[0mm] right-[0mm]"
+        //             style={{
+        //                 width: '30%',
+        //                 height: '40px',
+        //                 backgroundColor: '#a20000',
+        //                 display: 'flex',
+        //                 flexDirection: 'column',
+        //                 justifyContent: 'center',
+        //                 padding: '4px 8px',
+        //                 opacity: 0.8,
+        //                 color:'white',
+        //                 padding:"30px 10px",
+        //                 borderRadius:'10px'
+        //             }}>
+        //             <span>{data.email}</span>
+        //             <span>{data.contactNumber}</span>
+        //         </div>
+        //  )
+    }
 
     return (
         <div className="flex min-h-screen flex-col gap-6 bg-gray-200">
@@ -192,7 +215,7 @@ const PanelPropsalView = () => {
             </button>
 
             <PdfComp bg={pages[0]}>
-                <div className="absolute top-[7mm]  left-[4mm] w-[90mm] h-40 flex items-center justify-center">
+                <div className="absolute top-[7mm]  left-[4mm] w-[90mm] h-40 flex items-center justify-center ">
                     {data?.companyLogo ? (
                         <img
                             className='logo-img'
@@ -205,7 +228,7 @@ const PanelPropsalView = () => {
                     )}
                 </div>
 
-                <div className="absolute top-[8mm] right-[6mm] text-end">
+                <div className="absolute top-[8mm] right-[6mm] text-end" style={{ color: 'white' }}>
                     <div>
                         <span>{data.companyName}</span><br />
                         <span>{data.email}</span><br />
@@ -215,12 +238,14 @@ const PanelPropsalView = () => {
                     </div>
                 </div>
 
-                <div className="absolute top-[189mm] left-[17mm]">
-                    <span>{customerData.name}</span><br />
-                    <span>{customerData.address}</span><br />
-                    <span>{customerData.phone}</span><br />
+                <div className="absolute top-[187mm] left-[17mm]" >
+                    <span style={{ textTransform: 'capitalize' }}>{customerData.name}</span><br />
+                    <span style={{ textTransform: 'capitalize', fontSize: '14px', width: "400px", display: 'inline-block', wordWrap: "break-word" }}>{customerData.address}</span><br />
+                    <span style={{ textTransform: 'capitalize' }}>{customerData.phone}</span><br />
                     <span>{customerData.email}</span>
                 </div>
+
+               {showDealerContactFooter()}
             </PdfComp>
 
             <PdfComp bg={pages[1]}>
@@ -234,6 +259,7 @@ const PanelPropsalView = () => {
                         <h1>{data?.companyName}</h1>
                     }
                 </div>
+                {showDealerContactFooter()}
             </PdfComp>
 
             <PdfComp bg={pages[2]}>
@@ -248,6 +274,8 @@ const PanelPropsalView = () => {
                         <h1>{data?.companyName}</h1>
                     }
                 </div>
+                {showDealerContactFooter()}
+
             </PdfComp>
 
             <PdfComp bg={pages[3]}>
@@ -262,6 +290,8 @@ const PanelPropsalView = () => {
                         <h1>{data?.companyName}</h1>
                     }
                 </div>
+                {showDealerContactFooter()}
+
             </PdfComp>
 
             <PdfComp bg={pages[4]}>
@@ -370,33 +400,36 @@ const PanelPropsalView = () => {
 
                     </div>
                 </div>
-        
+                {showDealerContactFooter()}
+                 
             </PdfComp >
 
-    <PdfComp bg={pages[5]}>
-        <div className="absolute top-[2mm] right-[11mm] flex items-center justify-center w-52 h-30">
-            {data?.companyLogo ?
-                <img src={data?.companyLogo}
-                    className='logo-img'
+            <PdfComp bg={pages[5]}>
+                <div className="absolute top-[2mm] right-[11mm] flex items-center justify-center w-52 h-30">
+                    {data?.companyLogo ?
+                        <img src={data?.companyLogo}
+                            className='logo-img'
 
 
-                    style={{ width: "120px", height: 'auto', filter: 'contrast(1.2)' }}
-                />
-                :
-                <h1>{data?.companyName}</h1>
-            }
-        </div>
+                            style={{ width: "120px", height: 'auto', filter: 'contrast(1.2)' }}
+                        />
+                        :
+                        <h1>{data?.companyName}</h1>
+                    }
+                </div>
 
-        <div className='pt-10 '>
-            <div
-                className=" pdf-content max-w-none space-y-3 ml-5 mt-52"
-                dangerouslySetInnerHTML={{ __html: panelData?.termsAndConditions }}
-            >
-            </div>
-        </div>
-    </PdfComp>
+                <div className='pt-10 '>
+                    <div
+                        className=" pdf-content max-w-none space-y-3 ml-5 mt-52"
+                        dangerouslySetInnerHTML={{ __html: panelData?.termsAndConditions }}
+                    >
+                    </div>
+                </div>
+                {showDealerContactFooter()}
 
-{
+            </PdfComp>
+
+            {/* {
     panelProposal?.selectedPanels?.flatMap(panel => panel?.watt?.imgWatt || [])?.map((item, index) => {
         const pageIndex = 6 + index;
         if (!pages[pageIndex]) return null;
@@ -407,33 +440,33 @@ const PanelPropsalView = () => {
             </PdfComp>
         );
     })
-}
+} */}
 
-<PdfComp bg={pages[pages.length - 1]} >
-    <div className="absolute top-[7mm]  left-[4mm] w-[90mm] h-40 flex items-center justify-center">
-        {data?.companyLogo ? (
-            <img
-                className='logo-img'
-                src={data.companyLogo}
-                onLoad={handleImageLoad}
-                style={imgStyle}
-            />
-        ) : (
-            <h1>{data?.companyName}</h1>
-        )}
-    </div>
+            <PdfComp bg={pages[pages.length - 1]} >
+                <div className="absolute top-[7mm]  left-[4mm] w-[90mm] h-40 flex items-center justify-center">
+                    {data?.companyLogo ? (
+                        <img
+                            className='logo-img'
+                            src={data.companyLogo}
+                            onLoad={handleImageLoad}
+                            style={imgStyle}
+                        />
+                    ) : (
+                        <h1>{data?.companyName}</h1>
+                    )}
+                </div>
 
-    <div className="absolute top-[8mm] right-[6mm] text-end">
-        <div>
-            <span>{data.companyName}</span><br />
-            <span>{data.email}</span><br />
-            <span>{data.contactNumber}</span><br />
-            <span>{data.gstin}</span><br />
-            <span className='text-xs'>{data.address}</span>
-        </div>
-    </div>
+                <div className="absolute top-[8mm] right-[6mm] text-end" style={{ color: 'white' }}>
+                    <div>
+                        <span>{data.companyName}</span><br />
+                        <span>{data.email}</span><br />
+                        <span>{data.contactNumber}</span><br />
+                        <span>{data.gstin}</span><br />
+                        <span className='text-xs'>{data.address}</span>
+                    </div>
+                </div>
 
-</PdfComp>
+            </PdfComp>
 
         </div >
     )
