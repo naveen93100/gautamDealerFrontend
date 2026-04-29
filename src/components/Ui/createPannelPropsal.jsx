@@ -5,12 +5,12 @@ import { apiCall } from '../../services/api';
 import PanelSelector from './panelSelector';
 import JoditEditor from 'jodit-react';
 import { useAuth } from '../../Context/AuthContext';
+import { useRefetchProposal } from '../../hooks/useDealerProposalMethods';
 
 const CreatePannelPropsal = ({ onClose, proposalData, data = {}, customerId }) => {
-  console.log("d:", data);
 
   const [loading, setLoading] = useState(false);
-  // const { user, token } = useAuth();
+  const { user, token } = useAuth();
   const [panelData, setPanelData] = useState();
   const [technologyData, setTechnologyData] = useState();
   const [constructiveData, setConstructiveData] = useState();
@@ -36,6 +36,7 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {}, customerId }) =
     }]
   )
 
+  const {refetchProposal}=useRefetchProposal()
 
   const joditConfig = useMemo(()=>({
     readonly: false,
@@ -67,7 +68,14 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {}, customerId }) =
 
             <br>
 
-            <h3 style="background-color:#a20000; color:#fff; display:inline-block;">
+            <h3 style="background-color:#a20000;
+  color:#fff;
+  padding:1px 10px;
+  font-weight:bold;
+  line-height:1.3;
+  margin-top:1px;
+  width:300px;
+  border-radius:10px;">
             <strong>Terms and Conditions:</strong>
             </h3>
 
@@ -219,10 +227,8 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {}, customerId }) =
         var panelPropsal = await apiCall("put", "/api/dealer/edit-solarPanel-proposal", payload)
       }
       toast.success(panelPropsal?.data?.message);
-      setTimeout(() => {
-        onClose(false);
-        proposalData()
-      }, 1000)
+      refetchProposal(user?.id,customerId);
+      onClose(false);
 
     } catch (error) {
       alert(error?.response?.data?.message || error?.message);
@@ -323,6 +329,8 @@ const CreatePannelPropsal = ({ onClose, proposalData, data = {}, customerId }) =
                     onChange={handleChange}
                     className="w-full px-4 py-3 border rounded-xl focus:ring-2"
                     placeholder="GST %"
+                    type='number'
+                    min={0}
                   />
                 </div>
 

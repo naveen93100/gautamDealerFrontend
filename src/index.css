@@ -1,15 +1,24 @@
 @import "tailwindcss";
 /* 📄 Ensure each page prints as a full A4 sheet */
-@page {
-  size: A4;
-  margin: 0; 
-  /* remove browser default margins */
-}
+
+/* * {
+  color: rgb(0, 0, 0);
+} */
 
 @media print {
+  @page {
+    size: A4;
+    margin: 0; 
+  }
   body {
     margin: 0;
     padding: 0;
+  }
+
+  .logo {
+    width: 40mm !important;   /* or 120px */
+    height: auto !important;
+    max-width: 100% !important;
   }
 
   /* Every .pdf-page SHOULD become one printed page */
@@ -69,4 +78,22 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+}
+
+
+
+
+.pdf-content * {
+  line-height: 1.5 !important;   /* 👈 prevents clipping */
+}
+
+.pdf-content span,
+.pdf-content strong,
+.pdf-content b {
+  display: inline-block;         /* 👈 fixes background cut */
+  padding: 2px 4px;              /* 👈 gives breathing space */
+}
+
+.pdf-content p {
+  margin: 6px 0;
 }

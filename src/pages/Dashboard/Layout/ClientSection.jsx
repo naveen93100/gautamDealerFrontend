@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { apiCall } from "../../../services/api";
 import { useAuth } from "../../../Context/AuthContext";
 import toast from "react-hot-toast";
+import { useQuery } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
+import { useCreateClient, useGetClient, useUpdateClient } from "../../../hooks/useDealerProposalMethods";
 const COLOR_MAP = {
     coral: {
         bg: "bg-[#FAECE7]",
@@ -43,7 +46,7 @@ export default function ClientSection() {
     const [clients, setClients] = useState([]);
     const [search, setSearch] = useState("");
     const [showModal, setShowModal] = useState(false);
-    const [errors, setErrosr] = useState({});
+    const [errors, setErrors] = useState({});
 
     const [form, setForm] = useState({
         name: "",
@@ -51,29 +54,22 @@ export default function ClientSection() {
         phone: "",
         address: "",
     });
+
     const [isEdit, setIsEdit] = useState(false);
     const [selectedClient, setSelectedClient] = useState(null);
-    useEffect(() => {
-        const getClient = async () => {
-            try {
-                const res = await apiCall(
-                    "GET",
-                    `/api/dealer/get-customers?dealerId=${user?.id}`,
-                );
 
-                setClients(res?.data?.data || []);
-            } catch (error) {
-                console.log("Something went wrong:", error?.res?.data?.message);
-                setClients([]);
-            }
-        };
 
-        if (user?.id) {
-            getClient();
-        }
-    }, [user?.id]);
+    const { data, isLoading } = useGetClient(user?.id)
 
-    const filtered = clients.filter((c) => {
+    // const { data, isLoading } = useQuery({
+    //     queryKey: ['client'],
+    //     queryFn: getClient,
+    //     staleTime: 5 * 60 * 1000,
+    //     refetchOnMount: false,
+    //     enabled:user?.id?true:false
+    // })
+
+    const filtered = data?.filter((c) => {
         const q = search.trim().toLowerCase();
 
         return (
@@ -92,8 +88,12 @@ export default function ClientSection() {
                 .includes(q)
         );
     });
-    
+
+    const { mutate: createClient, isPending } = useCreateClient()
+    const {mutate:updateClient,isPending:updatePending}=useUpdateClient();
+
     const handleCreate = async () => {
+        toast.dismiss();
         const newErrors = {};
 
         if (!form.name.trim()) {
@@ -109,51 +109,39 @@ export default function ClientSection() {
             newErrors.address = "Address is required";
         }
 
-        // if (!form.name.trim()) {
-        //     toast.error("Full name is required");
-        //     return;
-        // }
-
         if (Object.keys(newErrors).length > 0) {
-            setErrosr(newErrors);
-            toast.error("please fill all required fields");
+            setErrors(newErrors);
+            toast.error("Please fill all required fields");
             return;
         }
 
-        const newClient = {
+        const payLoad = {
             ...form,
             dealerId: user.id,
         };
 
-        try {
-            const res = await apiCall(
-                "POST",
-                "/api/dealer/create-customer",
-                newClient,
-            );
-
-            // console.log("shoing the cretae clinet response?", res?.data);
-
-            if (res?.data?.success) {
-                setClients((prev) => [newClient, ...prev]);
-
-                setForm({
-                    dealerId: "",
-                    fullName: "",
-                    email: "",
-                    phone: "",
-                    location: "",
-                });
-                setErrosr({});
+        createClient(payLoad, {
+            onSuccess: () => {
+                setForm({ dealerId: "", fullName: "", email: "", phone: "", location: "" });
+                setErrors({});
                 setShowModal(false);
                 toast.success("Client created successfully");
-            } else {
-                toast.error("Failed to create client");
+            },
+            onError: (er) => {
+                toast.dismiss()
+                const errors = er?.message || [];
+
+                toast.error(<div>
+                    <strong>Please fix the following:</strong>
+                    <ul className="mt-1">
+                        {errors.map((err, i) => (
+                            <li key={i} className="capitalize text-sm">• {err.message}</li>
+                        ))}
+                    </ul>
+                </div>
+                );
             }
-        } catch (er) {
-            // console.log(er?.)
-            toast.error(er?.response?.data?.message);
-        }
+        })
     };
 
     const resetForm = () => {
@@ -164,7 +152,7 @@ export default function ClientSection() {
             address: "",
         });
 
-        setErrosr({});
+        setErrors({});
         setSelectedClient(null);
         setIsEdit(false);
     };
@@ -183,30 +171,16 @@ export default function ClientSection() {
     };
 
     const handleUpdateClient = async () => {
-        try {
-            const response = await apiCall(
-                "PATCH",
-                `/api/dealer/edit-customer/${selectedClient._id}`,
-                form,
-            );
-
-            if (response?.data?.success) {
-                setClients((prev) =>
-                    prev.map((item) =>
-                        item._id === selectedClient._id
-                            ? { ...item, ...form }
-                            : item,
-                    ),
-                );
-
-                toast.success("Client updated successfully");
-
+        updateClient({clientId:selectedClient?._id,payLoad:form},{
+            onSuccess:(d)=>{
+                toast.success('Client Updated Successfully')
                 setShowModal(false);
                 resetForm();
+            },
+            onError:(er)=>{
+                toast.error(er?.message)
             }
-        } catch (error) {
-            console.log(error?.response?.data?.message);
-        }
+        })
     };
 
     const field = (key, label, ph) => {
@@ -218,17 +192,16 @@ export default function ClientSection() {
                     {label} <span className="text-red-700 text-lg">*</span>{" "}
                 </label>
                 <input
-                    className={`w-full border border-gray-200 rounded-xl px-3 py-2  text-sm outline-none focus:border-[#D85A30] focus:ring-2 focus:ring-[#D85A30]/20 bg-gray-50 ${
-                        hasError
-                            ? "border-red-500 focus:ring-2 focus:ring-red-300"
-                            : "border-gray-200 focus:border-[#D85A30] focus:ring-2-[#D85A30]/20"
-                    }`}
+                    className={`w-full border border-gray-200 rounded-xl px-3 py-2  text-sm outline-none focus:border-[#D85A30] focus:ring-2 focus:ring-[#D85A30]/20 bg-gray-50 ${hasError
+                        ? "border-red-500 focus:ring-2 focus:ring-red-300"
+                        : "border-gray-200 focus:border-[#D85A30] focus:ring-2-[#D85A30]/20"
+                        }`}
                     placeholder={ph}
                     value={form[key]}
                     onChange={(e) => {
                         setForm((p) => ({ ...p, [key]: e.target.value }));
 
-                        setErrosr((p) => ({
+                        setErrors((p) => ({
                             ...p,
                             [key]: "",
                         }));
@@ -242,6 +215,13 @@ export default function ClientSection() {
         );
     };
 
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center  w-full">
+                <Loader2 className="w-8 h-8 animate-spin text-gray-600" />
+            </div>
+        );
+    }
     return (
         <div className="mt-2">
             {/* Toolbar */}
@@ -261,7 +241,7 @@ export default function ClientSection() {
                         resetForm();
                         setShowModal(true);
                     }}
-                    className="flex items-center justify-center gap-2 bg-red-700 hover:bg-[#e75050] text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 hover:shadow-md"
+                    className="flex cursor-pointer items-center justify-center gap-2 bg-red-700 hover:bg-[#e75050] text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 hover:shadow-md"
                 >
                     <span className="text-base leading-none">＋</span>
                     Create Client
@@ -270,12 +250,12 @@ export default function ClientSection() {
 
             {/* Cards Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filtered.length === 0 ? (
+                {filtered?.length === 0 ? (
                     <p className="col-span-3 text-center text-gray-400 py-16 text-sm bg-white rounded-2xl border border-gray-200">
                         No clients found
                     </p>
                 ) : (
-                    filtered.map((c, index) => {
+                    filtered?.map((c, index) => {
                         const colors = Object.values(COLOR_MAP);
                         const col = colors[index % colors.length];
                         return (
@@ -325,23 +305,74 @@ export default function ClientSection() {
 
                                 {/* Info rows */}
                                 <div className="space-y-1.5">
+                                    {/* Put this once in parent component (top of return) */}
+                                    <svg
+                                        width="0"
+                                        height="0"
+                                        className="absolute"
+                                    >
+                                        <defs>
+                                            <linearGradient
+                                                id="gmailGradient"
+                                                x1="0%"
+                                                y1="0%"
+                                                x2="100%"
+                                                y2="100%"
+                                            >
+                                                <stop
+                                                    offset="0%"
+                                                    stopColor="#4285F4"
+                                                />{" "}
+                                                {/* Blue */}
+                                                <stop
+                                                    offset="45%"
+                                                    stopColor="#EA4335"
+                                                />{" "}
+                                                {/* Red */}
+                                                <stop
+                                                    offset="75%"
+                                                    stopColor="#FBBC05"
+                                                />{" "}
+                                                {/* Yellow */}
+                                                <stop
+                                                    offset="100%"
+                                                    stopColor="#34A853"
+                                                />{" "}
+                                                {/* Green */}
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
                                     {c.email && (
                                         <div className="flex items-center gap-2 text-xs text-gray-500">
-                                            <Mail className="w-4 h-4 text-gray-400 shrink-0" />
+                                            <Mail
+                                                className="w-4 h-4 shrink-0"
+                                                style={{
+                                                    stroke: "url(#gmailGradient)",
+                                                }}
+                                            />
                                             <span className="truncate">
+                                                <span className="text-black text-[0.875rem] font-medium">
+                                                    Email :
+                                                </span>{" "}
                                                 {c.email}
                                             </span>
                                         </div>
                                     )}
                                     {c.phone && (
                                         <div className="flex items-center gap-2 text-xs text-gray-500">
-                                            <Phone className="w-4 h-4 text-gray-400 shrink-0" />
+                                            <Phone className="w-4 h-4 text-green-600 shrink-0" />
+                                            <span className="text-black text-[0.875rem] font-medium">
+                                                Phone :
+                                            </span>{" "}
                                             <span>{c.phone}</span>
                                         </div>
                                     )}
                                     {c.address && (
                                         <div className="flex items-center gap-2 text-xs text-gray-500">
-                                            <MapPin className="w-4 h-4 text-gray-400 shrink-0" />
+                                            <MapPin className="w-4 h-4 text-red-600 shrink-0" />
+                                            <span className="text-black text-[0.875rem] font-medium">
+                                                Address :
+                                            </span>{" "}
                                             <span>{c.address}</span>
                                         </div>
                                     )}
@@ -370,7 +401,7 @@ export default function ClientSection() {
                     <div className="bg-white rounded-2xl border border-gray-100 w-full max-w-sm p-6 shadow-xl">
                         <div className="flex items-center justify-between mb-5">
                             <h3 className="text-base font-semibold text-gray-800">
-                                Add new client
+                                {isEdit?'Update Client':'Add Client'}
                             </h3>
                             <button
                                 onClick={() => {
@@ -407,11 +438,10 @@ export default function ClientSection() {
                                 onClick={
                                     isEdit ? handleUpdateClient : handleCreate
                                 }
-                                className={`px-5 py-2.5 rounded-xl text-sm font-semibold text-white cursor-pointer transition-all duration-200 shadow-sm hover:shadow-md active:scale-95 ${
-                                    isEdit
-                                        ? "bg-amber-500 hover:bg-amber-600"
-                                        : "bg-[#D85A30] hover:bg-[#c04e28]"
-                                }`}
+                                className={`px-5 py-2.5 rounded-xl text-sm font-semibold text-white cursor-pointer transition-all duration-200 shadow-sm hover:shadow-md active:scale-95 ${isEdit
+                                    ? "bg-amber-500 hover:bg-amber-600"
+                                    : "bg-[#D85A30] hover:bg-[#c04e28]"
+                                    }`}
                             >
                                 {isEdit ? "Update Client" : "Create Client"}
                             </button>

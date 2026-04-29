@@ -29,9 +29,12 @@ import { apiCall } from "../../../services/api";
 import { useAuth } from "../../../Context/AuthContext";
 import MainPage from "../../../components/common/MainPage";
 import CreatePannelPropsal from "../../../components/Ui/createPannelPropsal";
+import { useQuery } from "@tanstack/react-query";
+import { fetchProposal } from "../../../services/Dealer/DealerApi";
+import { useDeleteProposal, useProposal } from "../../../hooks/useDealerProposalMethods";
 
 const ClientPanelHistory = () => {
-    const [proposals, setProposals] = useState([]);
+    // const [proposals, setProposals] = useState([]);
     const location = useLocation();
     const { clientId: customerId } = location.state;
     const { user, token } = useAuth();
@@ -39,15 +42,18 @@ const ClientPanelHistory = () => {
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const [select, setSelect] = useState(null);
-    const [printP, setPrintP] = useState(false);
-    const [proposalsImages, setProposalsImages] = useState([]);
     const [proposalData, setProposalData] = useState(null);
     const [createPanelProp, setCreatePanelProp] = useState(false);
-    const [createEmpPanel, setCreateEmpPanel] = useState(false);
     const navigate = useNavigate();
 
     const bgColor = "#a20000";
     const [filter, setFilter] = useState("all");
+
+
+    const { data: proposals, isLoading, isError, error } = useProposal(user?.id,customerId);
+    
+    const deletePro=useDeleteProposal(user?.id,customerId)
+
 
     const allProposals = [
         ...(proposals?.proposalsData || []).map((p) => ({
@@ -73,76 +79,12 @@ const ClientPanelHistory = () => {
             ? allProposals
             : allProposals.filter((p) => p.type === filter);
 
-    const fetchProposal = useCallback(async () => {
-        try {
-            let res = await apiCall(
-                "GET",
-                `/api/dealer/get-proposal?dealerId=${user?.id}&customerId=${customerId}`,
-            );
 
-            if (res?.data?.success) {
-                setProposalsImages(res?.data?.images);
-                setProposals(res?.data?.data);
-            }
-        } catch (er) {
-            console.log("Somthing is worng", er);
-        }
-    }, [user?.id]);
+    const handledeleteProposal = async (item) => {
+           deletePro.mutate({type:item?.type,proposalId:item?._id})
 
-    useEffect(() => {
-        if (user?.id) {
-            fetchProposal();
-        }
-    }, [user?.id]);
-
-    const customFunc = (proposal) => {
-        setProposalData(proposal);
-
-        const originalTitle = document.title;
-        document.title = `${proposal?.name}_Proposal`;
-
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                window.print();
-                setTimeout(() => {
-                    document.title = originalTitle;
-                }, 500);
-            });
-        });
     };
 
-    const hangedeleteProposal = async (item) => {
-        const payload = {
-            type: item?.type,
-            proposalId: item?._id,
-        };
-
-        const toastId = toast.loading("Deleting proposal...");
-
-        try {
-            const res = await apiCall(
-                "DELETE",
-                "/api/dealer/delete-proposal",
-                payload,
-            );
-
-            if (res?.data?.success) {
-                toast.success("Proposal deleted successfully ✅", {
-                    id: toastId,
-                });
-            } else {
-                toast.error("Failed to delete proposal ❌", {
-                    id: toastId,
-                });
-            }
-        } catch (error) {
-            console.log(error);
-
-            toast.error("Something went wrong ❌", {
-                id: toastId,
-            });
-        }
-    };
     const handleEdit = (item) => {
         setSelect(item);
 
@@ -159,6 +101,7 @@ const ClientPanelHistory = () => {
                 console.log("Unknown type");
         }
     };
+
 
     return (
         <>
@@ -282,7 +225,7 @@ const ClientPanelHistory = () => {
                                         {filter === "panel"
                                             ? 0
                                             : proposals?.proposalsData
-                                                  ?.length || 0}
+                                                ?.length || 0}
                                     </h2>
 
                                     <p className="text-xs mt-2 text-red-100">
@@ -350,7 +293,7 @@ const ClientPanelHistory = () => {
                                         <div className="flex flex-wrap gap-3">
                                             <button
                                                 onClick={() =>
-                                                    hangedeleteProposal(item)
+                                                    handledeleteProposal(item)
                                                 }
                                                 className="flex items-center gap-2 px-4 py-2 rounded-lg border border-red-500 text-red-600 hover:bg-red-50 transition text-sm font-medium"
                                             >
@@ -397,7 +340,7 @@ const ClientPanelHistory = () => {
                 {showCreateModal && (
                     <CreateProposalModal
                         setClose={setShowCreateModal}
-                        proposalData={fetchProposal}
+                        // proposalData={fetchProposal}
                         data={select}
                         setData={setSelect}
                         customerId={customerId}
@@ -407,7 +350,7 @@ const ClientPanelHistory = () => {
                 {createPanelProp && (
                     <CreatePannelPropsal
                         onClose={setCreatePanelProp}
-                        proposalData={fetchProposal}
+                        // proposalData={fetchProposal}
                         data={select}
                         setData={setSelect}
                         customerId={customerId}
@@ -418,9 +361,7 @@ const ClientPanelHistory = () => {
             {proposalData && (
                 <div id="PrintData" className="print-this hidden print:block">
                     <MainPage
-                        proposalsImages={proposalsImages}
                         proposalDatas={proposalData}
-                        printP={printP}
                     />
                 </div>
             )}

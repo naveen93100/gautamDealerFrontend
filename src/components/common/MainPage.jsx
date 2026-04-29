@@ -33,7 +33,7 @@ const pages = [
 
 
 
-const MainPage = ({ printP }) => {
+const MainPage = () => {
     const { state } = useLocation();
     const { user } = useAuth()
     const proposalDatas = state

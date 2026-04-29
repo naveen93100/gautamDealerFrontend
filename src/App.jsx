@@ -26,6 +26,9 @@ import ClientPanelHistory from "./pages/Dashboard/Layout/ClientPanelHistory";
 // sales proposal
 import SalesDashBoard from "./pages/SalesDashboard/SalesDashBoard";
 import SalesClientPanelHistory from "./pages/SalesDashboard/SalesClientPanelHistory";
+import SalesPersonList from "./pages/Dashboard/SalesAdmin/SalesPersonList";
+import SalesProposalView from "./pages/SalesDashboard/SalesProposalView";
+import TestingProposalView from "./components/common/TestingProposalView";
 
 const App = () => {
     const navigate = useNavigate();
@@ -46,7 +49,6 @@ const App = () => {
                 />
             </Route>
 
-            {/* <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}> */}
             <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<AdminDashboard />} />
                 <Route path="panel" element={<PannelProposal />} />
@@ -60,8 +62,8 @@ const App = () => {
                     element={<PanelWatt />}
                 />
                 <Route path="dealer" element={<DealerList />} />
+                <Route path="sales" element={<SalesPersonList/>}/>
             </Route>
-            {/* <Route path="users" element={<AdminUsers />} /> */}
 
             <Route
                 path="/dashboard"
@@ -77,22 +79,22 @@ const App = () => {
 
             {/* solar panel */}
             <Route path="viewPanelProposal" element={<PanelPropsalView />} />
+            {/* <Route path="viewPanelProposal" element={<TestingProposalView />} /> */}
             {/* client panel history  */}
             <Route
                 path="clientpanel-history"
                 element={<ClientPanelHistory />}
             />
 
-            {/* <Route path='test' element={<AdminDashboard />} /> */}
 
             {/* sales porposal router  */}
-            <Route>
-                <Route path="salesdashbord" element={<SalesDashBoard />} />
+                <Route path="/salesdashbord" element={<SalesDashBoard />} />
                 <Route
-                    path="salesclient-history"
+                    path="/salesclient-history"
                     element={<SalesClientPanelHistory />}
                 />
-            </Route>
+
+                <Route path="/sales-panel-proposal-view" element={<SalesProposalView/>}/>
         </Routes>
     );
 };
