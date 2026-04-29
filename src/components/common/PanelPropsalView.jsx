@@ -36,14 +36,14 @@ const PanelPropsalView = () => {
     // const wattImages = panelProposal?.selectedPanels?.flatMap(p => p?.watt?.imgWatt || []) || [];
 
     const pages = [
-        "/panelimg/p1.jpeg",
-        "/panelimg/p2.jpeg",
-        "/panelimg/p3.jpeg",
-        "/panelimg/p4.jpeg",
-        "/panelimg/p5.jpeg",
-        "/panelimg/p6.jpeg",
+        "/panelimg/001.png",
+        "/panelimg/002.png",
+        "/panelimg/003.png",
+        "/panelimg/004.png",
+        "/panelimg/005.png",
+        "/panelimg/006.png",
         // ...wattImages,
-        "/panelimg/p7.jpeg",
+        "/panelimg/007.png",
     ];
 
     const panelData = {
@@ -161,26 +161,14 @@ const PanelPropsalView = () => {
     };
 
     const showDealerContactFooter=()=>{
-        //  return(
-        //     <div
-        //             className="absolute bottom-[0mm] right-[0mm]"
-        //             style={{
-        //                 width: '30%',
-        //                 height: '40px',
-        //                 backgroundColor: '#a20000',
-        //                 display: 'flex',
-        //                 flexDirection: 'column',
-        //                 justifyContent: 'center',
-        //                 padding: '4px 8px',
-        //                 opacity: 0.8,
-        //                 color:'white',
-        //                 padding:"30px 10px",
-        //                 borderRadius:'10px'
-        //             }}>
-        //             <span>{data.email}</span>
-        //             <span>{data.contactNumber}</span>
-        //         </div>
-        //  )
+         return(
+            <div
+                    className="absolute bottom-[0mm] right-[0mm] flex flex-col items-end justify-center w-full  h-18 px-4"
+                   >
+                    <span style={{color:'white',fontSize:'17px'}}>{data.email}</span>
+                    <span style={{color:'white',fontSize:'17px'}}>{data.contactNumber}</span>
+                </div>
+         )
     }
 
     return (

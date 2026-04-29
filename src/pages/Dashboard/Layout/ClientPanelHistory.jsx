@@ -83,33 +83,6 @@ const ClientPanelHistory = () => {
     const handledeleteProposal = async (item) => {
            deletePro.mutate({type:item?.type,proposalId:item?._id})
 
-        // const payload = {
-        //     type: item?.type,
-        //     proposalId: item?._id,
-        // };
-
-        // const toastId = toast.loading("Deleting proposal...");
-
-        // try {
-        //     const res = await apiCall(
-        //         "DELETE",
-        //         "/api/dealer/delete-proposal",
-        //         payload,
-        //     );
-
-        //     if (res?.data?.success) {
-        //         toast.success("Proposal deleted successfully ✅", {
-        //             id: toastId,
-        //         });
-        //     }
-        // } catch (error) {
-        //     console.log(error);
-
-        //     toast.error("Something went wrong ❌", {
-        //         id: toastId,
-        //     });
-        // }
-
     };
 
     const handleEdit = (item) => {

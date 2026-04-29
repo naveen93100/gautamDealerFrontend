@@ -6,6 +6,7 @@ import { useAuth } from "../../../Context/AuthContext";
 import toast from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
+import { useCreateClient, useGetClient, useUpdateClient } from "../../../hooks/useDealerProposalMethods";
 const COLOR_MAP = {
     coral: {
         bg: "bg-[#FAECE7]",
@@ -45,7 +46,7 @@ export default function ClientSection() {
     const [clients, setClients] = useState([]);
     const [search, setSearch] = useState("");
     const [showModal, setShowModal] = useState(false);
-    const [errors, setErrosr] = useState({});
+    const [errors, setErrors] = useState({});
 
     const [form, setForm] = useState({
         name: "",
@@ -53,31 +54,20 @@ export default function ClientSection() {
         phone: "",
         address: "",
     });
+
     const [isEdit, setIsEdit] = useState(false);
     const [selectedClient, setSelectedClient] = useState(null);
 
-    const getClient = async () => {
-        try {
-            const res = await apiCall(
-                "GET",
-                `/api/dealer/get-customers?dealerId=${user?.id}`,
-            );
 
-            return res?.data?.data || []
-            // setClients(res?.data?.data || []);
-        } catch (error) {
-            console.log("Something went wrong:", error?.res?.data?.message);
-            setClients([]);
-        }
-    };
+    const { data, isLoading } = useGetClient(user?.id)
 
-    const { data, isLoading } = useQuery({
-        queryKey: ['client'],
-        queryFn: getClient,
-        staleTime: 5 * 60 * 1000,
-        refetchOnMount: false,
-        enabled:user?.id?true:false
-    })
+    // const { data, isLoading } = useQuery({
+    //     queryKey: ['client'],
+    //     queryFn: getClient,
+    //     staleTime: 5 * 60 * 1000,
+    //     refetchOnMount: false,
+    //     enabled:user?.id?true:false
+    // })
 
     const filtered = data?.filter((c) => {
         const q = search.trim().toLowerCase();
@@ -99,7 +89,11 @@ export default function ClientSection() {
         );
     });
 
+    const { mutate: createClient, isPending } = useCreateClient()
+    const {mutate:updateClient,isPending:updatePending}=useUpdateClient();
+
     const handleCreate = async () => {
+        toast.dismiss();
         const newErrors = {};
 
         if (!form.name.trim()) {
@@ -115,60 +109,39 @@ export default function ClientSection() {
             newErrors.address = "Address is required";
         }
 
-        // if (!form.name.trim()) {
-        //     toast.error("Full name is required");
-        //     return;
-        // }
-
         if (Object.keys(newErrors).length > 0) {
-            setErrosr(newErrors);
-            toast.error("please fill all required fields");
+            setErrors(newErrors);
+            toast.error("Please fill all required fields");
             return;
         }
 
-        const newClient = {
+        const payLoad = {
             ...form,
             dealerId: user.id,
         };
 
-        try {
-            const res = await apiCall(
-                "POST",
-                "/api/dealer/create-customer",
-                newClient,
-            );
-
-
-            if (res?.data?.success) {
-                setClients((prev) => [newClient, ...prev]);
-
-                setForm({
-                    dealerId: "",
-                    fullName: "",
-                    email: "",
-                    phone: "",
-                    location: "",
-                });
-                setErrosr({});
+        createClient(payLoad, {
+            onSuccess: () => {
+                setForm({ dealerId: "", fullName: "", email: "", phone: "", location: "" });
+                setErrors({});
                 setShowModal(false);
                 toast.success("Client created successfully");
-            }
-        } catch (er) {
-            // // console.log(er?.)
-            // toast.error(er?.response?.data?.message);
-            toast.dismiss()
-            const errors = er?.response?.data?.message || [];
+            },
+            onError: (er) => {
+                toast.dismiss()
+                const errors = er?.message || [];
 
-            toast.error(<div>
-                <strong>Please fix the following:</strong>
-                <ul className="mt-1">
-                    {errors.map((err, i) => (
-                        <li key={i} className="capitalize text-sm">• {err.message}</li>
-                    ))}
-                </ul>
-            </div>
-            );
-        }
+                toast.error(<div>
+                    <strong>Please fix the following:</strong>
+                    <ul className="mt-1">
+                        {errors.map((err, i) => (
+                            <li key={i} className="capitalize text-sm">• {err.message}</li>
+                        ))}
+                    </ul>
+                </div>
+                );
+            }
+        })
     };
 
     const resetForm = () => {
@@ -179,7 +152,7 @@ export default function ClientSection() {
             address: "",
         });
 
-        setErrosr({});
+        setErrors({});
         setSelectedClient(null);
         setIsEdit(false);
     };
@@ -198,30 +171,16 @@ export default function ClientSection() {
     };
 
     const handleUpdateClient = async () => {
-        try {
-            const response = await apiCall(
-                "PATCH",
-                `/api/dealer/edit-customer/${selectedClient._id}`,
-                form,
-            );
-
-            if (response?.data?.success) {
-                setClients((prev) =>
-                    prev.map((item) =>
-                        item._id === selectedClient._id
-                            ? { ...item, ...form }
-                            : item,
-                    ),
-                );
-
-                toast.success("Client updated successfully");
-
+        updateClient({clientId:selectedClient?._id,payLoad:form},{
+            onSuccess:(d)=>{
+                toast.success('Client Updated Successfully')
                 setShowModal(false);
                 resetForm();
+            },
+            onError:(er)=>{
+                toast.error(er?.message)
             }
-        } catch (error) {
-            console.log(error?.response?.data?.message);
-        }
+        })
     };
 
     const field = (key, label, ph) => {
@@ -242,7 +201,7 @@ export default function ClientSection() {
                     onChange={(e) => {
                         setForm((p) => ({ ...p, [key]: e.target.value }));
 
-                        setErrosr((p) => ({
+                        setErrors((p) => ({
                             ...p,
                             [key]: "",
                         }));
@@ -282,7 +241,7 @@ export default function ClientSection() {
                         resetForm();
                         setShowModal(true);
                     }}
-                    className="flex items-center justify-center gap-2 bg-red-700 hover:bg-[#e75050] text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 hover:shadow-md"
+                    className="flex cursor-pointer items-center justify-center gap-2 bg-red-700 hover:bg-[#e75050] text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 hover:shadow-md"
                 >
                     <span className="text-base leading-none">＋</span>
                     Create Client
@@ -442,7 +401,7 @@ export default function ClientSection() {
                     <div className="bg-white rounded-2xl border border-gray-100 w-full max-w-sm p-6 shadow-xl">
                         <div className="flex items-center justify-between mb-5">
                             <h3 className="text-base font-semibold text-gray-800">
-                                Add new client
+                                {isEdit?'Update Client':'Add Client'}
                             </h3>
                             <button
                                 onClick={() => {
