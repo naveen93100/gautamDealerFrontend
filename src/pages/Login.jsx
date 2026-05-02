@@ -302,6 +302,7 @@ const Login = () => {
                     { withCredentials: true },
                 );
                 if (res?.data?.success) {
+                    login(res?.data?.data, res?.data?.token ,res?.data?.data?.role);
                     navigate("/admin");
                 }
             } else if (loginType === "sales") {

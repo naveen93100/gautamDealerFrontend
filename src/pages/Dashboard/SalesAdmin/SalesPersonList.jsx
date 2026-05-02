@@ -108,7 +108,6 @@ const SalesPersonList = () => {
                 payload,
             );
 
-            console.log("API Response:", response);
             if (response?.data?.success) {
                 toast.success("Sales person account created successfully!");
                 setShowModal(false);
@@ -123,7 +122,6 @@ const SalesPersonList = () => {
         const fetchSalesClient = async () => {
             try {
                 const responser = await apiCall("GET", "/api/sales");
-                console.log("Sales Clients:", responser?.data);
                 if (responser?.data?.success) {
                     setSalesClients(responser?.data?.data || []);
                 }
