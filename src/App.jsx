@@ -29,6 +29,7 @@ import SalesClientPanelHistory from "./pages/SalesDashboard/SalesClientPanelHist
 import SalesPersonList from "./pages/Dashboard/SalesAdmin/SalesPersonList";
 import SalesProposalView from "./pages/SalesDashboard/SalesProposalView";
 import TestingProposalView from "./components/common/TestingProposalView";
+import ShowSalesAllproposalToAdmin from "./pages/SalesDashboard/ShowSalesAllproposalToAdmin";
 
 const App = () => {
     const navigate = useNavigate();
@@ -63,6 +64,7 @@ const App = () => {
                 />
                 <Route path="dealer" element={<DealerList />} />
                 <Route path="sales" element={<SalesPersonList/>}/>
+                  <Route path="showallsalesproposaltoadmin" element ={<ShowSalesAllproposalToAdmin/>}/>
             </Route>
 
             <Route
@@ -95,6 +97,8 @@ const App = () => {
                 />
 
                 <Route path="/sales-panel-proposal-view" element={<SalesProposalView/>}/>
+
+              
         </Routes>
     );
 };

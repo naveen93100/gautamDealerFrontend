@@ -9,6 +9,7 @@ import {
     X,
     Receipt,
     Building2,
+    FileText,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -53,8 +54,9 @@ const SalesPersonList = () => {
     const [enabled, setEnabled] = useState(true);
     const [errors, setErrors] = useState({});
     const [salesPerson, setSalesClients] = useState([]);
+    const navigate = useNavigate();
 
-    console.log("Sales Clients State:", selectedClient);
+    // console.log("Sales Clients State:", selectedClient);
     const [form, setForm] = useState({
         name: "",
         email: "",
@@ -173,9 +175,7 @@ const SalesPersonList = () => {
                 { salesId, isActive: !currentStatus },
             );
             if (response?.data?.success) {
-                toast.success(
-                    `${response.data.message} successfully!`,
-                );
+                toast.success(`${response.data.message} successfully!`);
                 setSalesClients((prev) =>
                     prev.map((person) =>
                         person._id === salesId
@@ -264,7 +264,8 @@ const SalesPersonList = () => {
                                                 {person.phone || "N/A"}
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 text-center">
+
+                                        {/* <td className="px-6 py-4 text-center">
                                             <button
                                                 onClick={() => {
                                                     setSelectedClient(person);
@@ -275,7 +276,39 @@ const SalesPersonList = () => {
                                             >
                                                 Edit
                                             </button>
+
+                                            <button>Show all proposal</button>
+                                        </td> */}
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center justify-center gap-3">
+                                                <button
+                                                    onClick={() => {
+                                                        setSelectedClient(
+                                                            person,
+                                                        );
+                                                        setIsEdit(true);
+                                                        setShowModal(true);
+                                                    }}
+                                                    className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-xl hover:bg-blue-200 transition-all duration-200 font-medium cursor-pointer shadow-sm"
+                                                >
+                                                    <Pencil size={16} />
+                                                    Edit
+                                                </button>
+
+                                                <button
+                                                    onClick={() =>
+                                                        navigate(
+                                                            "/admin/showallsalesproposaltoadmin",
+                                                        )
+                                                    }
+                                                    className="flex items-center gap-2 px-4 py-2 bg-orange-100 text-orange-700 rounded-xl hover:bg-orange-200 transition-all duration-200 font-medium cursor-pointer shadow-sm"
+                                                >
+                                                    <FileText size={16} />
+                                                    Show Proposals
+                                                </button>
+                                            </div>
                                         </td>
+
                                         <td className="px-6 py-4 text-center">
                                             <button
                                                 onClick={() =>
