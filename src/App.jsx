@@ -70,7 +70,7 @@ const App = () => {
                     <Route path="dealer" element={<DealerList />} />
                     <Route path="sales" element={<SalesPersonList />} />
                     <Route path="create-admin" element={<CreateAdmin />} />
-                    <Route path="showallsalesproposaltoadmin" element={<ShowSalesAllproposalToAdmin />} />
+                    <Route path="sales-client/:salesId" element={<ShowSalesAllproposalToAdmin />} />
                 </Route>
             </Route>
 

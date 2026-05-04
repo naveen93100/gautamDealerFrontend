@@ -56,6 +56,8 @@ const SalesPersonList = () => {
     const [salesPerson, setSalesClients] = useState([]);
     const navigate = useNavigate();
 
+    console.log("show sales detials", { salesPerson });
+
     // console.log("Sales Clients State:", selectedClient);
     const [form, setForm] = useState({
         name: "",
@@ -122,6 +124,7 @@ const SalesPersonList = () => {
         const fetchSalesClient = async () => {
             try {
                 const responser = await apiCall("GET", "/api/sales");
+
                 if (responser?.data?.success) {
                     setSalesClients(responser?.data?.data || []);
                 }
@@ -294,11 +297,11 @@ const SalesPersonList = () => {
                                                 </button>
 
                                                 <button
-                                                    onClick={() =>
+                                                    onClick={() => {
                                                         navigate(
-                                                            "/admin/showallsalesproposaltoadmin",
-                                                        )
-                                                    }
+                                                            `/admin/sales-client/${person?._id}`,
+                                                        );
+                                                    }}
                                                     className="flex items-center gap-2 px-4 py-2 bg-orange-100 text-orange-700 rounded-xl hover:bg-orange-200 transition-all duration-200 font-medium cursor-pointer shadow-sm"
                                                 >
                                                     <FileText size={16} />

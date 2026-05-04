@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
     User,
     FileText,
@@ -9,40 +9,19 @@ import {
     Eye,
     ArrowLeft,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { apiCall } from "../../services/api";
+import toast from "react-hot-toast";
+import AdminModalProposalDetails from "./AdminModalProposalDetails";
 
 const ShowSalesAllproposalToAdmin = () => {
+    const { salesId } = useParams();
+    const [salesProposalDetails, setSalesProposalDetails] = useState([]);
+    const [adminModal, setAdminModal] = useState(false);
+    const [selectedProposal, setSelectedProposal] = useState(null);
     const navigate = useNavigate();
 
-    const dummyData = [
-        {
-            id: 1,
-            salesPerson: "Seraj Ansari",
-            email: "seraj@gmail.com",
-            phone: "9876543210",
-            comanyName: "Gautam Solar",
-            totalRevenue: "₹4,50,000",
-            lastProposalDate: "28 Apr 2026",
-        },
-        {
-            id: 2,
-            salesPerson: "Naveen Kumar",
-            email: "naveen@gmail.com",
-            phone: "9123456780",
-            comanyName: "Gautam Solar",
-            totalRevenue: "₹2,80,000",
-            lastProposalDate: "26 Apr 2026",
-        },
-        {
-            id: 3,
-            salesPerson: "Manish Singh",
-            email: "mainsh@gmail.com",
-            phone: "9988776655",
-            comanyName: "Gautam Solar",
-            totalRevenue: "₹6",
-            lastProposalDate: "30 Apr 2026",
-        },
-    ];
+    // console.log("rrr", salesProposalDetails);
 
     const initalNameColor = [
         {
@@ -89,8 +68,8 @@ const ShowSalesAllproposalToAdmin = () => {
         },
     ];
 
-    const initalsName = (salesPerson = "") =>
-        salesPerson
+    const initalsName = (fullName = "") =>
+        fullName
             .trim()
             .split(" ")
             .filter(Boolean)
@@ -99,6 +78,24 @@ const ShowSalesAllproposalToAdmin = () => {
             .join("")
             .toUpperCase();
 
+    useEffect(() => {
+        const getSalesPersonProposalDetails = async () => {
+            try {
+                const response = await apiCall(
+                    "GET",
+                    `/adminPanel/sales-client/${salesId}`,
+                );
+                const res = response?.data;
+                if (res.success) {
+                    setSalesProposalDetails(res?.data || []);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        getSalesPersonProposalDetails();
+    }, []);
     return (
         <>
             <div>
@@ -112,7 +109,7 @@ const ShowSalesAllproposalToAdmin = () => {
             </div>
             <div className="p-4">
                 <div className="mb-6">
-                    <h1 className="text-3xl font-bold text-gray-800">
+                    <h1 className="text-xl font-bold text-gray-800">
                         Sales Proposal Overview
                     </h1>
 
@@ -122,15 +119,15 @@ const ShowSalesAllproposalToAdmin = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-                    {dummyData.map((item, i) => {
+                    {salesProposalDetails.map((item, i) => {
                         const nameColors =
                             initalNameColor[i % initalNameColor.length];
 
-                        console.log(nameColors.avatar);
+                        // console.log(nameColors.avatar);
 
                         return (
                             <div
-                                key={item?.id}
+                                key={item?._id}
                                 className="bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden"
                             >
                                 <div
@@ -139,32 +136,41 @@ const ShowSalesAllproposalToAdmin = () => {
                                     <div className="flex items-center gap-3">
                                         <div
                                             className={`w-14 h-14 rounded-full bg-linear-to-br ${nameColors.avatar}
-    flex items-center justify-center text-white font-bold text-lg shadow-md`}
+    flex items-center justify-center text-white font-bold text-md shadow-md`}
                                         >
-                                            {item?.salesPerson ? (
-                                                initalsName(item?.salesPerson)
+                                            {item?.fullName ? (
+                                                initalsName(item?.fullName)
                                             ) : (
                                                 <User
-                                                    className="text-orange-700"
+                                                    className="text-gray-100"
                                                     size={24}
                                                 />
                                             )}
                                         </div>
 
                                         <div>
-                                            <h2 className="text-lg font-bold text-gray-800">
+                                            {/* <h2 className="text-lg font-bold text-gray-800">
                                                 {item.salesPerson}
-                                            </h2>
+                                            </h2> */}
+                                            {item?.fullName && (
+                                                <h2 className="text-md font-bold text-gray-800">
+                                                    {" "}
+                                                    {item?.fullName}
+                                                </h2>
+                                            )}
 
-                                            <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
-                                                <Mail size={14} />
-                                                {item.email}
-                                            </div>
-
-                                            <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
-                                                <Phone size={14} />
-                                                {item.phone}
-                                            </div>
+                                            {item?.email && (
+                                                <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
+                                                    <Mail size={14} />
+                                                    {item.email}
+                                                </div>
+                                            )}
+                                            {item?.phone && (
+                                                <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
+                                                    <Phone size={14} />
+                                                    {item.phone}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -173,21 +179,21 @@ const ShowSalesAllproposalToAdmin = () => {
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2 text-gray-600">
                                             <FileText size={18} />
-                                            <span>Compnay Name : </span>
+                                            <span>Company Name : </span>
                                         </div>
 
-                                        <span className="font-bold text-gray-800">
-                                            {item.comanyName}
+                                        <span className="font-medium text-sm text-gray-800">
+                                            {item.companyName}
                                         </span>
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2 text-gray-600">
                                             <IndianRupee size={18} />
-                                            <span>Total Revenue</span>
+                                            <span>GST Numbar</span>
                                         </div>
 
-                                        <span className="font-bold text-gray-800">
-                                            {item.totalRevenue}
+                                        <span className="font-medium text-sm text-gray-800">
+                                            {item.gstin}
                                         </span>
                                     </div>
 
@@ -198,11 +204,19 @@ const ShowSalesAllproposalToAdmin = () => {
                                         </div>
 
                                         <span className="text-sm font-medium text-gray-700">
-                                            {item.lastProposalDate}
+                                            {new Date(
+                                                item.createdAt,
+                                            ).toLocaleString()}
                                         </span>
                                     </div>
 
-                                    <button className="w-full mt-3 flex items-center justify-center gap-2 bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-xl font-semibold transition-all duration-300">
+                                    <button
+                                        onClick={() => {
+                                            setSelectedProposal(item);
+                                            setAdminModal(true);
+                                        }}
+                                        className="w-full mt-3 flex items-center justify-center gap-2 bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-xl font-semibold transition-all duration-300"
+                                    >
                                         <Eye size={18} />
                                         View Proposals
                                     </button>
@@ -212,6 +226,16 @@ const ShowSalesAllproposalToAdmin = () => {
                     })}
                 </div>
             </div>
+
+            {adminModal && (
+                <AdminModalProposalDetails
+                    salesId={salesId}
+                    clientId={selectedProposal?._id}
+                    onClose={() => {
+                        setAdminModal(false);
+                    }}
+                />
+            )}
         </>
     );
 };
