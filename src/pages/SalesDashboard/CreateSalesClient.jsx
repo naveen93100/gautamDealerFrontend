@@ -228,6 +228,7 @@ export default function CreateSalesClient() {
                     ),
                 );
                 setShowModal(false);
+                fetchSalesCleints()
                 resetForm();
             }
         } catch (error) {
