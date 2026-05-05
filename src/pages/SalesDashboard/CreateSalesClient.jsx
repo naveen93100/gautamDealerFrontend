@@ -114,25 +114,25 @@ export default function CreateSalesClient() {
         );
     });
 
-    useEffect(() => {
-        const fetchSalesCleints = async () => {
-            try {
-                const response = await apiCall(
-                    "GET",
-                    `/api/sales/get-client/${user?._id}`,
+    const fetchSalesCleints = async () => {
+        try {
+            const response = await apiCall(
+                "GET",
+                `/api/sales/get-client/${user?._id}`,
+            );
+            if (response?.data?.success) {
+                setClients(response?.data?.sales || []);
+            } else {
+                toast.error(
+                    response?.data?.message || "Failed to fetch clients",
                 );
-                if (response?.data?.success) {
-                    setClients(response?.data?.sales || []);
-                } else {
-                    toast.error(
-                        response?.data?.message || "Failed to fetch clients",
-                    );
-                }
-            } catch (error) {
-                console.log(error);
-                toast.error("An error occurred while fetching clients");
             }
-        };
+        } catch (error) {
+            console.log(error);
+            toast.error("An error occurred while fetching clients");
+        }
+    };
+    useEffect(() => {
         if (user?._id) {
             fetchSalesCleints();
         }
@@ -159,7 +159,7 @@ export default function CreateSalesClient() {
             if (response?.data?.success) {
                 toast.success("Client created successfully");
                 setClients((prev) => [response.data.client, ...prev]);
-
+                fetchSalesCleints();
                 resetForm();
                 setShowModal(false);
             }
@@ -573,26 +573,26 @@ export default function CreateSalesClient() {
                                     fkey: "phone",
                                     label: "Phone Number",
                                     placeholder: "Enter mobile number",
-                                    required : true
+                                    required: true,
                                 })}
 
                                 {Field({
                                     fkey: "address",
                                     label: "Address",
                                     placeholder: "Enter address",
-                                    required : true
+                                    required: true,
                                 })}
                                 {Field({
                                     fkey: "companyName",
                                     label: "Company Name",
                                     placeholder: "Enter Company Name",
-                                    required : true
+                                    required: true,
                                 })}
                                 {Field({
                                     fkey: "gstNumber",
                                     label: "GST Number",
                                     placeholder: "Enter GST Number",
-                                    required : true
+                                    required: true,
                                 })}
                             </div>
 
