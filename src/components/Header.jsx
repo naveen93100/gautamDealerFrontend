@@ -48,7 +48,7 @@ const Header = () => {
                               }
                             </h1>
                             <p className="text-xs sm:text-sm  opacity-90 font-light">
-                                Powered by Gautam Solar
+                                Powered by Gautam Solar   
                             </p>
                         </div>
                     </div>
@@ -66,7 +66,7 @@ const Header = () => {
                                     loading='lazy'
                                 />
                                 <span className="hidden text-sm  font-bold text-gray-800 whitespace-nowrap">
-                                    GAUTAM SOLAR
+                                    GAUTAM SOLAR 
                                 </span>
                             </a>
                         </div>

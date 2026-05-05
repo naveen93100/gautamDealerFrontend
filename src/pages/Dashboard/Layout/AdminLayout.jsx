@@ -39,6 +39,7 @@ const AdminLayout = () => {
 
                         <div className=" ml-5  w-45 ">
                             <img src="/companyLogo/companyLogo.png" alt="Gautam Solar" />
+                            
                         </div>
 
                         <div className="ml-auto text-right mr-5">

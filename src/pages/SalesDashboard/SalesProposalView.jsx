@@ -23,6 +23,8 @@ const SalesProposalView = () => {
         gstin: state?.clientId?.gstin,
         phone: state?.clientId?.phone,
         address: state?.clientId?.address,
+        createdAt: state?.createdAt,
+        // date : state.clientId?.createdAt
     };
 
     // const wattImages = state?.selectedPanels?.flatMap(p => p?.wattId?.imgWatt || []) || [];
@@ -273,6 +275,10 @@ const SalesProposalView = () => {
                     <span className="text-xs font-semibold block">
                         {customerData.companyName}
                     </span>
+
+                    <span className="text-xs font-semibold block">
+                        {new Date(customerData.createdAt).toLocaleString()}
+                    </span>
                 </div>
             </PdfComp>
 
@@ -480,9 +486,9 @@ const SalesProposalView = () => {
                             <div>
                                 <strong>Phone : </strong> {data?.phone}
                             </div>
-                            <div>
+                            {/* <div>
                                 <strong>Email : </strong> {data?.email}
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>

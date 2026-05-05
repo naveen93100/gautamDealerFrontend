@@ -219,6 +219,7 @@ const CreateSalesPanelProposal = ({ onClose, data = null, setData, clientId }) =
   })
 
 
+  console.log("showing the painel data", panelData)
 
   const userData = JSON.parse(localStorage.getItem("userData") || "{}");
   const salesId = userData?._id;

@@ -292,7 +292,7 @@ const Login = () => {
                     data,
                 );
                 if (res?.data?.success) {
-                    login(res?.data?.data, res?.data?.token ,"dealer");
+                    login(res?.data?.data, res?.data?.token, "dealer");
                     navigate("/dashboard");
                 }
             } else if (loginType === "admin") {
@@ -302,7 +302,11 @@ const Login = () => {
                     { withCredentials: true },
                 );
                 if (res?.data?.success) {
-                    login(res?.data?.data, res?.data?.token ,res?.data?.data?.role);
+                    login(
+                        res?.data?.data,
+                        res?.data?.token,
+                        res?.data?.data?.role,
+                    );
                     navigate("/admin");
                 }
             } else if (loginType === "sales") {
@@ -312,7 +316,7 @@ const Login = () => {
                     { withCredentials: true },
                 );
                 if (res?.data?.success) {
-                    login(res?.data?.data, res?.data?.token , "sales");
+                    login(res?.data?.data, res?.data?.token, "sales");
                     navigate("/salesdashbord");
                 }
             }
@@ -375,7 +379,7 @@ const Login = () => {
                     >
                         {/* Email Field — hidden for Sales login */}
 
-                        <div className="space-y-1.5">
+                        {/* <div className="space-y-1.5">
                             <label className="text-xs font-bold uppercase tracking-wider text-gray-600 ml-1">
                                 Email Address
                             </label>
@@ -399,7 +403,60 @@ const Login = () => {
                                     {errors.email.message}
                                 </p>
                             )}
-                        </div>
+                        </div> */}
+
+                        {loginType !== "sales" ? (
+                            // ✅ EMAIL (Dealer + Admin)
+                            <div className="space-y-1.5">
+                                <label className="text-xs font-bold uppercase tracking-wider text-gray-600 ml-1">
+                                    Email Address
+                                </label>
+                                <div className="group flex items-center gap-3 bg-gray-50 px-4 py-3 rounded-xl border border-gray-200 focus-within:border-[#a20000]">
+                                    <FiMail className="text-gray-400" />
+                                    <input
+                                        type="email"
+                                        placeholder="email@company.com"
+                                        className="w-full bg-transparent focus:outline-none text-sm"
+                                        {...register("email", {
+                                            required: "Email is required",
+                                            pattern: {
+                                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                                message:
+                                                    "Invalid email address",
+                                            },
+                                        })}
+                                    />
+                                </div>
+                                {errors.email && (
+                                    <p className="text-xs text-red-600">
+                                        {errors.email.message}
+                                    </p>
+                                )}
+                            </div>
+                        ) : (
+                            // ✅ USER ID (Sales)
+                            <div className="space-y-1.5">
+                                <label className="text-xs font-bold uppercase tracking-wider text-gray-600 ml-1">
+                                    User ID
+                                </label>
+                                <div className="group flex items-center gap-3 bg-gray-50 px-4 py-3 rounded-xl border border-gray-200 focus-within:border-[#a20000]">
+                                    <FiUser className="text-gray-400" />
+                                    <input
+                                        type="text"
+                                        placeholder="Enter your User ID"
+                                        className="w-full bg-transparent focus:outline-none text-sm"
+                                        {...register("userId", {
+                                            required: "User ID is required",
+                                        })}
+                                    />
+                                </div>
+                                {errors.userId && (
+                                    <p className="text-xs text-red-600">
+                                        {errors.userId.message}
+                                    </p>
+                                )}
+                            </div>
+                        )}
 
                         {/* User ID Field — only for Sales login */}
                         {/* {loginType === "sales" && (
