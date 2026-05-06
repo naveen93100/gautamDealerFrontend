@@ -21,7 +21,6 @@ const ShowSalesAllproposalToAdmin = () => {
     const [selectedProposal, setSelectedProposal] = useState(null);
     const navigate = useNavigate();
 
-    // console.log("rrr", salesProposalDetails);
 
     const initalNameColor = [
         {
@@ -122,8 +121,6 @@ const ShowSalesAllproposalToAdmin = () => {
                     {salesProposalDetails.map((item, i) => {
                         const nameColors =
                             initalNameColor[i % initalNameColor.length];
-
-                        // console.log(nameColors.avatar);
 
                         return (
                             <div
@@ -226,23 +223,9 @@ const ShowSalesAllproposalToAdmin = () => {
                     })}
                 </div>
 
-                {salesProposalDetails.length > 0 ? (
-                    <div className="flex items-center justify-center gap-4 mt-6">
-                        <button
-                            className="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 
-        hover:bg-gray-100 transition disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            ← Prev
-                        </button>
 
-                        <button
-                            className="px-4 py-2 rounded-lg bg-blue-500 text-white 
-        hover:bg-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            Next →
-                        </button>
-                    </div>
-                ) : (
+                {salesProposalDetails.length === 0 &&
+
                     <div className="flex items-center justify-center py-16">
                         <div className="bg-gray-50 border border-gray-200 rounded-xl px-6 py-5 text-center shadow-sm">
                             <span className="text-gray-500 text-sm font-medium">
@@ -250,7 +233,7 @@ const ShowSalesAllproposalToAdmin = () => {
                             </span>
                         </div>
                     </div>
-                )}
+                }
             </div>
 
             {adminModal && (

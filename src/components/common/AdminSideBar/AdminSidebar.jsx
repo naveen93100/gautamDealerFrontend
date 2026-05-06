@@ -64,17 +64,19 @@ const AdminSidebar = ({ sidebarOpen }) => {
 
                 {/* Menu */}
                 <nav className="flex-1 px-3 py-6 ">
-                    {menuItems.map((item) => {
+                    {menuItems.map((item,i) => {
                         const Icon = item.icon;
                         const isActive = activeMenu === item._id;
 
                         return (
-                            <React.Fragment key={item?._id}>
+                            // <React.Fragment key={item?._id}>
+                            <div key={i}>
+
                                 {item?.role.includes(user?.role) &&
                                     <NavLink
                                         key={item?._id}
                                         to={item.path}
-                                        end={item.path==='/admin'}
+                                        end={item.path === '/admin'}
                                         className={({ isActive }) =>
                                             `w-full flex items-center gap-3 px-4 py-3 rounded-xl mb-2
     ${isActive
@@ -87,7 +89,8 @@ const AdminSidebar = ({ sidebarOpen }) => {
                                         {sidebarOpen && item.label}
                                     </NavLink>
                                 }
-                            </React.Fragment>
+                            </div>
+                            // </React.Fragment>
                         );
                     })}
                 </nav>
