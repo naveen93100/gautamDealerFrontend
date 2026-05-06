@@ -83,8 +83,10 @@ const CreateAdmin = () => {
         } catch (er) {
             console.log(er);
         }
-        setFormData({ email: "", password: "", role: "" });
-        setShowModal(false);
+        finally{
+            setFormData({ email: "", password: "", role: "" });
+            setShowModal(false);
+        }
     };
 
     const toggle = async (id, isActive) => {
@@ -209,7 +211,7 @@ const CreateAdmin = () => {
 
                                 <td className="px-4 py-3">
                                     {admin.role === "super_admin" &&
-                                    superAdminCount >= 2 ? (
+                                    superAdminCount >= 1 ? (
                                         <span className="text-xs text-gray-400">
                                             Locked
                                         </span>
