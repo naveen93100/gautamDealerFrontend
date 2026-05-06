@@ -204,7 +204,7 @@ import SalesPanelSelector from './SalesPanelSelector';
 import JoditEditor from 'jodit-react';
 import { useAuth } from '../../Context/AuthContext';
 
-const CreateSalesPanelProposal = ({ onClose, data = null, setData, clientId }) => {
+const CreateSalesPanelProposal = ({ onClose, data = null,fetchProposal, setData, clientId }) => {
   const { loginType, user } = useAuth();
   const [loading, setLoading] = useState(false);
   // const { user, token } = useAuth();
@@ -515,6 +515,7 @@ const CreateSalesPanelProposal = ({ onClose, data = null, setData, clientId }) =
       toast.success(panelPropsal?.data?.message);
       setTimeout(() => {
         onClose(false);
+        fetchProposal()
       }, 1000)
 
     } catch (error) {

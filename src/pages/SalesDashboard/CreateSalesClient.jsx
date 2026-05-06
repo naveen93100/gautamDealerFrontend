@@ -60,8 +60,6 @@ const PALETTE = [
     },
 ];
 
-
-
 const initials = (fullName = "") =>
     fullName
         .trim()
@@ -104,8 +102,6 @@ export default function CreateSalesClient() {
         setIsEdit(false);
     };
 
-
-
     const filtered = clients.filter((c) => {
         const q = search.trim().toLowerCase();
         return (
@@ -118,38 +114,36 @@ export default function CreateSalesClient() {
         );
     });
 
-
-    useEffect(() => {
-        const fetchSalesCleints = async () => {
-            try {
-                const response = await apiCall(
-                    "GET",
-                    `/api/sales/get-client/${user?._id}`,
+    const fetchSalesCleints = async () => {
+        try {
+            const response = await apiCall(
+                "GET",
+                `/api/sales/get-client/${user?._id}`,
+            );
+            if (response?.data?.success) {
+                setClients(response?.data?.sales || []);
+            } else {
+                toast.error(
+                    response?.data?.message || "Failed to fetch clients",
                 );
-                if (response?.data?.success) {
-                    setClients(response?.data?.sales || []);
-                } else {
-                    toast.error(
-                        response?.data?.message || "Failed to fetch clients",
-                    );
-                }
-            } catch (error) {
-                console.log(error);
-                toast.error("An error occurred while fetching clients");
             }
-        };
+        } catch (error) {
+            console.log(error);
+            toast.error("An error occurred while fetching clients");
+        }
+    };
+    useEffect(() => {
         if (user?._id) {
             fetchSalesCleints();
         }
     }, [user?._id]);
 
     const handleCreate = async () => {
-
         const paylod = {
             fullName: form.fullName,
-            email: form?.email.trim()?form?.email:undefined,
+            email: form?.email.trim() ? form?.email : undefined,
             phone: form.phone,
-            address: form?.address.trim()?form?.email:undefined,
+            address: form?.address.trim() ? form?.email : undefined,
             companyName: form.companyName,
             gstin: form.gstNumber,
             salesId: user._id,
@@ -165,22 +159,25 @@ export default function CreateSalesClient() {
             if (response?.data?.success) {
                 toast.success("Client created successfully");
                 setClients((prev) => [response.data.client, ...prev]);
-
+                fetchSalesCleints();
                 resetForm();
                 setShowModal(false);
             }
         } catch (error) {
-            toast.dismiss()
+            toast.dismiss();
             const errors = error?.response?.data?.message || [];
 
-            toast.error(<div>
-                <strong>Please fix the following:</strong>
-                <ul className="mt-1">
-                    {errors.map((err, i) => (
-                        <li key={i} className="capitalize text-sm">• {err.message}</li>
-                    ))}
-                </ul>
-            </div>
+            toast.error(
+                <div>
+                    <strong>Please fix the following:</strong>
+                    <ul className="mt-1">
+                        {errors.map((err, i) => (
+                            <li key={i} className="capitalize text-sm">
+                                • {err.message}
+                            </li>
+                        ))}
+                    </ul>
+                </div>,
             );
         }
     };
@@ -200,13 +197,12 @@ export default function CreateSalesClient() {
     };
 
     const handleUpdate = async () => {
-
         try {
             const paylod = {
-                fullName: form.fullName.trim()?form.fullName:undefined,
-                email: form.email.trim()?form.email:undefined,
+                fullName: form.fullName.trim() ? form.fullName : undefined,
+                email: form.email.trim() ? form.email : undefined,
                 phone: form.phone,
-                address: form.address?form.address:undefined,
+                address: form.address ? form.address : undefined,
                 companyName: form.companyName,
                 gstin: form.gstNumber,
                 salesId: user._id,
@@ -232,39 +228,46 @@ export default function CreateSalesClient() {
                     ),
                 );
                 setShowModal(false);
+                fetchSalesCleints()
                 resetForm();
             }
         } catch (error) {
-            toast.dismiss()
+            toast.dismiss();
             const errors = error?.response?.data?.message || [];
 
-            toast.error(<div>
-                <strong>Please fix the following:</strong>
-                <ul className="mt-1">
-                    {errors.map((err, i) => (
-                        <li key={i} className="capitalize text-sm">• {err.message}</li>
-                    ))}
-                </ul>
-            </div>
+            toast.error(
+                <div>
+                    <strong>Please fix the following:</strong>
+                    <ul className="mt-1">
+                        {errors.map((err, i) => (
+                            <li key={i} className="capitalize text-sm">
+                                • {err.message}
+                            </li>
+                        ))}
+                    </ul>
+                </div>,
             );
         }
     };
 
-    const Field = ({ fkey, label, placeholder }) => {
+    const Field = ({ fkey, label, placeholder, required = false }) => {
         const hasError = errors[fkey];
         return (
             <div className="mb-4">
                 <label className="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1.5">
                     {label}{" "}
-                    <span className="text-red-500 normal-case tracking-normal text-sm">
-                        *
-                    </span>
+                    {required && (
+                        <span className="text-red-500 normal-case tracking-normal text-sm">
+                            *
+                        </span>
+                    )}
                 </label>
                 <input
                     className={`w-full rounded-xl px-4 py-3 text-sm font-medium outline-none transition-all duration-200 bg-gray-50 border
-                        ${hasError
-                            ? "border-red-400 focus:ring-2 focus:ring-red-200 bg-red-50/30"
-                            : "border-gray-200 focus:border-[#D85A30] focus:ring-2 focus:ring-[#D85A30]/15 focus:bg-white"
+                        ${
+                            hasError
+                                ? "border-red-400 focus:ring-2 focus:ring-red-200 bg-red-50/30"
+                                : "border-gray-200 focus:border-[#D85A30] focus:ring-2 focus:ring-[#D85A30]/15 focus:bg-white"
                         }`}
                     placeholder={placeholder}
                     value={form[fkey]}
@@ -339,7 +342,10 @@ export default function CreateSalesClient() {
                                 key={i}
                                 onClick={() =>
                                     navigate("/salesclient-history", {
-                                        state: { clientId: c._id, clientName: c.fullName },
+                                        state: {
+                                            clientId: c._id,
+                                            clientName: c.fullName,
+                                        },
                                     })
                                 }
                                 className={`group relative bg-white rounded-2xl border border-gray-100
@@ -568,22 +574,26 @@ export default function CreateSalesClient() {
                                     fkey: "phone",
                                     label: "Phone Number",
                                     placeholder: "Enter mobile number",
+                                    required: true,
                                 })}
 
                                 {Field({
                                     fkey: "address",
                                     label: "Address",
                                     placeholder: "Enter address",
+                                    required: true,
                                 })}
                                 {Field({
                                     fkey: "companyName",
                                     label: "Company Name",
                                     placeholder: "Enter Company Name",
+                                    required: true,
                                 })}
                                 {Field({
                                     fkey: "gstNumber",
                                     label: "GST Number",
                                     placeholder: "Enter GST Number",
+                                    required: true,
                                 })}
                             </div>
 
@@ -604,9 +614,10 @@ export default function CreateSalesClient() {
                                     }
                                     className={`flex-1 py-3 rounded-xl text-sm font-semibold text-white
                                         transition-all duration-200 shadow-md active:scale-[0.97]
-                                        ${isEdit
-                                            ? "bg-linear-to-br from-amber-400 to-amber-600 shadow-amber-200 hover:shadow-amber-300 hover:shadow-lg"
-                                            : "bg-linear-to-br from-[#D85A30] to-[#993C1D] shadow-[#D85A30]/30 hover:shadow-[#D85A30]/50 hover:shadow-lg"
+                                        ${
+                                            isEdit
+                                                ? "bg-linear-to-br from-amber-400 to-amber-600 shadow-amber-200 hover:shadow-amber-300 hover:shadow-lg"
+                                                : "bg-linear-to-br from-[#D85A30] to-[#993C1D] shadow-[#D85A30]/30 hover:shadow-[#D85A30]/50 hover:shadow-lg"
                                         }`}
                                 >
                                     {isEdit ? "Update Client" : "Create Client"}

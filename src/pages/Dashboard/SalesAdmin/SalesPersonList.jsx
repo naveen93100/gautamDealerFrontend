@@ -9,6 +9,8 @@ import {
     X,
     Receipt,
     Building2,
+    FileText,
+    Users,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -53,11 +55,15 @@ const SalesPersonList = () => {
     const [enabled, setEnabled] = useState(true);
     const [errors, setErrors] = useState({});
     const [salesPerson, setSalesClients] = useState([]);
+    const navigate = useNavigate();
 
-    console.log("Sales Clients State:", selectedClient);
+    // console.log("show sales detials", { salesPerson });
+
+    // console.log("Sales Clients State:", selectedClient);
     const [form, setForm] = useState({
         name: "",
-        email: "",
+        // email: "",
+        // userid: "",
         phone: "",
         password: "",
     });
@@ -65,7 +71,8 @@ const SalesPersonList = () => {
     const resetForm = () => {
         setForm({
             name: "",
-            email: "",
+            // email: "",
+            // userid: "",
             phone: "",
             password: "",
         });
@@ -76,12 +83,9 @@ const SalesPersonList = () => {
 
     const createSalesAccount = async () => {
         try {
-            const { name, email, phone, password } = form;
+            const { name, phone, password } = form;
             const newErrors = {};
-            if (!name.trim()) newErrors.name = "Name is required";
-            if (!email.trim()) newErrors.email = "Email is required";
-            else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
-                newErrors.email = "Invalid email format";
+            if (!name || !name.trim()) newErrors.name = "Name is required";
             if (!phone.trim()) newErrors.phone = "Phone number is required";
             else if (!/^\d{10}$/.test(phone))
                 newErrors.phone = "Phone number must be 10 digits";
@@ -95,7 +99,8 @@ const SalesPersonList = () => {
 
             const payload = {
                 name: form.name,
-                email: form.email,
+                // email: form.email,
+                // : form.userid,
                 phone: form.phone,
                 password: form.password,
             };
@@ -106,29 +111,31 @@ const SalesPersonList = () => {
                 payload,
             );
 
-            console.log("API Response:", response);
             if (response?.data?.success) {
                 toast.success("Sales person account created successfully!");
+                fetchSalesClient();
                 setShowModal(false);
                 resetForm();
             }
         } catch (error) {
+            console.log(error);
             toast.error("Failed to create sales person account.");
         }
     };
 
-    useEffect(() => {
-        const fetchSalesClient = async () => {
-            try {
-                const responser = await apiCall("GET", "/api/sales");
-                console.log("Sales Clients:", responser?.data);
-                if (responser?.data?.success) {
-                    setSalesClients(responser?.data?.data || []);
-                }
-            } catch (error) {
-                console.error("Error fetching sales clients:", error);
+    const fetchSalesClient = async () => {
+        try {
+            const responser = await apiCall("GET", "/api/sales");
+
+            if (responser?.data?.success) {
+                setSalesClients(responser?.data?.data || []);
             }
-        };
+        } catch (error) {
+            console.error("Error fetching sales clients:", error);
+        }
+    };
+
+    useEffect(() => {
         fetchSalesClient();
     }, []);
 
@@ -136,7 +143,8 @@ const SalesPersonList = () => {
         if (selectedClient) {
             setForm({
                 name: selectedClient.name || "",
-                email: selectedClient.email || "",
+                // email: selectedClient.email || "",
+                // userid: selectedClient.userid || "",
                 phone: selectedClient.phone || "",
             });
         }
@@ -146,7 +154,8 @@ const SalesPersonList = () => {
         try {
             const payload = {
                 name: form.name,
-                email: form.email,
+                // email: form.email,
+                // userid: form.userid,
                 phone: form.phone,
                 salesId: selectedClient._id,
             };
@@ -173,9 +182,7 @@ const SalesPersonList = () => {
                 { salesId, isActive: !currentStatus },
             );
             if (response?.data?.success) {
-                toast.success(
-                    `${response.data.message} successfully!`,
-                );
+                toast.success(`${response.data.message} successfully!`);
                 setSalesClients((prev) =>
                     prev.map((person) =>
                         person._id === salesId
@@ -218,35 +225,37 @@ const SalesPersonList = () => {
                     <thead>
                         <tr className="bg-gray-100 text-gray-700 uppercase text-xs tracking-wider">
                             <th className="px-6 py-4">Name</th>
-                            <th className="px-6 py-4">Email</th>
+                            {/* <th className="px-6 py-4">Email</th> */}
+                            <th className="px-6 py-4">User Id</th>
                             <th className="px-6 py-4">Phone</th>
+
                             <th className="px-6 py-4 text-center">Actions</th>
+                            <th className="px-6 py-4 text-center">Status</th>
                             <th className="px-6 py-4 text-center">Active</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         {
-                            salesPerson
-                                .map((person, index) => (
-                                    <tr
-                                        key={index}
-                                        className="border-t hover:bg-gray-50 transition duration-200"
-                                    >
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center">
-                                                    <UserPlus
-                                                        className="text-green-600"
-                                                        size={18}
-                                                    />
-                                                </div>
-                                                <span className="font-medium text-gray-800">
-                                                    {person.name || "N/A"}
-                                                </span>
+                            salesPerson.map((person, index) => (
+                                <tr
+                                    key={index}
+                                    className="border-t hover:bg-gray-50 transition duration-200"
+                                >
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center">
+                                                <UserPlus
+                                                    className="text-green-600"
+                                                    size={18}
+                                                />
                                             </div>
-                                        </td>
-                                        <td className="px-6 py-4">
+                                            <span className="font-medium text-gray-800">
+                                                {person.name || "N/A"}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    {/* <td className="px-6 py-4">
                                             <div className="flex items-center gap-2 text-gray-600">
                                                 <Mail
                                                     className="text-blue-600"
@@ -254,54 +263,98 @@ const SalesPersonList = () => {
                                                 />
                                                 {person.email || "N/A"}
                                             </div>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center gap-2 text-gray-600">
-                                                <Phone
-                                                    className="text-green-600"
-                                                    size={16}
-                                                />
-                                                {person.phone || "N/A"}
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 text-center">
+                                        </td> */}
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center gap-2 text-gray-600">
+                                            <Users
+                                                className="text-blue-600"
+                                                size={18}
+                                            />
+                                            {/* {person.email || "N/A"} */}
+                                            {person.userId || "N/A"}
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center gap-2 text-gray-600">
+                                            <Phone
+                                                className="text-green-600"
+                                                size={16}
+                                            />
+                                            {person.phone || "N/A"}
+                                        </div>
+                                    </td>
+
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center justify-center gap-3">
                                             <button
                                                 onClick={() => {
                                                     setSelectedClient(person);
                                                     setIsEdit(true);
                                                     setShowModal(true);
                                                 }}
-                                                className="px-4 py-1.5 bg-blue-100 text-blue-600 cursor-pointer rounded-lg hover:bg-blue-200 transition font-medium"
+                                                className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-xl hover:bg-blue-200 transition-all duration-200 font-medium cursor-pointer shadow-sm"
                                             >
+                                                <Pencil size={16} />
                                                 Edit
                                             </button>
-                                        </td>
-                                        <td className="px-6 py-4 text-center">
+
                                             <button
-                                                onClick={() =>
-                                                    handleToggleActive(
-                                                        person._id,
-                                                        person.isActive,
-                                                    )
-                                                }
-                                                className={`relative w-14 h-7 cursor-pointer rounded-full transition-all duration-300 ${
-                                                    person.isActive
-                                                        ? "bg-blue-500"
-                                                        : "bg-gray-300"
-                                                }`}
+                                                onClick={() => {
+                                                    navigate(
+                                                        `/admin/sales-client/${person?._id}`,
+                                                    );
+                                                }}
+                                                className="flex items-center gap-2 px-4 py-2 bg-orange-100 text-orange-700 rounded-xl hover:bg-orange-200 transition-all duration-200 font-medium cursor-pointer shadow-sm"
                                             >
-                                                <span
-                                                    className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow-md transition-all duration-300 ${
-                                                        person.isActive
-                                                            ? "right-1"
-                                                            : "left-1"
-                                                    }`}
-                                                ></span>
+                                                <FileText size={16} />
+                                                Show Proposals
                                             </button>
-                                        </td>
-                                    </tr>
-                                ))
-                                .slice(0, 5) /* Show only first 5 for demo */
+                                        </div>
+                                    </td>
+
+                                    {/*  */}
+                                    <td className="px-6 py-4 text-center">
+                                        {person?.isActive ? (
+                                            <div className="flex text-green-600  bg-green-100 p-1 rounded-md gap-2 items-center font-medium">
+                                                <span className="w-2 h-2 bg-green-600 rounded-full"></span>
+                                                Active
+                                            </div>
+                                        ) : (
+                                            <div className="flex items-center gap-2 bg-gray-200 p-1 rounded-md text-gray-500 font-medium">
+                                                <span className="w-2 h-2 bg-gray-500 rounded-full"></span>
+                                                Inactive
+                                            </div>
+                                        )}
+                                    </td>
+
+                                    <td className="px-6 py-4 text-center">
+                                        <button
+                                            role="switch"
+                                            aria-checked={person.isActive}
+                                            onClick={() =>
+                                                handleToggleActive(
+                                                    person._id,
+                                                    person.isActive,
+                                                )
+                                            }
+                                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400/40 ${
+                                                person.isActive
+                                                    ? "bg-green-600 shadow-inner"
+                                                    : "bg-gray-300"
+                                            }`}
+                                        >
+                                            <span
+                                                className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-md transition-all duration-300 ${
+                                                    person.isActive
+                                                        ? "translate-x-6"
+                                                        : "translate-x-1"
+                                                }`}
+                                            />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                            // .slice(0, 5)
                         }
                     </tbody>
                 </table>
@@ -361,23 +414,32 @@ const SalesPersonList = () => {
                             <Field
                                 fkey="name"
                                 label="Full Name"
-                                placeholder="Enter full name"
+                                placeholder="Enter full name.."
                                 form={form}
                                 setForm={setForm}
                                 errors={errors}
                             />
-                            <Field
+                            {/* <Field
                                 fkey="email"
                                 label="Email Address"
                                 placeholder="Enter email"
                                 form={form}
                                 setForm={setForm}
                                 errors={errors}
-                            />
+                            /> */}
+
+                            {/* <Field
+                                fkey="userId"
+                                label="User Id"
+                                placeholder="Enter UserId.."
+                                form={form}
+                                setForm={setForm}
+                                errors={errors}
+                            /> */}
                             <Field
                                 fkey="phone"
                                 label="Phone Number"
-                                placeholder="Enter mobile number"
+                                placeholder="Enter mobile number.."
                                 form={form}
                                 setForm={setForm}
                                 errors={errors}
@@ -387,7 +449,7 @@ const SalesPersonList = () => {
                                 <Field
                                     fkey="password"
                                     label="Password"
-                                    placeholder="Enter password"
+                                    placeholder="Enter password.."
                                     form={form}
                                     setForm={setForm}
                                     errors={errors}

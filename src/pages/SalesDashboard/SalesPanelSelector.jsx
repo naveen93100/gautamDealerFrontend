@@ -123,7 +123,6 @@ const SalesPanelSelector = ({
         setSelectPanel((prev) => prev.filter((_, i) => i !== index));
     };
 
-    console.log(gst);
 
     return (
         <section className="mb-6">

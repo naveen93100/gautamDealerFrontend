@@ -1,35 +1,40 @@
-import { LayoutDashboard, LogOut, Package, Users } from "lucide-react";
-import { useEffect, useState } from "react";
+import { LayoutDashboard, LogOut, Package, UserRoundPlus, Users } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { apiCall } from "../../../services/api";
+import { useAuth } from "../../../Context/AuthContext";
+import { BiSolidUserAccount } from "react-icons/bi";
 
 const AdminSidebar = ({ sidebarOpen }) => {
     const navigate = useNavigate();
     const [activeMenu, setActiveMenu] = useState("dashboard");
 
-    const menuItems = [
-        { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, path: "/admin" },
-        { id: "panel", label: "Panel Data", icon: Package, path: "/admin/panel" },
-        { id: "sales", label: "Create sales Account", icon: Users, path: "/admin/sales" },
-    ];
+    const { user, setToken, setLoginType, } = useAuth();
 
-    useEffect(() => {
-        navigate("/admin", { replace: true });
-    }, []);
+    const menuItems = [
+        { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, path: "/admin", role: ['super_admin'] },
+        { id: "panel", label: "Panel Data", icon: Package, path: "/admin/panel", role: ['super_admin'] },
+        { id: "sales", label: "Create sales Account", icon: Users, path: "/admin/sales", role: ['admin', 'super_admin'] },
+        { id: "createAdmin", label: "Create Admin", icon: UserRoundPlus, path: "/admin/create-admin", role: ['super_admin'] },
+    ];
 
     const handleNavigate = (item) => {
         setActiveMenu(item?.id);
         navigate(item?.path)
-
     }
 
     const handleLogout = async () => {
         toast.dismiss()
         try {
             const response = await apiCall("get", "/adminPanel/logoutAdmin", null, { withCredentials: true });
-            toast.success(response?.data?.message);
             navigate("/login")
+            toast.success(response?.data?.message);
+            setToken(null);
+            setLoginType(null)
+            localStorage.removeItem('token');
+            localStorage.removeItem('userData');
+            localStorage.removeItem('loginType');
 
         } catch (error) {
             toast.error(error?.response?.data?.message || "There have some server error,please wait we are resolving this error")
@@ -51,33 +56,41 @@ const AdminSidebar = ({ sidebarOpen }) => {
 
                     {sidebarOpen && (
                         <div>
-                            <p className="text-white font-bold">Dealer</p>
-                            <p className="text-xs text-slate-400">Admin Panel</p>
+                            {/* <p className="text-white font-bold">Dealer</p> */}
+                            <p className="text-xs text-slate-400">{user?.role === 'super_admin' ? 'Super Admin' : "Admin"}</p>
                         </div>
                     )}
                 </div>
 
                 {/* Menu */}
                 <nav className="flex-1 px-3 py-6 ">
-                    {menuItems.map((item) => {
+                    {menuItems.map((item,i) => {
                         const Icon = item.icon;
-                        const isActive = activeMenu === item.id;
+                        const isActive = activeMenu === item._id;
 
                         return (
-                            <button
-                                key={item.id}
-                                onClick={() => {
-                                    handleNavigate(item)
-                                }}
-                                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl mb-2
-                  ${isActive
-                                        ? "bg-orange-600 text-white"
-                                        : "text-slate-300 hover:bg-slate-800"}
-                `}
-                            >
-                                <Icon className="w-5 h-5" />
-                                {sidebarOpen && item.label}
-                            </button>
+                            // <React.Fragment key={item?._id}>
+                            <div key={i}>
+
+                                {item?.role.includes(user?.role) &&
+                                    <NavLink
+                                        key={item?._id}
+                                        to={item.path}
+                                        end={item.path === '/admin'}
+                                        className={({ isActive }) =>
+                                            `w-full flex items-center gap-3 px-4 py-3 rounded-xl mb-2
+    ${isActive
+                                                ? "bg-[#a20000] text-white"
+                                                : "text-slate-300 hover:bg-slate-800"
+                                            }`
+                                        }
+                                    >
+                                        <Icon className="w-5 h-5" />
+                                        {sidebarOpen && item.label}
+                                    </NavLink>
+                                }
+                            </div>
+                            // </React.Fragment>
                         );
                     })}
                 </nav>

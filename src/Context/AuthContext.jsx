@@ -11,8 +11,6 @@ export const AuthProvider = ({ children }) => {
     const [loginType, setLoginType] = useState(null);
 
     const login = (userData, token, type) => {
-        // localStorage.setItem('token', token);
-        // localStorage.setItem('userData', JSON.stringify(userData));
         if(userData) localStorage.setItem('userData', JSON.stringify(userData));
         if(token) localStorage.setItem('token', token);
         if(type) localStorage.setItem('loginType', type);
@@ -40,10 +38,6 @@ export const AuthProvider = ({ children }) => {
         const t = rawToken && rawToken !== "Undefined" ? rawToken : null;
         const lt = rawLoginType && rawLoginType !== "Undefined" ? rawLoginType : null;
 
-        // console.log("User Data:", localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')) : null);
-        // let d = localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')) : null;
-        // let t = localStorage.getItem('token') ? localStorage.getItem('token') : null;
-
         if (!d && !t) return;
 
         setUser(d);
@@ -54,7 +48,7 @@ export const AuthProvider = ({ children }) => {
 
     return (
 
-        <AuthContext.Provider value={{ user, login, logout, token, setUser, loginType }}>
+        <AuthContext.Provider value={{ user, login, logout, token,setToken,setLoginType, setUser, loginType }}>
             {children}
         </AuthContext.Provider>
     )

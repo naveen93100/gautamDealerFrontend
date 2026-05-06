@@ -30,20 +30,20 @@ const SalesClientPanelHistory = () => {
 
     const [proposals, setProposals] = useState([]);
 
-    useEffect(() => {
-        const fetchProposal = async () => {
-            try {
-                let res = await apiCall(
-                    "GET",
-                    `/api/sales/get-proposals/${clientId}`,
-                );
-                if (res?.data?.success) {
-                    setProposals(res?.data?.data || []);
-                }
-            } catch (er) {
-                console.log(er);
+    const fetchProposal = async () => {
+        try {
+            let res = await apiCall(
+                "GET",
+                `/api/sales/get-proposals/${clientId}`,
+            );
+            if (res?.data?.success) {
+                setProposals(res?.data?.data || []);
             }
-        };
+        } catch (er) {
+            console.log(er);
+        }
+    };
+    useEffect(() => {
         fetchProposal();
     }, []);
 
@@ -253,6 +253,7 @@ const SalesClientPanelHistory = () => {
                             onClose={() => setCreateSalesPanelProp(false)}
                             // proposalData={fetchProposal}
                             data={selectSalesProposal}
+                            fetchProposal={fetchProposal}
                             setData={setSelectSalesProposal}
                             clientId={clientId}
                         />

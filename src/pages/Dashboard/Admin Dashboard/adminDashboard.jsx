@@ -21,7 +21,6 @@ const adminDashboard = () => {
     }, [])
 
     
-    // console.log("data : ", data)
     return (
         <div className="w-full p-6">
 
