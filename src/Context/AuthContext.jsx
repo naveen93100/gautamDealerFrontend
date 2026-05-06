@@ -38,10 +38,6 @@ export const AuthProvider = ({ children }) => {
         const t = rawToken && rawToken !== "Undefined" ? rawToken : null;
         const lt = rawLoginType && rawLoginType !== "Undefined" ? rawLoginType : null;
 
-        // console.log("User Data:", localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')) : null);
-        // let d = localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')) : null;
-        // let t = localStorage.getItem('token') ? localStorage.getItem('token') : null;
-
         if (!d && !t) return;
 
         setUser(d);

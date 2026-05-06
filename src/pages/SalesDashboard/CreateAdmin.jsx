@@ -100,7 +100,6 @@ const CreateAdmin = () => {
                 adminId: id,
                 isActive: newStatus,
             });
-            console.log(res);
         } catch (err) {
             console.error(err);
 
@@ -218,8 +217,7 @@ const CreateAdmin = () => {
                                         <button
                                             role="switch"
                                             aria-checked={admin.isActive}
-                                            onClick={() => {
-                                                (console.log("clicked"),
+                                            onClick={() => {(
                                                     toggle(
                                                         admin._id,
                                                         admin.isActive,

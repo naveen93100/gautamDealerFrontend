@@ -9,7 +9,6 @@ import { X } from 'lucide-react';
 
 const PanelWatt = () => {
     const location = useLocation();
-    // console.log("location : ", location?.state?.data)
     const constructiveId = location?.state?.data?._id
     const constructiveName = location?.state?.data?.constructiveType
     const navigate = useNavigate()
@@ -61,7 +60,6 @@ const PanelWatt = () => {
     useEffect(() => {
         fetchData();
     }, [])
-    //  console.log("Data : ",data)
 
 
     const handleToggle = async (e, panelWatt) => {
@@ -75,7 +73,6 @@ const PanelWatt = () => {
                 constructiveId
             }
 
-            // console.log("payload : ", payload);
 
             const api = await apiCall("put", "/adminPanel/togglePanelWatt", {}, {
                 params: {
@@ -95,17 +92,7 @@ const PanelWatt = () => {
     }
 
     const handleCreatePanelWatt = async (data) => {
-        // console.log("data : ", data);
         let formData = new FormData()
-        // console.log(data?.imgWatt)
-
-        // const payload = {
-        //     panelId: location?.state?.data?.panelId,
-        //     technologyId: location?.state?.data?.technologyId,
-        //     constructiveId,
-        //     watt: Number(data?.watt),
-        //     imgWatt: data?.imgWatt
-        // }
 
         formData.append("panelId", location?.state?.data?.panelId);
         formData.append("technologyId", location?.state?.data?.technologyId);
@@ -122,7 +109,6 @@ const PanelWatt = () => {
 
 
 
-        // console.log("Payload :  ", payload)
 
         try {
             const apiData = await apiCall("post", "/adminPanel/createPanelWatt", formData)
@@ -137,21 +123,18 @@ const PanelWatt = () => {
             toast.error(error?.response?.data?.message || error?.message)
         }
 
-        // console.log("formData : ", formData)
 
     }
 
 
 
     const handleOpenEdit = (e, data) => {
-        // console.log("panelWatt Data : ",data)
         e.stopPropagation();
         setEdit(true);
         setUpdateData(data)
     }
 
     const handleEditPanelWatt = async (data) => {
-        // console.log("handleUpdate : ", data)
         toast.dismiss();
         const formData = new FormData();
 

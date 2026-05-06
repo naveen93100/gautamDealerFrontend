@@ -10,7 +10,6 @@ import { BiLeftArrow } from 'react-icons/bi';
 const TechnologyPanel = () => {
     const location = useLocation();
     const panelId = location?.state?.id;
-    // console.log("panelId : ", panelId)
     const panelName = location?.state?.name
     const [open, setOpen] = useState(false);
     const [edit, setEdit] = useState(false);
@@ -26,10 +25,8 @@ const TechnologyPanel = () => {
     const navigate = useNavigate();
     const [updateTechData, setUpdateTechData] = useState()
 
-    // console.log("panelName : ",panelName);
 
     const [technologyPanel, setTechnologyPanel] = useState();
-    // console.log("data : ", location?.state?.id)
 
     const fetchData = useCallback(async () => {
         try {
@@ -48,14 +45,12 @@ const TechnologyPanel = () => {
         }
 
     }, [])
-    // console.log("technologyPanel : ", technologyPanel)
 
     useEffect(() => {
         fetchData()
     }, [])
 
     const handleCreateTech = async (data) => {
-        // console.log("data: ", data)
         toast.dismiss();
         try {
             const res = await apiCall("post", "/adminPanel/addTechnology", { ...data, panelId });
@@ -76,7 +71,6 @@ const TechnologyPanel = () => {
     }
 
     const handleUpdateTech = async (data) => {
-        // console.log("data: ", data)
         toast.dismiss();
         const payload = {
             panelId,
@@ -84,7 +78,6 @@ const TechnologyPanel = () => {
             technologyPanel: data?.technologyPanel
         }
 
-        // console.log("payload : ", payload);
         try {
             const response = await apiCall("put", "adminPanel/updateTechnology", { ...payload });
             toast.success(response?.data?.message);
@@ -102,7 +95,6 @@ const TechnologyPanel = () => {
         e.stopPropagation()
         toast.dismiss();
 
-        // console.log("tech : ", tech)
         try {
             const payload = {
                 panelId,
@@ -116,7 +108,6 @@ const TechnologyPanel = () => {
             setTimeout(() => {
                 fetchData()
             }, 500);
-            // console.log("payload : ", payload)
 
 
         } catch (error) {
@@ -128,7 +119,6 @@ const TechnologyPanel = () => {
 
     const handleNavigate = async (e, tech) => {
         e.stopPropagation();
-        // console.log("tech",tech)
         navigate("/admin/panel/technology/constructive", { state: { data: tech, panelName: panelName } })
     }
     return (

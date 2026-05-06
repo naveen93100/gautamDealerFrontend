@@ -9,12 +9,10 @@ import { BiLeftArrow } from 'react-icons/bi';
 
 const ConstructivePanel = () => {
     const location = useLocation()
-    // console.log(location?.state)
     const panelId = location?.state?.data?.panelId;
     const panelName = location?.state?.panelName;
     const technologyId = location?.state?.data?._id;
     const technologyName = location?.state?.data?.technologyPanel;
-    // console.log("panelId,technologyId ,technologyName ", panelId, technologyId, technologyName)
     const [open, setOpen] = useState(false)
     const [edit, setEdit] = useState(false);
     const [updateData, setUpdateData] = useState()
@@ -52,12 +50,9 @@ const ConstructivePanel = () => {
     useEffect(() => {
         fetchData()
     }, [])
-    // console.log("Data : ", constructiveData);
     const handleToggle = async (e, data) => {
         e.stopPropagation()
         toast.dismiss();
-        // console.log(data)
-        // console.log("data?.isActive", data?.isActive)
         const payload = {
             panelId,
             technologyId,
@@ -80,7 +75,6 @@ const ConstructivePanel = () => {
     }
 
     const handleCreate = async (data) => {
-        // console.log(("data  ", data));
         toast?.dismiss();
         try {
             const response = await apiCall("post", "/adminPanel/createConstructive", { constructiveType: data?.constructiveType, panelId, technologyId })

@@ -78,24 +78,20 @@ const PannelProposal = () => {
 
 
     const handleEdit = async (e, panel) => {
-        // console.log("data : ", e, panel)
         e.stopPropagation();
         setEdit(true);
         setUpdatePannelData(panel)
     }
     const handleToggle = async (e, panel) => {
-        // console.log("panel : ", panel)
         e.stopPropagation();
         toast.dismiss();
         const payload = {
             id: panel?._id,
             panelActive: !panel?.panelActive
         }
-        // console.log("payload: ", payload)
         try {
             const response = await apiCall("PUT", "/adminPanel/togglePanel", payload)
 
-            // console.log(response?.data?.message)
             toast.success(response?.data?.message)
             setTimeout(() => {
                 fetchPannelData()
@@ -109,7 +105,6 @@ const PannelProposal = () => {
     };
 
     const handleNavigate = async (e, panel) => {
-        // console.log("panel : ", panel)
         e.stopPropagation();
         navigate("/admin/panel/technology", { state: { id: panel?._id, name: panel?.panelType } })
     }
