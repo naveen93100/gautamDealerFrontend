@@ -33,11 +33,10 @@ const Field = ({ fkey, label, placeholder, form, setForm, errors }) => {
                 }
                 placeholder={placeholder}
                 className={`w-full px-4 py-3 rounded-xl border text-sm outline-none transition-all duration-200 bg-white shadow-sm
-        ${
-            hasError
-                ? "border-red-400 focus:ring-2 focus:ring-red-200 focus:border-red-500"
-                : "border-gray-300 focus:ring-2 focus:ring-orange-200 focus:border-orange-500 hover:border-gray-400"
-        }`}
+        ${hasError
+                        ? "border-red-400 focus:ring-2 focus:ring-red-200 focus:border-red-500"
+                        : "border-gray-300 focus:ring-2 focus:ring-orange-200 focus:border-orange-500 hover:border-gray-400"
+                    }`}
             />
 
             {hasError && (
@@ -57,16 +56,15 @@ const SalesPersonList = () => {
     const [salesPerson, setSalesClients] = useState([]);
     const navigate = useNavigate();
 
-    // console.log("show sales detials", { salesPerson });
 
-    // console.log("Sales Clients State:", selectedClient);
     const [form, setForm] = useState({
         name: "",
-        // email: "",
-        // userid: "",
         phone: "",
         password: "",
     });
+    const [pageNo, setPageNo] = useState(1);
+    const [hasNextPage, setHasNextPage] = useState(false);
+    const [totalRecord, setTotalRecord] = useState(0);
 
     const resetForm = () => {
         setForm({
@@ -125,10 +123,12 @@ const SalesPersonList = () => {
 
     const fetchSalesClient = async () => {
         try {
-            const responser = await apiCall("GET", "/api/sales");
+            const res = await apiCall("GET", `/api/sales?pageNo=${pageNo}`);
 
-            if (responser?.data?.success) {
-                setSalesClients(responser?.data?.data || []);
+            if (res?.data?.success) {
+                setSalesClients(res?.data?.data || []);
+                setHasNextPage(res?.data?.hasNextPage)
+                setTotalRecord(res?.data?.totalRecord);
             }
         } catch (error) {
             console.error("Error fetching sales clients:", error);
@@ -137,7 +137,7 @@ const SalesPersonList = () => {
 
     useEffect(() => {
         fetchSalesClient();
-    }, []);
+    }, [pageNo]);
 
     useEffect(() => {
         if (selectedClient) {
@@ -220,7 +220,7 @@ const SalesPersonList = () => {
             </div>
 
             {/* Showing the all sales persons list */}
-            <div className="overflow-x-auto bg-white rounded-xl shadow-md border border-gray-200">
+            <div className="overflow-x-auto bg-white rounded-xl shadow-md border border-gray-200 h-130 scrollbar-hide">
                 <table className="w-full text-sm text-left border-collapse">
                     <thead>
                         <tr className="bg-gray-100 text-gray-700 uppercase text-xs tracking-wider">
@@ -237,127 +237,152 @@ const SalesPersonList = () => {
 
                     <tbody>
                         {
-                            salesPerson.map((person, index) => (
-                                <tr
-                                    key={index}
-                                    className="border-t hover:bg-gray-50 transition duration-200"
-                                >
-                                    <td className="px-6 py-4">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center">
-                                                <UserPlus
-                                                    className="text-green-600"
-                                                    size={18}
-                                                />
+                            salesPerson.map((person, index) => {
+                                return (
+                                    <tr
+                                        key={index}
+                                        className={`border-t ${person.isActive ? 'hover:bg-gray-300' : 'bg-slate-100'} transition duration-200`}
+                                    >
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center">
+                                                    <UserPlus
+                                                        className="text-green-600"
+                                                        size={18}
+                                                    />
+                                                </div>
+                                                <span className="font-medium text-gray-800">
+                                                    {person.name || "N/A"}
+                                                </span>
                                             </div>
-                                            <span className="font-medium text-gray-800">
-                                                {person.name || "N/A"}
-                                            </span>
-                                        </div>
-                                    </td>
-                                    {/* <td className="px-6 py-4">
+                                        </td>
+
+                                        <td className="px-6 py-4">
                                             <div className="flex items-center gap-2 text-gray-600">
-                                                <Mail
+                                                <Users
                                                     className="text-blue-600"
                                                     size={18}
                                                 />
-                                                {person.email || "N/A"}
+                                                {person.userId || "N/A"}
                                             </div>
-                                        </td> */}
-                                    <td className="px-6 py-4">
-                                        <div className="flex items-center gap-2 text-gray-600">
-                                            <Users
-                                                className="text-blue-600"
-                                                size={18}
-                                            />
-                                            {/* {person.email || "N/A"} */}
-                                            {person.userId || "N/A"}
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <div className="flex items-center gap-2 text-gray-600">
-                                            <Phone
-                                                className="text-green-600"
-                                                size={16}
-                                            />
-                                            {person.phone || "N/A"}
-                                        </div>
-                                    </td>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center gap-2 text-gray-600">
+                                                <Phone
+                                                    className="text-green-600"
+                                                    size={16}
+                                                />
+                                                {person.phone || "N/A"}
+                                            </div>
+                                        </td>
 
-                                    <td className="px-6 py-4">
-                                        <div className="flex items-center justify-center gap-3">
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center justify-center gap-3">
+                                                <button
+                                                    onClick={() => {
+                                                        setSelectedClient(person);
+                                                        setIsEdit(true);
+                                                        setShowModal(true);
+                                                    }}
+                                                    className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-xl hover:bg-blue-200 transition-all duration-200 font-medium cursor-pointer shadow-sm"
+                                                >
+                                                    <Pencil size={16} />
+                                                    Edit
+                                                </button>
+
+                                                <button
+                                                    onClick={() => {
+                                                        navigate(
+                                                            `/admin/sales-client/${person?._id}`,
+                                                        );
+                                                    }}
+                                                    className="flex relative items-center gap-2 px-4 py-3 bg-orange-100 text-orange-700 rounded-xl hover:bg-orange-200 transition-all duration-200 font-medium cursor-pointer shadow-sm"
+                                                >
+                                                    <FileText size={16} />
+                                                    Show Proposals
+                                                    <span className="absolute right-0 top-0 bg-red-500 text-xs text-white size-4 rounded-full">{person.totalClient}</span>
+                                                </button>
+                                            </div>
+                                        </td>
+
+                                        {/*  */}
+                                        <td className="px-6 py-4 text-center">
+                                            {person?.isActive ? (
+                                                <div className="flex text-green-600  bg-green-100 p-1 rounded-md gap-2 justify-center items-center font-medium">
+                                                    <span className="w-2 h-2 bg-green-600 rounded-full"></span>
+                                                    Active
+                                                </div>
+                                            ) : (
+                                                <div className="flex items-center gap-2 bg-red-200 p-1 rounded-md justify-center text-gray-500 font-medium">
+                                                    <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                                                    Inactive
+                                                </div>
+                                            )}
+                                        </td>
+
+                                        <td className="px-6 py-4 text-center">
                                             <button
-                                                onClick={() => {
-                                                    setSelectedClient(person);
-                                                    setIsEdit(true);
-                                                    setShowModal(true);
-                                                }}
-                                                className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-xl hover:bg-blue-200 transition-all duration-200 font-medium cursor-pointer shadow-sm"
-                                            >
-                                                <Pencil size={16} />
-                                                Edit
-                                            </button>
-
-                                            <button
-                                                onClick={() => {
-                                                    navigate(
-                                                        `/admin/sales-client/${person?._id}`,
-                                                    );
-                                                }}
-                                                className="flex items-center gap-2 px-4 py-2 bg-orange-100 text-orange-700 rounded-xl hover:bg-orange-200 transition-all duration-200 font-medium cursor-pointer shadow-sm"
-                                            >
-                                                <FileText size={16} />
-                                                Show Proposals
-                                            </button>
-                                        </div>
-                                    </td>
-
-                                    {/*  */}
-                                    <td className="px-6 py-4 text-center">
-                                        {person?.isActive ? (
-                                            <div className="flex text-green-600  bg-green-100 p-1 rounded-md gap-2 items-center font-medium">
-                                                <span className="w-2 h-2 bg-green-600 rounded-full"></span>
-                                                Active
-                                            </div>
-                                        ) : (
-                                            <div className="flex items-center gap-2 bg-gray-200 p-1 rounded-md text-gray-500 font-medium">
-                                                <span className="w-2 h-2 bg-gray-500 rounded-full"></span>
-                                                Inactive
-                                            </div>
-                                        )}
-                                    </td>
-
-                                    <td className="px-6 py-4 text-center">
-                                        <button
-                                            role="switch"
-                                            aria-checked={person.isActive}
-                                            onClick={() =>
-                                                handleToggleActive(
-                                                    person._id,
-                                                    person.isActive,
-                                                )
-                                            }
-                                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400/40 ${
-                                                person.isActive
+                                                role="switch"
+                                                aria-checked={person.isActive}
+                                                onClick={() =>
+                                                    handleToggleActive(
+                                                        person._id,
+                                                        person.isActive,
+                                                    )
+                                                }
+                                                className={`relative cursor-pointer inline-flex h-6 w-11 items-center rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400/40 ${person.isActive
                                                     ? "bg-green-600 shadow-inner"
                                                     : "bg-gray-300"
-                                            }`}
-                                        >
-                                            <span
-                                                className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-md transition-all duration-300 ${
-                                                    person.isActive
+                                                    }`}
+                                            >
+                                                <span
+                                                    className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-md transition-all duration-300 ${person.isActive
                                                         ? "translate-x-6"
                                                         : "translate-x-1"
-                                                }`}
-                                            />
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))
-                            // .slice(0, 5)
+                                                        }`}
+                                                />
+                                            </button>
+                                        </td>
+                                    </tr>)
+                            })
                         }
+
                     </tbody>
                 </table>
+            </div>
+
+            {/* pagination */}
+            <div className="flex items-center justify-center gap-3 mt-8 flex-wrap">
+                {/* Previous */}
+                <button
+                    onClick={() => setPageNo((prev) => prev - 1)}
+                    disabled={pageNo === 1}
+                    className="px-4 py-2 rounded-xl border border-gray-300 bg-white text-gray-700 font-medium shadow-sm hover:bg-gray-100 hover:shadow transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                    ← Prev
+                </button>
+
+                {/* Page Info */}
+                <div className="flex items-center gap-2 bg-white border border-gray-200 shadow-sm rounded-xl px-5 py-2">
+                    <span className="text-sm text-gray-500">Page</span>
+
+                    <span className="w-8 h-8 flex items-center justify-center rounded-lg bg-black text-white font-semibold">
+                        {pageNo}
+                    </span>
+
+                    <span className="text-sm text-gray-500">
+                        of {Math.ceil(totalRecord / 6)}
+                    </span>
+                </div>
+
+                {/* Next */}
+                <button
+                    onClick={() => setPageNo((prev) => prev + 1)}
+                    disabled={!hasNextPage}
+                    className="px-4 py-2 rounded-xl border border-gray-300 bg-white text-gray-700 font-medium shadow-sm hover:bg-gray-100 hover:shadow transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                    Next →
+                </button>
             </div>
 
             {showModal && (
@@ -475,11 +500,10 @@ const SalesPersonList = () => {
                                     }
                                     className={`flex-1 py-2.5 rounded-xl text-sm font-semibold text-white
                             transition-all duration-200 shadow-md active:scale-[0.97]
-                            ${
-                                isEdit
-                                    ? "bg-linear-to-br from-amber-400 to-amber-600 shadow-amber-200 hover:shadow-amber-300 hover:shadow-lg"
-                                    : "bg-linear-to-br from-[#D85A30] to-[#993C1D] shadow-[#D85A30]/30 hover:shadow-[#D85A30]/50 hover:shadow-lg"
-                            }`}
+                            ${isEdit
+                                            ? "bg-linear-to-br from-amber-400 to-amber-600 shadow-amber-200 hover:shadow-amber-300 hover:shadow-lg"
+                                            : "bg-linear-to-br from-[#D85A30] to-[#993C1D] shadow-[#D85A30]/30 hover:shadow-[#D85A30]/50 hover:shadow-lg"
+                                        }`}
                                 >
                                     {isEdit
                                         ? "Update Sales Person"
