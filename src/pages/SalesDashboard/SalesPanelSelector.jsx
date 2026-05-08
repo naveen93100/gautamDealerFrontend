@@ -81,20 +81,22 @@ const SalesPanelSelector = ({
                 ...copy[index],
                 [key]: updatedValue,
             };
-
-            const selectedWattId = copy[index].wattId;
-
+           
+            const selectedWattId = copy[index].wattId||null;
+             
             const pWatt = panelWatt?.find(i => i._id === selectedWattId);
 
             const quantity = Number(copy[index].quantity || 0);
             const rate = Number(copy[index].rate || 0);
-
-            const watt = Number(pWatt?.watt);
-            const amount = watt * quantity * rate;
-            const gstAmount = (amount * gst) / 100;
-
-            copy[index].totalPrice = amount;
-            copy[index].gstAmount = gstAmount;
+            
+            if(selectedWattId){
+                const watt = Number(pWatt?.watt);
+                const amount = watt * quantity * rate;
+                const gstAmount = (amount * gst) / 100;
+                
+                copy[index].totalPrice = amount;
+                copy[index].gstAmount = gstAmount;
+            }
 
             return copy;
         });

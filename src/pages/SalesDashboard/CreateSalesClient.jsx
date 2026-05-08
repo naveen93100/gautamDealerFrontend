@@ -9,11 +9,13 @@ import {
     X,
     Receipt,
     Building2,
+    Loader2
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { apiCall } from "../../services/api";
 import { useAuth } from "../../Context/AuthContext";
+import { useCreateSalesClient, useGetSalesClient, useUpdateSalesClient } from "../../hooks/useSalesMethods";
 
 const PALETTE = [
     {
@@ -73,7 +75,7 @@ const initials = (fullName = "") =>
 export default function CreateSalesClient() {
     const { user, loginType } = useAuth();
     const navigate = useNavigate();
-    const [clients, setClients] = useState([]);
+    // const [clients, setClients] = useState([]);
     const [search, setSearch] = useState("");
     const [showModal, setShowModal] = useState(false);
     const [errors, setErrors] = useState({});
@@ -102,7 +104,26 @@ export default function CreateSalesClient() {
         setIsEdit(false);
     };
 
-    const filtered = clients.filter((c) => {
+    const { data: clients, error, isLoading } = useGetSalesClient(user?._id);
+
+    const { mutate: createClient } = useCreateSalesClient();
+    const { mutate: updateClient } = useUpdateSalesClient();
+
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="flex flex-col items-center gap-3 text-gray-600">
+                    <Loader2 className="w-8 h-8 animate-spin text-[#a20000]" />
+                    <p className="text-sm font-medium tracking-wide">
+                        Loading data...
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
+
+    const filtered = clients?.filter((c) => {
         const q = search.trim().toLowerCase();
         return (
             !q ||
@@ -114,32 +135,9 @@ export default function CreateSalesClient() {
         );
     });
 
-    const fetchSalesCleints = async () => {
-        try {
-            const response = await apiCall(
-                "GET",
-                `/api/sales/get-client/${user?._id}`,
-            );
-            if (response?.data?.success) {
-                setClients(response?.data?.sales || []);
-            } else {
-                toast.error(
-                    response?.data?.message || "Failed to fetch clients",
-                );
-            }
-        } catch (error) {
-            console.log(error);
-            toast.error("An error occurred while fetching clients");
-        }
-    };
-    useEffect(() => {
-        if (user?._id) {
-            fetchSalesCleints();
-        }
-    }, [user?._id]);
 
-    const handleCreate = async () => {
-        const paylod = {
+    const handleCreate = () => {
+        const payload = {
             fullName: form.fullName,
             email: form?.email.trim() ? form?.email : undefined,
             phone: form.phone,
@@ -149,37 +147,31 @@ export default function CreateSalesClient() {
             salesId: user._id,
         };
 
-        try {
-            const response = await apiCall(
-                "POST",
-                "/api/sales/create-client",
-                paylod,
-            );
+        createClient(payload,
+            {
+                onSuccess: () => {
+                    resetForm();
+                    setShowModal(false);
+                },
+                onError: (e) => {
+                    toast.dismiss();
+                    const errors = e || [];
 
-            if (response?.data?.success) {
-                toast.success("Client created successfully");
-                setClients((prev) => [response.data.client, ...prev]);
-                fetchSalesCleints();
-                resetForm();
-                setShowModal(false);
+                    toast.error(
+                        <div>
+                            <strong>Please fix the following:</strong>
+                            <ul className="mt-1">
+                                {errors.map((err, i) => (
+                                    <li key={i} className="capitalize text-sm">
+                                        • {err.message}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>,
+                    );
+                }
             }
-        } catch (error) {
-            toast.dismiss();
-            const errors = error?.response?.data?.message || [];
-
-            toast.error(
-                <div>
-                    <strong>Please fix the following:</strong>
-                    <ul className="mt-1">
-                        {errors.map((err, i) => (
-                            <li key={i} className="capitalize text-sm">
-                                • {err.message}
-                            </li>
-                        ))}
-                    </ul>
-                </div>,
-            );
-        }
+        );
     };
 
     const handleEdit = (c) => {
@@ -197,57 +189,40 @@ export default function CreateSalesClient() {
     };
 
     const handleUpdate = async () => {
-        try {
-            const paylod = {
-                fullName: form.fullName.trim() ? form.fullName : undefined,
-                email: form.email.trim() ? form.email : undefined,
-                phone: form.phone,
-                address: form.address ? form.address : undefined,
-                companyName: form.companyName,
-                gstin: form.gstNumber,
-                salesId: user._id,
-                clientId: selectedClient._id,
-            };
-            // console.log(
-            //     "show the payload when i update the sales client",
-            //     paylod,
-            // );
-
-            const response = await apiCall(
-                "PATCH",
-                "/api/sales/update-client/",
-                paylod,
-            );
-            if (response?.data?.success) {
-                toast.success("Client updated successfully");
-                setClients((p) =>
-                    p.map((item) =>
-                        item._id === selectedClient._id
-                            ? { ...item, ...response.data.client }
-                            : item,
-                    ),
-                );
+        const payload = {
+            fullName: form.fullName.trim() ? form.fullName : undefined,
+            email: form.email.trim() ? form.email : undefined,
+            phone: form.phone,
+            address: form.address ? form.address : undefined,
+            companyName: form.companyName,
+            gstin: form.gstNumber,
+            salesId: user._id,
+            clientId: selectedClient._id,
+        };
+        updateClient(payload, {
+            onSuccess: (data) => {
+                toast.success(data?.message);
                 setShowModal(false);
-                fetchSalesCleints()
                 resetForm();
-            }
-        } catch (error) {
-            toast.dismiss();
-            const errors = error?.response?.data?.message || [];
+            },
+            onError: (e) => {
+                 toast.dismiss();
+                const errors = e || [];
 
-            toast.error(
-                <div>
-                    <strong>Please fix the following:</strong>
-                    <ul className="mt-1">
-                        {errors.map((err, i) => (
-                            <li key={i} className="capitalize text-sm">
-                                • {err.message}
-                            </li>
-                        ))}
-                    </ul>
-                </div>,
-            );
-        }
+                toast.error(
+                    <div>
+                        <strong>Please fix the following:</strong>
+                        <ul className="mt-1">
+                            {errors.map((err, i) => (
+                                <li key={i} className="capitalize text-sm">
+                                    • {err.message}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>,
+                );
+            }
+        })
     };
 
     const Field = ({ fkey, label, placeholder, required = false }) => {
@@ -264,10 +239,9 @@ export default function CreateSalesClient() {
                 </label>
                 <input
                     className={`w-full rounded-xl px-4 py-3 text-sm font-medium outline-none transition-all duration-200 bg-gray-50 border
-                        ${
-                            hasError
-                                ? "border-red-400 focus:ring-2 focus:ring-red-200 bg-red-50/30"
-                                : "border-gray-200 focus:border-[#D85A30] focus:ring-2 focus:ring-[#D85A30]/15 focus:bg-white"
+                        ${hasError
+                            ? "border-red-400 focus:ring-2 focus:ring-red-200 bg-red-50/30"
+                            : "border-gray-200 focus:border-[#D85A30] focus:ring-2 focus:ring-[#D85A30]/15 focus:bg-white"
                         }`}
                     placeholder={placeholder}
                     value={form[fkey]}
@@ -322,7 +296,7 @@ export default function CreateSalesClient() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filtered.length === 0 ? (
+                {filtered?.length === 0 ? (
                     <div className="col-span-3 flex flex-col items-center justify-center py-20  rounded-2xl border border-dashed border-gray-200 text-center">
                         <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
                             <Search className="w-5 h-5 text-gray-300" />
@@ -335,7 +309,7 @@ export default function CreateSalesClient() {
                         </p>
                     </div>
                 ) : (
-                    filtered.map((c, i) => {
+                    filtered?.map((c, i) => {
                         const col = PALETTE[i % PALETTE.length];
                         return (
                             <div
@@ -614,10 +588,9 @@ export default function CreateSalesClient() {
                                     }
                                     className={`flex-1 py-3 rounded-xl text-sm font-semibold text-white
                                         transition-all duration-200 shadow-md active:scale-[0.97]
-                                        ${
-                                            isEdit
-                                                ? "bg-linear-to-br from-amber-400 to-amber-600 shadow-amber-200 hover:shadow-amber-300 hover:shadow-lg"
-                                                : "bg-linear-to-br from-[#D85A30] to-[#993C1D] shadow-[#D85A30]/30 hover:shadow-[#D85A30]/50 hover:shadow-lg"
+                                        ${isEdit
+                                            ? "bg-linear-to-br from-amber-400 to-amber-600 shadow-amber-200 hover:shadow-amber-300 hover:shadow-lg"
+                                            : "bg-linear-to-br from-[#D85A30] to-[#993C1D] shadow-[#D85A30]/30 hover:shadow-[#D85A30]/50 hover:shadow-lg"
                                         }`}
                                 >
                                     {isEdit ? "Update Client" : "Create Client"}

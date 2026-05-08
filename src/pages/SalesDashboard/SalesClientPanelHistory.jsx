@@ -12,6 +12,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import CreateSalesPanelProposal from "./CreateSalesPanelProposal";
 import { apiCall } from "../../services/api";
 import toast from "react-hot-toast";
+import { useDeleteSalesClientProposal, useGetSalesClientProposal } from "../../hooks/useSalesMethods";
 
 const SalesClientPanelHistory = () => {
     const [createSalesPanelProp, setCreateSalesPanelProp] = useState(false);
@@ -22,50 +23,27 @@ const SalesClientPanelHistory = () => {
     const clientName = location.state?.clientName;
 
     const [showdeleteModal, setShowDeleteModal] = useState(false);
-    const [selectedDeleteProposalId, setSelectedDeleteProposalId] =
-        useState(null);
+    const [selectedDeleteProposalId, setSelectedDeleteProposalId] = useState(null);
 
     const navigate = useNavigate();
     const bgColor = "#a20000";
 
-    const [proposals, setProposals] = useState([]);
+    const { data: proposals, isLoading } = useGetSalesClientProposal(clientId)
+    const { mutate: deleteProposal } = useDeleteSalesClientProposal(clientId)
 
-    const fetchProposal = async () => {
-        try {
-            let res = await apiCall(
-                "GET",
-                `/api/sales/get-proposals/${clientId}`,
-            );
-            if (res?.data?.success) {
-                setProposals(res?.data?.data || []);
+    const handleDeleteProposal = () => {
+
+        let propId = selectedDeleteProposalId;
+        deleteProposal(propId, {
+            onSuccess: (d) => {
+                toast.success(d?.message);
+                setShowDeleteModal(false);
+                setSelectedDeleteProposalId(null);
+            },
+            onError: (e) => {
+                toast.error(e || "Delete failed");
             }
-        } catch (er) {
-            console.log(er);
-        }
-    };
-    useEffect(() => {
-        fetchProposal();
-    }, []);
-
-    const handleDeleteProposal = async () => {
-        try {
-            let res = await apiCall(
-                "DELETE",
-                `/api/sales/delete-proposal/${selectedDeleteProposalId}`,
-            );
-
-            if (res?.data?.success) {
-                setProposals((prev) =>
-                    prev.filter((i) => i?._id !== selectedDeleteProposalId),
-                );
-                toast.success(res?.data?.message);
-            }
-        } catch (er) {
-            toast.error(er?.response?.data?.message || "Delete failed");
-        } finally {
-            setShowDeleteModal(false);
-            setSelectedDeleteProposalId(null);
-        }
+        })
     };
     return (
         <div className="min-h-screen bg-linear-to-br from-red-50 via-orange-50 to-white pb-10">
@@ -126,7 +104,7 @@ const SalesClientPanelHistory = () => {
                                 Total Created Proposals:
                             </h2>
                             <p className="text-2xl font-bold">
-                                {proposals.length}
+                                {proposals?.length}
                             </p>
 
                             <PanelsTopLeft
@@ -138,8 +116,8 @@ const SalesClientPanelHistory = () => {
 
                     {/* Proposal List */}
                     <div className="space-y-5">
-                        {proposals.length > 0 &&
-                            proposals.map((item) => (
+                        {proposals?.length > 0 &&
+                            proposals?.map((item) => (
                                 <div
                                     key={item?._id}
                                     className="bg-gray-50 border border-gray-200 rounded-3xl p-6 shadow-md hover:shadow-lg transition"
@@ -253,7 +231,6 @@ const SalesClientPanelHistory = () => {
                             onClose={() => setCreateSalesPanelProp(false)}
                             // proposalData={fetchProposal}
                             data={selectSalesProposal}
-                            fetchProposal={fetchProposal}
                             setData={setSelectSalesProposal}
                             clientId={clientId}
                         />

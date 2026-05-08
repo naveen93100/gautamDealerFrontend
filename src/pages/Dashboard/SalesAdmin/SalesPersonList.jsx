@@ -69,8 +69,6 @@ const SalesPersonList = () => {
     const resetForm = () => {
         setForm({
             name: "",
-            // email: "",
-            // userid: "",
             phone: "",
             password: "",
         });
@@ -143,8 +141,6 @@ const SalesPersonList = () => {
         if (selectedClient) {
             setForm({
                 name: selectedClient.name || "",
-                // email: selectedClient.email || "",
-                // userid: selectedClient.userid || "",
                 phone: selectedClient.phone || "",
             });
         }
@@ -444,23 +440,6 @@ const SalesPersonList = () => {
                                 setForm={setForm}
                                 errors={errors}
                             />
-                            {/* <Field
-                                fkey="email"
-                                label="Email Address"
-                                placeholder="Enter email"
-                                form={form}
-                                setForm={setForm}
-                                errors={errors}
-                            /> */}
-
-                            {/* <Field
-                                fkey="userId"
-                                label="User Id"
-                                placeholder="Enter UserId.."
-                                form={form}
-                                setForm={setForm}
-                                errors={errors}
-                            /> */}
                             <Field
                                 fkey="phone"
                                 label="Phone Number"
@@ -469,7 +448,6 @@ const SalesPersonList = () => {
                                 setForm={setForm}
                                 errors={errors}
                             />
-                            {/* if update then disable password field */}
                             {!isEdit && (
                                 <Field
                                     fkey="password"

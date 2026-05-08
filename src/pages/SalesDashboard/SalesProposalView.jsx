@@ -223,8 +223,8 @@ const SalesProposalView = () => {
                 onClick={handleDownload}
                 disabled={loading}
                 className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 rounded-full text-white
-        ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-red-600"}
-    `}
+                    ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-red-600"}
+                `}
             >
                 {loading ? (
                     <>
@@ -240,27 +240,11 @@ const SalesProposalView = () => {
             </button>
 
             <PdfComp bg={pages[0]}>
-                {/* <div className="absolute top-[15mm] left-[6mm] text-start">
-          <div style={{ color: "#000000" }}>
-            <span className="inline-block text-lg capitalize">
-              {data.name}
-            </span>
-            <br />
-            <span className="inline-block text-lg capitalize">
-              {data.phone}
-            </span>
-            <br />
-            <span className="inline-block text-lg capitalize max-w-96">
-              {data.email}
-            </span>
-          </div>
-        </div> */}
-
                 <div className="absolute top-[189mm] right-[90mm] min-w-96 font-medium space-y-0.5">
                     <span className="text-xs font-semibold block capitalize">
                         {customerData.name}
                     </span>
-                    <span className="text-xs font-semibold block">
+                    <span className="text-xs w-96 font-semibold block">
                         {customerData.address}
                     </span>
                     <span className="text-xs font-semibold block">
@@ -512,19 +496,6 @@ const SalesProposalView = () => {
                 </div>
             </PdfComp>
 
-            {/* {state?.selectedPanels
-        ?.flatMap((panel) => panel?.wattId?.imgWatt || [])
-        ?.map((_, index) => {
-          const pageIndex = 6 + index;
-          if (!pages[pageIndex]) return null;
-
-          return (
-            <PdfComp key={index} bg={pages[pageIndex]}>
-            </PdfComp>
-          );
-        })} */}
-
-            {/* LAST PAGE */}
             <PdfComp bg={pages[pages.length - 1]}></PdfComp>
         </div>
     );

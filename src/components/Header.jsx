@@ -62,7 +62,6 @@ const Header = () => {
                                     src="/logo.png"
                                     alt="Gautam Solar"
                                     className="h-8 lg:h-12 w-auto object-contain"
-                                    
                                     loading='lazy'
                                 />
                                 <span className="hidden text-sm  font-bold text-gray-800 whitespace-nowrap">

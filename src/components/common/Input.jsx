@@ -8,7 +8,6 @@ const Input = ({ field = [], initialData = {}, onSubmit, submitText = "Submit" }
     const [formData, setFormData] = useState({});
     const [previews, setPreviews] = useState({});
 
-    // console.log("formData : ", formData)
 
     // Load backend data (EDIT MODE)
     useEffect(() => {
@@ -104,20 +103,6 @@ const Input = ({ field = [], initialData = {}, onSubmit, submitText = "Submit" }
                         onChange={(e) => handleChange(e, item)}
                         className="w-full px-4 py-2 border rounded-lg"
                     />
-
-                    {/* PREVIEW SECTION */}
-                    {item.type === "file" && previews[item.name] && (
-                        <div className="flex gap-3 mt-2 flex-wrap">
-                            {previews[item.name].map((src, i) => (
-                                <img
-                                    key={i}
-                                    src={src}
-                                    alt="preview"
-                                    className="w-24 h-24 object-cover rounded border"
-                                />
-                            ))}
-                        </div>
-                    )}
                 </div>
             ))}
 

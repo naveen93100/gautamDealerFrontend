@@ -26,18 +26,6 @@ const PanelWatt = () => {
             placeholder: "Enter panel watt (555,666,...)",
 
         },
-        {
-
-            lable: "Panel Watt Img",
-            name: "imgWatt",
-            type: "file",
-            placeholder: "select the image..",
-            multiple: true,
-            maxFiles: 2,
-            maxSize: 2 * 1024 * 1024,
-            accept: "image/jpeg,image/jpg,image/png,image/webp",
-            extensions: ["jpeg", "jpg", "png", "webp"]
-        },
     ]
 
     const fetchData = async () => {
@@ -99,17 +87,6 @@ const PanelWatt = () => {
         formData.append("constructiveId", constructiveId);
         formData.append("watt", Number(data?.watt));
 
-
-        // when we are adding the image then the index of image is not sort , we have no granted to store img that we are provide that reson we need to add a index to know the index of image, this problem is occur in multer
-        data?.imgWatt.forEach((item, index) => {
-            formData.append("imgWatt", item);
-            formData.append("imgOrder[]", index);
-        });
-
-
-
-
-
         try {
             const apiData = await apiCall("post", "/adminPanel/createPanelWatt", formData)
             toast.success(apiData?.data?.message);
@@ -122,10 +99,7 @@ const PanelWatt = () => {
         } catch (error) {
             toast.error(error?.response?.data?.message || error?.message)
         }
-
-
     }
-
 
 
     const handleOpenEdit = (e, data) => {
@@ -142,12 +116,6 @@ const PanelWatt = () => {
         formData.append("watt", data?.watt)
         formData.append("constructiveId", data?.constructiveId)
 
-        data?.imgWatt?.forEach((item, index) => {
-            formData.append("imgWatt", item);
-            formData.append("imgOrder[]", index);
-        });
-
-
         try {
             const apiData = await apiCall("put", "/adminPanel/updatePanelWatt", formData)
             toast.success(apiData?.data?.message);
@@ -162,6 +130,7 @@ const PanelWatt = () => {
         }
 
     }
+
     return (
         <div className="p-6 space-y-6">
             <div className="space-y-6 border-2 border-red-300 p-8 rounded-2xl shadow-md shadow-red-300 ">
@@ -192,7 +161,6 @@ const PanelWatt = () => {
                         </div>
 
                         <button
-                            //  onClick={() => naviagate("/panel/technology", { state: { id: panelId, name: panelName } })}
                             onClick={() => navigate(-1)}
                             className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium
                               text-red-600 hover:text-gray-900 hover:bg-red-300
@@ -216,7 +184,6 @@ const PanelWatt = () => {
                         </div>
                     ) : (
                         data?.map((panelWatt) => (
-                            // console.log("panelWatt : ", panelWatt),
                             <PanelCard
                                 title={`${panelWatt?.watt} Watt`}
                                 subtitle={"Panel Watt Conmfiguration"}

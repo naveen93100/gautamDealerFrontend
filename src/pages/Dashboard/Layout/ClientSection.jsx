@@ -61,14 +61,6 @@ export default function ClientSection() {
 
     const { data, isLoading } = useGetClient(user?.id)
 
-    // const { data, isLoading } = useQuery({
-    //     queryKey: ['client'],
-    //     queryFn: getClient,
-    //     staleTime: 5 * 60 * 1000,
-    //     refetchOnMount: false,
-    //     enabled:user?.id?true:false
-    // })
-
     const filtered = data?.filter((c) => {
         const q = search.trim().toLowerCase();
 
