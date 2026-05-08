@@ -80,12 +80,13 @@ const PanelWatt = () => {
     }
 
     const handleCreatePanelWatt = async (data) => {
-        let formData = new FormData()
 
-        formData.append("panelId", location?.state?.data?.panelId);
-        formData.append("technologyId", location?.state?.data?.technologyId);
-        formData.append("constructiveId", constructiveId);
-        formData.append("watt", Number(data?.watt));
+        let formData = {}
+        formData.panelId = location?.state?.data?.panelId;
+        formData.technologyId = location?.state?.data?.technologyId;
+        formData.constructiveId = constructiveId;
+        formData.watt = Number(data?.watt);
+
 
         try {
             const apiData = await apiCall("post", "/adminPanel/createPanelWatt", formData)
