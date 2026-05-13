@@ -1,4 +1,4 @@
-import { LayoutDashboard, LogOut, Package, UserRoundPlus, Users } from "lucide-react";
+import { LayoutDashboard, LogOut, Package, UserRound, UserRoundPlus, Users } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -14,9 +14,14 @@ const AdminSidebar = ({ sidebarOpen }) => {
 
     const menuItems = [
         { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, path: "/admin", role: ['super_admin'] },
-        { id: "panel", label: "Panel Data", icon: Package, path: "/admin/panel", role: ['super_admin'] },
-        { id: "sales", label: "Create sales Account", icon: Users, path: "/admin/sales", role: ['admin', 'super_admin'] },
-        { id: "createAdmin", label: "Create Admin", icon: UserRoundPlus, path: "/admin/create-admin", role: ['super_admin'] },
+
+        { id: "panel", label: "Panel Management", icon: Package, path: "/admin/panel", role: ['super_admin'] },
+
+        { id: "sales", label: "Sales Accounts", icon: Users, path: "/admin/sales", role: ['admin', 'super_admin'] },
+
+        { id: "createAdmin", label: "Admin Management", icon: UserRoundPlus, path: "/admin/create-admin", role: ['super_admin'] },
+
+        { id: "createDealer", label: "Dealer Management", icon: UserRound, path: "/admin/create-dealer", role: ['super_admin'] },
     ];
 
     const handleNavigate = (item) => {
@@ -64,7 +69,7 @@ const AdminSidebar = ({ sidebarOpen }) => {
 
                 {/* Menu */}
                 <nav className="flex-1 px-3 py-6 ">
-                    {menuItems.map((item,i) => {
+                    {menuItems.map((item, i) => {
                         const Icon = item.icon;
                         const isActive = activeMenu === item._id;
 

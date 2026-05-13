@@ -33,6 +33,7 @@ import ShowSalesAllproposalToAdmin from "./pages/SalesDashboard/ShowSalesAllprop
 import CreateAdmin from "./pages/SalesDashboard/CreateAdmin";
 import AdminRoute from "./components/common/AdminRoute";
 import { useAuth } from "./Context/AuthContext";
+import CreateDealerAccount from "./pages/Dashboard/Admin Dashboard/CreateDealerAccount";
 
 const App = () => {
     const navigate = useNavigate();
@@ -68,6 +69,7 @@ const App = () => {
                         element={<PanelWatt />}
                     />
                     <Route path="dealer" element={<DealerList />} />
+                    <Route path="create-dealer" element={<CreateDealerAccount/>}/>
                     <Route path="sales" element={<SalesPersonList />} />
                     <Route path="create-admin" element={<CreateAdmin />} />
                     <Route path="sales-client/:salesId" element={<ShowSalesAllproposalToAdmin />} />
