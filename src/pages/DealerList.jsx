@@ -90,6 +90,10 @@ const DealerList = () => {
                                 <span className="font-medium text-sm text-gray-700">Phone:</span>{" "}
                                 {dealer.contactNumber}
                             </p>
+                            <p className='break-all overflow-hidden'>
+                                <span className="font-medium text-sm text-gray-700">Date:</span>{" "}
+                                {new Date(dealer.createdAt).toDateString()}
+                            </p>
                         </div>
                     </div>
                 ))}
