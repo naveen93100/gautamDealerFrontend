@@ -90,7 +90,6 @@ const App = () => {
 
             {/* solar panel */}
             <Route path="viewPanelProposal" element={<PanelPropsalView />} />
-            {/* <Route path="viewPanelProposal" element={<TestingProposalView />} /> */}
             {/* client panel history  */}
             <Route
                 path="clientpanel-history"

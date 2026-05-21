@@ -19,6 +19,7 @@ const Login = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [loginType, setLoginType] = useState("dealer");
+    const [showPassword, setShowPassword] = useState(false);
 
     const onSubmit = async (data) => {
         try {
@@ -116,33 +117,6 @@ const Login = () => {
                         onSubmit={handleSubmit(onSubmit)}
                         className="space-y-6"
                     >
-                        {/* Email Field — hidden for Sales login */}
-
-                        {/* <div className="space-y-1.5">
-                            <label className="text-xs font-bold uppercase tracking-wider text-gray-600 ml-1">
-                                Email Address
-                            </label>
-                            <div className="group flex items-center gap-3 bg-gray-50 px-4 py-3 rounded-xl border border-gray-200 focus-within:border-[#a20000] focus-within:bg-white focus-within:ring-4 focus-within:ring-red-50 transition-all duration-200">
-                                <FiMail className="text-gray-400 group-focus-within:text-[#a20000] transition-colors" />
-                                <input
-                                    type="email"
-                                    className="w-full bg-transparent text-gray-800 placeholder-gray-400 focus:outline-none text-sm font-medium"
-                                    placeholder="email@company.com"
-                                    {...register("email", {
-                                        required: "Email is required",
-                                        pattern: {
-                                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                            message: "Invalid email address",
-                                        },
-                                    })}
-                                />
-                            </div>
-                            {errors.email && (
-                                <p className="text-[11px] font-semibold text-red-600 ml-1 uppercase">
-                                    {errors.email.message}
-                                </p>
-                            )}
-                        </div> */}
 
                         {loginType !== "sales" ? (
                             // ✅ EMAIL (Dealer + Admin)
@@ -197,30 +171,6 @@ const Login = () => {
                             </div>
                         )}
 
-                        {/* User ID Field — only for Sales login */}
-                        {/* {loginType === "sales" && (
-                            <div className="space-y-1.5">
-                                <label className="text-xs font-bold uppercase tracking-wider text-gray-600 ml-1">
-                                    User ID
-                                </label>
-                                <div className="group flex items-center gap-3 bg-gray-50 px-4 py-3 rounded-xl border border-gray-200 focus-within:border-[#a20000] focus-within:bg-white focus-within:ring-4 focus-within:ring-red-50 transition-all duration-200">
-                                    <FiUser className="text-gray-400 group-focus-within:text-[#a20000] transition-colors" />
-                                    <input
-                                        type="text"
-                                        className="w-full bg-transparent text-gray-800 placeholder-gray-400 focus:outline-none text-sm font-medium"
-                                        placeholder="Enter your User ID"
-                                        {...register("userId", {
-                                            required: "User ID is required",
-                                        })}
-                                    />
-                                </div>
-                                {errors.userId && (
-                                    <p className="text-[11px] font-semibold text-red-600 ml-1 uppercase">
-                                        {errors.userId.message}
-                                    </p>
-                                )}
-                            </div>
-                        )} */}
 
                         {/* Password Field */}
                         <div className="space-y-1.5">
@@ -229,16 +179,24 @@ const Login = () => {
                                     Password
                                 </label>
                             </div>
-                            <div className="group flex items-center gap-3 bg-gray-50 px-4 py-3 rounded-xl border border-gray-200 focus-within:border-[#a20000] focus-within:bg-white focus-within:ring-4 focus-within:ring-red-50 transition-all duration-200">
+                            <div className="group relative flex items-center gap-3 bg-gray-50 px-4 py-3 rounded-xl border border-gray-200 focus-within:border-[#a20000] focus-within:bg-white focus-within:ring-4 focus-within:ring-red-50 transition-all duration-200">
                                 <FiLock className="text-gray-400 group-focus-within:text-[#a20000] transition-colors" />
                                 <input
-                                    type="password"
+                                    type={showPassword?'text':'password'}
                                     className="w-full bg-transparent text-gray-800 placeholder-gray-400 focus:outline-none text-sm font-medium"
                                     placeholder="••••••••"
                                     {...register("password", {
                                         required: "Password is required",
                                     })}
+
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-sm text-gray-500"
+                                >
+                                    {showPassword ? "Hide" : "Show"}
+                                </button>
                             </div>
                             {errors.password && (
                                 <p className="text-[11px] font-semibold text-red-600 ml-1 uppercase">

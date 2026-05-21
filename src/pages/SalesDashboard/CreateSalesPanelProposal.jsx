@@ -199,9 +199,12 @@ const CreateSalesPanelProposal = ({ onClose, data = null, setData, clientId }) =
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setCreatePanelData((prev) => ({
-      ...prev, [name]: value
-    }))
+    if(e.target.value>=0){
+
+      setCreatePanelData((prev) => ({
+        ...prev, [name]: value
+      }))
+    } 
 
   }
 
@@ -449,14 +452,22 @@ const CreateSalesPanelProposal = ({ onClose, data = null, setData, clientId }) =
 
                 <div>
                   <label className="block text-sm font-medium mb-2">GST* (%)</label>
+
                   <input
+                    type='number'
                     name="gst"
                     value={createPanelData?.gst}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border rounded-xl focus:ring-2"
                     placeholder="GST %"
-                    type='number'
-                    min={0}
+                    min={1}
+                    onWheel={(e) => e.target.blur()}
+                    onKeyDown={(e) => {
+                        if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+                            e.preventDefault();
+                        }
+                    }}
+
                   />
                 </div>
 

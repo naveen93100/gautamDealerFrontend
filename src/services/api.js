@@ -2,10 +2,10 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const axiosInstance = axios.create({
-  // baseURL: "https://gautamsolar.us", 
-  baseURL: import.meta.env.VITE_SERVER_ADDRESS, 
+  // baseURL: "https://gautamsolar.us",
+  baseURL: import.meta.env.VITE_SERVER_ADDRESS,
   // baseURL: "http://localhost:1008",
-  withCredentials: true
+  withCredentials: true,
 });
 
 export const apiCall = (method, url, data, config = {}) => {
@@ -16,7 +16,6 @@ export const apiCall = (method, url, data, config = {}) => {
     ...config,
   });
 };
-
 
 axiosInstance.interceptors.request.use(
   (config) => {
@@ -30,21 +29,31 @@ axiosInstance.interceptors.request.use(
 
     return config;
   },
-  (er) => Promise.reject(er)
+  (er) => Promise.reject(er),
 );
 
 axiosInstance.interceptors.response.use(
   (res) => {
     return res;
   },
-  (er) => {
-    // console.log(er)
+  async (er) => {
     if (er.response?.status === 401) {
       localStorage.removeItem("userData");
       localStorage.removeItem("token");
-      toast.error(er?.response?.data?.message || "Session expired!! please login again");
-      window.location.href = "/login";
+      await axios.post(
+        `${import.meta.env.VITE_SERVER_ADDRESS}/api/sales/logout`,
+        {},
+        {
+          withCredentials: true,
+        },
+      );
+      toast.error(
+        er?.response?.data?.message || "Session expired!! Please Login Again",
+      );
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 1500);
     }
     return Promise.reject(er);
-  }
+  },
 );

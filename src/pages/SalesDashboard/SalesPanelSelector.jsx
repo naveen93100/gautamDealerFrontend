@@ -1,43 +1,29 @@
-// import { IndianRupee } from "lucide-react";
-// import React, { useEffect } from "react";
-// import toast from "react-hot-toast";
-
-// const SalesPanelSelector = ({
-//     selectPanel,
-//     setSelectPanel,
-//     panelData,
-//     technologyData,
-//     constructiveData,
-//     panelWatt,
-//     setActiveIndex,
-//     gst,
-// }) => {
-//     return (
-//         <section className="mb-6">
-//             <div className="flex items-center justify-between mb-6">
-//                 <div className="flex items-center gap-2">
-//                     <i className="fa-solid fa-solar-panel text-red-600"></i>
-//                     <h3 className="text-lg font-semibold">Panel Information</h3>
-//                 </div>
-
-//                 <div
-
-//                     className="flex items-center gap-2 border border-blue-500 text-blue-600 hover:bg-blue-50 px-4 py-2 rounded-lg transition"
-//                 >
-//                     <i className="fa-solid fa-plus text-sm"></i>
-//                     <span className="text-sm font-medium">Add More Panel</span>
-//                 </div>
-//             </div>
-
-//         </section>
-//     );
-// };
-
-
-
 import { IndianRupee } from "lucide-react";
 import React, { useEffect } from "react";
 import toast from "react-hot-toast";
+
+const Input = ({ index, inputType, value, type, handleChange }) => {
+    return (
+        <input
+            key={index}
+            type={type}
+            min={1}
+            required
+            value={value}
+            onChange={(e) => {
+                if (e.target.value >= 0) {
+                    handleChange(
+                        index,
+                        type,
+                        e.target.value,
+                    )
+                }
+            }}
+            className="w-full pl-5 pr-4 py-3 border rounded-xl "
+        />
+    )
+}
+
 
 const SalesPanelSelector = ({
     selectPanel,
@@ -75,25 +61,25 @@ const SalesPanelSelector = ({
             const copy = [...prev];
 
             const updatedValue =
-                key === "quantity" || key === "rate" ? Number(value) : value;
+                key === "quantity" || key === "rate" || key==='gstAmount'? Number(value) : value;
 
             copy[index] = {
                 ...copy[index],
                 [key]: updatedValue,
             };
-           
-            const selectedWattId = copy[index].wattId||null;
-             
+
+            const selectedWattId = copy[index].wattId || null;
+
             const pWatt = panelWatt?.find(i => i._id === selectedWattId);
 
             const quantity = Number(copy[index].quantity || 0);
             const rate = Number(copy[index].rate || 0);
-            
-            if(selectedWattId){
+
+            if (selectedWattId) {
                 const watt = Number(pWatt?.watt);
                 const amount = watt * quantity * rate;
                 const gstAmount = (amount * gst) / 100;
-                
+
                 copy[index].totalPrice = amount;
                 copy[index].gstAmount = gstAmount;
             }
@@ -103,7 +89,7 @@ const SalesPanelSelector = ({
     };
 
 
-    
+
     useEffect(() => {
         if (!gst) return
 
@@ -278,7 +264,7 @@ const SalesPanelSelector = ({
                                 <label className="text-sm font-medium text-gray-600 mt-4 block">
                                     Quantity
                                 </label>
-                                <input
+                                {/* <input
                                     key={index}
                                     type="number"
                                     min={1}
@@ -292,7 +278,8 @@ const SalesPanelSelector = ({
                                         )
                                     }
                                     className="w-full pl-5 pr-4 py-3 border rounded-xl "
-                                />
+                                /> */}
+                                <Input index={index} inputType={'number'} type={'quantity'} value={panel.quantity} handleChange={handleChange} />
                                 {/* price */}
                                 <div>
                                     <label className="block text-sm  mt-4 font-medium mb-2">
@@ -301,12 +288,12 @@ const SalesPanelSelector = ({
                                         <i className="fa-solid fa-rupee-sign text-red-600"></i>{" "}
                                     </label>
                                     <div className="relative">
-                                        <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                        <input
+                                        {/* <input
                                             key={index}
                                             type="number"
                                             name="rate"
                                             value={panel.rate}
+                                            min={1}
                                             onChange={(e) =>
                                                 handleChange(
                                                     index,
@@ -316,7 +303,8 @@ const SalesPanelSelector = ({
                                             }
                                             className="w-full pl-11 pr-4 py-3 border rounded-xl focus:ring-2"
                                             placeholder="Enter Panel Price"
-                                        />
+                                        /> */}
+                                        <Input index={index} inputType={'number'} type={'rate'} value={panel.rate} handleChange={handleChange} />
                                     </div>
                                 </div>
 
@@ -344,11 +332,13 @@ const SalesPanelSelector = ({
                                         <label className="block text-sm font-medium mb-2">
                                             Gst Amount
                                         </label>
+
                                         <input
 
                                             key={index}
                                             name="gstAmount"
                                             value={panel?.gstAmount}
+
                                             onChange={(e) =>
                                                 handleChange(
                                                     index,
