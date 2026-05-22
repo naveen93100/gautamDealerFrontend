@@ -288,7 +288,7 @@ const SalesPanelSelector = ({
                                         <i className="fa-solid fa-rupee-sign text-red-600"></i>{" "}
                                     </label>
                                     <div className="relative">
-                                        {/* <input
+                                        <input
                                             key={index}
                                             type="number"
                                             name="rate"
@@ -301,10 +301,10 @@ const SalesPanelSelector = ({
                                                     e.target.value,
                                                 )
                                             }
-                                            className="w-full pl-11 pr-4 py-3 border rounded-xl focus:ring-2"
+                                            className="w-full pl-4 pr-4 py-3 border rounded-xl focus:ring-2"
                                             placeholder="Enter Panel Price"
-                                        /> */}
-                                        <Input index={index} inputType={'number'} type={'rate'} value={panel.rate} handleChange={handleChange} />
+                                        />
+                                        {/* <Input index={index} inputType={'number'} type={'rate'} value={panel.rate} handleChange={handleChange} /> */}
                                     </div>
                                 </div>
 
