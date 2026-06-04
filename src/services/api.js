@@ -40,6 +40,7 @@ axiosInstance.interceptors.response.use(
     if (er.response?.status === 401) {
       localStorage.removeItem("userData");
       localStorage.removeItem("token");
+      localStorage.removeItem('loginType')
       await axios.post(
         `${import.meta.env.VITE_SERVER_ADDRESS}/api/sales/logout`,
         {},
@@ -50,9 +51,10 @@ axiosInstance.interceptors.response.use(
       toast.error(
         er?.response?.data?.message || "Session expired!! Please Login Again",
       );
-      setTimeout(() => {
-        window.location.href = "/login";
-      }, 1500);
+      console.log(er?.response);
+      // setTimeout(() => {
+      //   window.location.href = "/login";
+      // }, 1500);
     }
     return Promise.reject(er);
   },
