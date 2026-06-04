@@ -52,9 +52,9 @@ axiosInstance.interceptors.response.use(
         er?.response?.data?.message || "Session expired!! Please Login Again",
       );
       console.log(er?.response);
-      // setTimeout(() => {
-      //   window.location.href = "/login";
-      // }, 1500);
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 1500);
     }
     return Promise.reject(er);
   },
