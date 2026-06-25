@@ -34,6 +34,8 @@ import CreateAdmin from "./pages/SalesDashboard/CreateAdmin";
 import AdminRoute from "./components/common/AdminRoute";
 import { useAuth } from "./Context/AuthContext";
 import CreateDealerAccount from "./pages/Dashboard/Admin Dashboard/CreateDealerAccount";
+import InverterManagement from "./pages/Admin/InverterManagement";
+
 
 const App = () => {
     const navigate = useNavigate();
@@ -68,6 +70,7 @@ const App = () => {
                         path="panel/technology/constructive/panelWatt"
                         element={<PanelWatt />}
                     />
+                    <Route path="inverter" element={<InverterManagement/>}/>
                     <Route path="dealer" element={<DealerList />} />
                     <Route path="create-dealer" element={<CreateDealerAccount/>}/>
                     <Route path="sales" element={<SalesPersonList />} />
