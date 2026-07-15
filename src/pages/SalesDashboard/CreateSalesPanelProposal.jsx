@@ -55,6 +55,29 @@ const CreateSalesPanelProposal = ({ onClose, data = null, setData, clientId }) =
     useClasses: true,
   }), []);
 
+
+
+  const [company, setCompany] = useState("GSPL");
+
+  const bankDetails = {
+    GSPL: {
+      beneficiary: "Gautam Solar Pvt. Ltd.",
+      bank: "Axis Bank Ltd.",
+      account: "925030038328269",
+      ifsc: "UTIB0001609",
+      branch: "Okhla Phase-1, New Delhi - 110020",
+    },
+    GSIPL: {
+      beneficiary: "Gautam Solar Industries Private Limited",
+      bank: "ICICI Bank Limited",
+      account: "071605004868",
+      ifsc: "ICIC0000716",
+      branch: "Okhla Phase-1, New Delhi - 110020",
+    },
+  };
+
+  const bank = bankDetails[company];
+
   const [Body, setBody] = useState(`
       <div style="font-family: Arial, sans-serif; font-size: 14px;">
 
@@ -132,7 +155,7 @@ const CreateSalesPanelProposal = ({ onClose, data = null, setData, clientId }) =
       <td style="border: 1px solid #000; padding: 6px;">Beneficiary Name</td>
       <td style="border: 1px solid #000; text-align: center; padding: 6px;">:</td>
       <td style="border: 1px solid #000; padding: 6px; word-break: break-word;">
-        Gautam Solar Pvt. Ltd.
+        ${bank.beneficiary}
       </td>
     </tr>
 
@@ -140,7 +163,7 @@ const CreateSalesPanelProposal = ({ onClose, data = null, setData, clientId }) =
       <td style="border: 1px solid #000; padding: 6px;">Bank Name</td>
       <td style="border: 1px solid #000; text-align: center; padding: 6px;">:</td>
       <td style="border: 1px solid #000; padding: 6px; word-break: break-word;">
-        Axis Bank Ltd.
+        ${bank.bank}
       </td>
     </tr>
 
@@ -148,7 +171,7 @@ const CreateSalesPanelProposal = ({ onClose, data = null, setData, clientId }) =
       <td style="border: 1px solid #000; padding: 6px;">Bank Address</td>
       <td style="border: 1px solid #000; text-align: center; padding: 6px;">:</td>
       <td style="border: 1px solid #000; padding: 6px; word-break: break-word;">
-        Okhla Phase-1, New Delhi, 110020
+        ${bank.branch}
       </td>
     </tr>
 
@@ -156,7 +179,7 @@ const CreateSalesPanelProposal = ({ onClose, data = null, setData, clientId }) =
       <td style="border: 1px solid #000; padding: 6px;">Bank Account No.</td>
       <td style="border: 1px solid #000; text-align: center; padding: 6px;">:</td>
       <td style="border: 1px solid #000; padding: 6px; word-break: break-word;">
-        925030038328269
+        ${bank.account}
       </td>
     </tr>
 
@@ -164,7 +187,7 @@ const CreateSalesPanelProposal = ({ onClose, data = null, setData, clientId }) =
       <td style="border: 1px solid #000; padding: 6px;">IFSC Code</td>
       <td style="border: 1px solid #000; text-align: center; padding: 6px;">:</td>
       <td style="border: 1px solid #000; padding: 6px; word-break: break-word;">
-        UTIB0001609
+        ${bank.ifsc}
       </td>
     </tr>
 
@@ -199,14 +222,139 @@ const CreateSalesPanelProposal = ({ onClose, data = null, setData, clientId }) =
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if(e.target.value>=0){
+    if (e.target.value >= 0) {
 
       setCreatePanelData((prev) => ({
         ...prev, [name]: value
       }))
-    } 
+    }
 
   }
+
+  const changeBodyData=(bank)=>{
+     return `
+      <div style="font-family: Arial, sans-serif; font-size: 14px;">
+
+  <p><strong>Payment Terms:</strong></p>
+  <ul>
+    <li>20% at the Time of the purchase order and the remaining 80% before Dispatch.</li>
+  </ul>
+
+  <p><strong>Inco-Terms:</strong></p>
+  <ul>
+    <li>
+      This offer is inclusive of Packaging, forwarding, freight, transportation & transit insurance,
+      for PV Modules within our scope of supply on a FOR basis.
+    </li>
+    <li>
+      If, during dispatch, due to a change of government policy, any new taxes are applicable or
+      rates are changed, the same will be applied to your account.
+    </li>
+  </ul>
+
+  <p><strong>Validity of Offer:</strong></p>
+  <ul>
+    <li>
+      This offer is valid for 3 days from the date of the offer and thereafter,
+      subject to our reconfirmation.
+    </li>
+  </ul>
+
+  <p><strong>Delivery/Completion Period:</strong></p>
+  <ul>
+    <li>
+      Within 10-15 days after the date of purchase, along with the advance payment.
+    </li>
+  </ul>
+
+  <p><strong>Insurance:</strong></p>
+  <p>
+    Transit Insurance is included till the delivery point mentioned in the invoice.
+  </p>
+
+  <p><strong>Warranty:</strong></p>
+  <p>
+    <strong>For N-TYPE TOPCON:</strong> First 12 Years Performance Warranty on 90% Power Output.
+    Next 18 Years Performance Warranty on 80% Power Output.
+  </p>
+  <p>
+    <strong>For MONO PERC:</strong> First 10 Years Performance Warranty on 90% Power Output.
+    Next 15 Years Performance Warranty on 80% Power Output.
+  </p>
+  <p>
+    After commissioning of the plant, the “Fire & Allied Perils”, Theft & Burglary,
+    lack of sun radiation insurance policy, and loss of profit shall be arranged
+    by you at your own cost.
+  </p>
+
+</div>
+
+<div style="font-family: Arial, sans-serif; font-size: 14px;">
+
+  <h3 style="text-align: center; text-decoration: underline; margin-bottom: 8px;">
+    Bank A/C Details
+  </h3>
+
+  <table style="width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed;">
+    
+    <tr>
+      <td style="border: 1px solid #000; font-weight: bold; width: 30%; padding: 6px; box-sizing: border-box;">
+        Bank A/c Detail
+      </td>
+      <td style="border: 1px solid #000; width: 5%; padding: 6px; box-sizing: border-box;"></td>
+      <td style="border: 1px solid #000; padding: 6px; box-sizing: border-box;"></td>
+    </tr>
+
+    <tr>
+      <td style="border: 1px solid #000; padding: 6px;">Beneficiary Name</td>
+      <td style="border: 1px solid #000; text-align: center; padding: 6px;">:</td>
+      <td style="border: 1px solid #000; padding: 6px; word-break: break-word;">
+        ${bank.beneficiary}
+      </td>
+    </tr>
+
+    <tr>
+      <td style="border: 1px solid #000; padding: 6px;">Bank Name</td>
+      <td style="border: 1px solid #000; text-align: center; padding: 6px;">:</td>
+      <td style="border: 1px solid #000; padding: 6px; word-break: break-word;">
+        ${bank.bank}
+      </td>
+    </tr>
+
+    <tr>
+      <td style="border: 1px solid #000; padding: 6px;">Bank Address</td>
+      <td style="border: 1px solid #000; text-align: center; padding: 6px;">:</td>
+      <td style="border: 1px solid #000; padding: 6px; word-break: break-word;">
+        ${bank.branch}
+      </td>
+    </tr>
+
+    <tr>
+      <td style="border: 1px solid #000; padding: 6px;">Bank Account No.</td>
+      <td style="border: 1px solid #000; text-align: center; padding: 6px;">:</td>
+      <td style="border: 1px solid #000; padding: 6px; word-break: break-word;">
+        ${bank.account}
+      </td>
+    </tr>
+
+    <tr>
+      <td style="border: 1px solid #000; padding: 6px;">IFSC Code</td>
+      <td style="border: 1px solid #000; text-align: center; padding: 6px;">:</td>
+      <td style="border: 1px solid #000; padding: 6px; word-break: break-word;">
+        ${bank.ifsc}
+      </td>
+    </tr>
+
+  </table>
+
+</div>
+  `
+  }
+
+  useEffect(()=>{
+     let newBodyData=changeBodyData(bank)
+     setBody(newBodyData)
+  },[company])
 
 
   useState(() => {
@@ -316,27 +464,27 @@ const CreateSalesPanelProposal = ({ onClose, data = null, setData, clientId }) =
         }
       })
 
-       let mutationFn=data?updateSalesClientProposal:createSalesClientProposal
+      let mutationFn = data ? updateSalesClientProposal : createSalesClientProposal
 
-       mutationFn(payload,{
-          onSuccess: (d) => {
-            toast.success(d?.message);
-            onClose(false);
-          },
-          onError: (e) => {
-            let er = (e || []);
+      mutationFn(payload, {
+        onSuccess: (d) => {
+          toast.success(d?.message);
+          onClose(false);
+        },
+        onError: (e) => {
+          let er = (e || []);
 
-            toast.error(<div>
-              <strong>Please fix the following:</strong>
-              <ul className="mt-1">
-                {er.map((err, i) => (
-                  <li key={i} className="capitalize text-sm">• {err.message}</li>
-                ))}
-              </ul>
-            </div>
-            );
-          }
-       })
+          toast.error(<div>
+            <strong>Please fix the following:</strong>
+            <ul className="mt-1">
+              {er.map((err, i) => (
+                <li key={i} className="capitalize text-sm">• {err.message}</li>
+              ))}
+            </ul>
+          </div>
+          );
+        }
+      })
 
       // if (!data) {
       //   createSalesClientProposal(payload, {
@@ -463,9 +611,9 @@ const CreateSalesPanelProposal = ({ onClose, data = null, setData, clientId }) =
                     min={1}
                     onWheel={(e) => e.target.blur()}
                     onKeyDown={(e) => {
-                        if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-                            e.preventDefault();
-                        }
+                      if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+                        e.preventDefault();
+                      }
                     }}
 
                   />
@@ -474,19 +622,83 @@ const CreateSalesPanelProposal = ({ onClose, data = null, setData, clientId }) =
               </div>
             </section>
 
-            <section className="mb-6">
-              <div className="flex items-center gap-2 mb-4">
-                <MessageCircle className="w-5 h-5 text-red-600" />
-                <h3 className="text-lg font-semibold">Terms & Conditions / Message</h3>
+            <section className="mb-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-5">
+                <div className="flex items-center gap-2">
+                  <MessageCircle className="w-5 h-5 text-red-600" />
+                  <h3 className="text-lg font-semibold text-gray-800">
+                    Terms & Conditions / Message
+                  </h3>
+                </div>
               </div>
 
+              {/* Company Selection */}
+              <div className="mb-5 rounded-lg border border-gray-200 bg-gray-50 p-4">
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  Select Company for Bank Details
+                </label>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <label
+                    className={`flex items-center gap-3 rounded-lg border p-4 cursor-pointer transition-all duration-200 ${company === "GSPL"
+                      ? "border-red-600 bg-red-50 ring-1 ring-red-600"
+                      : "border-gray-300 bg-white hover:border-red-400"
+                      }`}
+                  >
+                    <input
+                      type="radio"
+                      name="company"
+                      value="GSPL"
+                      checked={company === "GSPL"}
+                      onChange={(e) => setCompany(e.target.value)}
+                      className="accent-red-600 h-5 w-5"
+                    />
+
+                    <div>
+                      <p className="font-semibold text-gray-800">
+                        Gautam Solar Pvt. Ltd.
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        Axis Bank
+                      </p>
+                    </div>
+                  </label>
+
+                  <label
+                    className={`flex items-center gap-3 rounded-lg border p-4 cursor-pointer transition-all duration-200 ${company === "GSIPL"
+                      ? "border-red-600 bg-red-50 ring-1 ring-red-600"
+                      : "border-gray-300 bg-white hover:border-red-400"
+                      }`}
+                  >
+                    <input
+                      type="radio"
+                      name="company"
+                      value="GSIPL"
+                      checked={company === "GSIPL"}
+                      onChange={(e) => setCompany(e.target.value)}
+                      className="accent-red-600 h-5 w-5"
+                    />
+
+                    <div>
+                      <p className="font-semibold text-gray-800">
+                        Gautam Solar Industries Pvt. Ltd.
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        ICICI Bank
+                      </p>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              {/* Editor */}
               <JoditEditor
+                key={company}
                 config={joditConfig}
                 value={Body}
                 onBlur={(d) => setBody(d)}
               />
-
-
             </section>
 
             <div className="items-center justify-center bg-gray-50 flex gap-3 mt-5">
