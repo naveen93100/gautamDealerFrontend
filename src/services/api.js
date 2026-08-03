@@ -75,6 +75,7 @@ const axiosInstance = axios.create({
 // };
 
 export const apiCall = (method, url, data, config = {}) => {
+    console.log("API CALL:", method, url, data, config);
     return axiosInstance({
         method,
         url,

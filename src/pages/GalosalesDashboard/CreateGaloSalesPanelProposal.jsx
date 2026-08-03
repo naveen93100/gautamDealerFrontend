@@ -91,43 +91,32 @@ const CreateGaloSalesPanelProposal = ({
     const bank = bankDetails[company];
 
     const [Body, setBody] = useState(`
-    <div style="font-family: Arial, sans-serif; font-size: 14px;">
-      <p><strong>Payment Terms:</strong></p>
-      <ul>
-        <li>20% at the Time of the purchase order and the remaining 80% before Dispatch.</li>
-      </ul>
-      <p><strong>Inco-Terms:</strong></p>
-      <ul>
-        <li>This offer is inclusive of Packaging, forwarding, freight, transportation & transit insurance, for PV Modules within our scope of supply on a FOR basis.</li>
-        <li>If, during dispatch, due to a change of government policy, any new taxes are applicable or rates are changed, the same will be applied to your account.</li>
-      </ul>
-      <p><strong>Validity of Offer:</strong></p>
-      <ul>
-        <li>This offer is valid for 3 days from the date of the offer and thereafter, subject to our reconfirmation.</li>
-      </ul>
-      <p><strong>Delivery/Completion Period:</strong></p>
-      <ul>
-        <li>Within 10-15 days after the date of purchase, along with the advance payment.</li>
-      </ul>
-      <p><strong>Insurance:</strong></p>
-      <p>Transit Insurance is included till the delivery point mentioned in the invoice.</p>
-      <p><strong>Warranty:</strong></p>
-      <p><strong>For N-TYPE TOPCON:</strong> First 12 Years Performance Warranty on 90% Power Output. Next 18 Years Performance Warranty on 80% Power Output.</p>
-      <p><strong>For MONO PERC:</strong> First 10 Years Performance Warranty on 90% Power Output. Next 15 Years Performance Warranty on 80% Power Output.</p>
-      <p>After commissioning of the plant, the “Fire & Allied Perils”, Theft & Burglary, lack of sun radiation insurance policy, and loss of profit shall be arranged by you at your own cost.</p>
-    </div>
-    <div style="font-family: Arial, sans-serif; font-size: 14px;">
-      <h3 style="text-align: center; text-decoration: underline; margin-bottom: 8px;">Bank A/C Details</h3>
-      <table style="width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed;">
-        <tr><td style="border: 1px solid #000; font-weight: bold; width: 30%; padding: 6px;">Bank A/c Detail</td><td style="border: 1px solid #000; width: 5%; padding: 6px;"></td><td style="border: 1px solid #000; padding: 6px;"></td></tr>
-        <tr><td style="border: 1px solid #000; padding: 6px;">Beneficiary Name</td><td style="border: 1px solid #000; text-align: center; padding: 6px;">:</td><td style="border: 1px solid #000; padding: 6px;">${bank.beneficiary}</td></tr>
-        <tr><td style="border: 1px solid #000; padding: 6px;">Bank Name</td><td style="border: 1px solid #000; text-align: center; padding: 6px;">:</td><td style="border: 1px solid #000; padding: 6px;">${bank.bank}</td></tr>
-        <tr><td style="border: 1px solid #000; padding: 6px;">Bank Address</td><td style="border: 1px solid #000; text-align: center; padding: 6px;">:</td><td style="border: 1px solid #000; padding: 6px;">${bank.branch}</td></tr>
-        <tr><td style="border: 1px solid #000; padding: 6px;">Bank Account No.</td><td style="border: 1px solid #000; text-align: center; padding: 6px;">:</td><td style="border: 1px solid #000; padding: 6px;">${bank.account}</td></tr>
-        <tr><td style="border: 1px solid #000; padding: 6px;">IFSC Code</td><td style="border: 1px solid #000; text-align: center; padding: 6px;">:</td><td style="border: 1px solid #000; padding: 6px;">${bank.ifsc}</td></tr>
-      </table>
-    </div>
-  `);
+<div style="font-family: Arial, sans-serif; font-size: 14px; line-height: 1.7;">
+  <h3 style="margin-bottom:10px;"><u>Terms & Conditions</u></h3>
+
+  <ol style="padding-left:20px;">
+    <li>
+      <strong>Design Changes:</strong>
+      Quote is based on a standard plant design; any deviations may incur additional charges.
+    </li>
+
+    <li>
+      <strong>Validity & Cancellation:</strong>
+      Quote is valid for 15 days. Order cancellation will result in a 30% deduction from the token amount.
+    </li>
+
+    <li>
+      <strong>Data Monitoring:</strong>
+      Included in the price. Internet connectivity must be provided by the customer.
+    </li>
+
+    <li>
+      <strong>Data Synchronization:</strong>
+      Synchronization with a DG set is chargeable at actual cost.
+    </li>
+  </ol>
+</div>
+`);
 
     const handleClose = () => {
         setCreatePanelData({ gst: 5 });
@@ -280,7 +269,7 @@ const CreateGaloSalesPanelProposal = ({
         useUpdateGaloSalesClientProposal(clientId);
 
     const handleSubmit = async (e) => {
-        console.log("client id", clientId)
+        console.log("client id", clientId);
         toast.dismiss();
         e.preventDefault();
         try {
@@ -299,7 +288,7 @@ const CreateGaloSalesPanelProposal = ({
                     termsAndConditions: Body,
                     gst: createPanelData?.gst,
                     salesId,
-                    customerId:clientId,
+                    customerId: clientId,
                 };
             }
 
@@ -331,7 +320,7 @@ const CreateGaloSalesPanelProposal = ({
                     onClose(false);
                 },
                 onError: (e) => {
-                    console.log(e)
+                    console.log(e);
                     let er = e || [];
                     toast.error(
                         <div>

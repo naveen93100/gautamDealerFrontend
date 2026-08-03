@@ -26,8 +26,8 @@ const GaloSalesPanelSelector = ({
                 gstAmount: 0,
                 wattPerPrice: 0,
                 //add the setup kw here
-                // setupKw: 0,
-                // subsidyAmount: 0
+                setupKw: 0,
+                subsidyAmount: 0,
             },
         ]);
         setActiveIndex(selectPanel.length);
@@ -49,7 +49,7 @@ const GaloSalesPanelSelector = ({
             };
 
             // this this new to add the setup kw to the calculation of total price and gst amount
-            const setupKw = Number(copy[index].setupKw || 0);
+            const setupKw = String(copy[index].setupKw || 0);
 
             const selectedWattId = copy[index].wattId || null;
             const pWatt = panelWatt?.find((i) => i._id === selectedWattId);
@@ -128,7 +128,7 @@ const GaloSalesPanelSelector = ({
                             </label>
                             <input
                                 key={index}
-                                type="number"
+                                type="string"
                                 min={1}
                                 required
                                 value={panel.setupKw}

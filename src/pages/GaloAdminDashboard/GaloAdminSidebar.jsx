@@ -1,15 +1,15 @@
-// import { icons, LayoutDashboard, LogOut, Users,  } from "lucide-react";
+// import { LayoutDashboard, LogOut, Users } from "lucide-react";
 // import { useState } from "react";
 // import toast from "react-hot-toast";
-// import { NavLink, useNavigate } from "react-router-dom";
+// import { NavLink, useNavigate, useLocation } from "react-router-dom"; // ← add useLocation
 // import { useAuth } from "../../Context/AuthContext";
 
 // const GaloAdminSidebar = ({ sidebarOpen }) => {
 //     const navigate = useNavigate();
+//     const location = useLocation();
 //     const [activeMenu, setActiveMenu] = useState("dashboard");
 //     const { user, loginType, logout } = useAuth();
 
-    
 //     const menuItems = [
 //         {
 //             id: "dashboard",
@@ -25,7 +25,13 @@
 //             path: "/galo/admin/panel",
 //             role: ["admin", "super_admin"],
 //         },
-       
+//         {
+//             id: "inverter",
+//             label: "Add Inverters",
+//             icon: Users,
+//             path: "/galo/admin/inverter",
+//             role: ["admin", "super_admin"],
+//         },
 //     ];
 
 //     const handleNavigate = (item) => {
@@ -74,13 +80,36 @@
 //                         const Icon = item.icon;
 //                         if (!item.role.includes(loginType)) return null;
 
+//                         // Custom active check
+//                         // let isActive = false;
+//                         // if (item.id === "dashboard") {
+//                         //     isActive = location.pathname === "/galo/admin";
+//                         // } else if (item.id === "panel") {
+//                         //     // Active for any path under /galo/admin/ except the exact dashboard
+//                         //     isActive =
+//                         //         location.pathname.startsWith("/galo/admin/") &&
+//                         //         location.pathname !== "/galo/admin";
+//                         // }
+
+                       
+//                         let isActive = false;
+//                         if (item.id === "dashboard") {
+//                             isActive = location.pathname === "/galo/admin";
+//                         } else if (item.id === "panel") {
+//                             isActive =
+//                                 location.pathname === "/galo/admin/panel";
+//                         } else if (item.id === "inverter") {
+//                             isActive =
+//                                 location.pathname === "/galo/admin/inverter";
+//                         }
+
 //                         return (
 //                             <NavLink
 //                                 key={item.id}
 //                                 to={item.path}
-//                                 end={item.path === "/galo/admin"}
+//                                 end={item.path === "/galo/admin"} // only exact for dashboard
 //                                 onClick={() => handleNavigate(item)}
-//                                 className={({ isActive }) =>
+//                                 className={() =>
 //                                     `w-full flex items-center gap-3 px-4 py-3 rounded-xl mb-2 transition-colors ${
 //                                         isActive
 //                                             ? "bg-[#FDC700] text-[#1a1a1a]"
@@ -114,16 +143,15 @@
 
 
 
-
 import { LayoutDashboard, LogOut, Users } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { NavLink, useNavigate, useLocation } from "react-router-dom"; // ← add useLocation
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../Context/AuthContext";
 
 const GaloAdminSidebar = ({ sidebarOpen }) => {
     const navigate = useNavigate();
-    const location = useLocation(); 
+    const location = useLocation();
     const [activeMenu, setActiveMenu] = useState("dashboard");
     const { user, loginType, logout } = useAuth();
 
@@ -140,6 +168,13 @@ const GaloAdminSidebar = ({ sidebarOpen }) => {
             label: "Add Panels",
             icon: Users,
             path: "/galo/admin/panel",
+            role: ["admin", "super_admin"],
+        },
+        {
+            id: "inverter",
+            label: "Add Inverters",
+            icon: Users,
+            path: "/galo/admin/inverter",
             role: ["admin", "super_admin"],
         },
     ];
@@ -190,22 +225,21 @@ const GaloAdminSidebar = ({ sidebarOpen }) => {
                         const Icon = item.icon;
                         if (!item.role.includes(loginType)) return null;
 
-                        // Custom active check
+                        // Active check: exact match for dashboard,
+                        // exact-or-nested match for every other item.
                         let isActive = false;
-                        if (item.id === "dashboard") {
-                            isActive = location.pathname === "/galo/admin";
-                        } else if (item.id === "panel") {
-                            // Active for any path under /galo/admin/ except the exact dashboard
+                        if (item.path === "/galo/admin") {
+                            isActive = location.pathname === item.path;
+                        } else {
                             isActive =
-                                location.pathname.startsWith("/galo/admin/") &&
-                                location.pathname !== "/galo/admin";
+                                location.pathname === item.path ||
+                                location.pathname.startsWith(item.path + "/");
                         }
 
                         return (
                             <NavLink
                                 key={item.id}
                                 to={item.path}
-                                end={item.path === "/galo/admin"} // only exact for dashboard
                                 onClick={() => handleNavigate(item)}
                                 className={() =>
                                     `w-full flex items-center gap-3 px-4 py-3 rounded-xl mb-2 transition-colors ${
