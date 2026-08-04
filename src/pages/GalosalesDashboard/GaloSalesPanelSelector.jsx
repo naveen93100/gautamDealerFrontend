@@ -11,27 +11,28 @@ const GaloSalesPanelSelector = ({
     panelWatt,
     setActiveIndex,
     gst,
+    inverters
 }) => {
-    const addPanel = () => {
-        setSelectPanel((prev) => [
-            ...prev,
-            {
-                panelId: "",
-                technologyId: "",
-                constructiveId: "",
-                wattId: "",
-                quantity: 1,
-                rate: 1,
-                totalPrice: 0,
-                gstAmount: 0,
-                wattPerPrice: 0,
-                //add the setup kw here
-                setupKw: 0,
-                subsidyAmount: 0,
-            },
-        ]);
-        setActiveIndex(selectPanel.length);
-    };
+    // const addPanel = () => {
+    //     setSelectPanel((prev) => [
+    //         ...prev,
+    //         {
+    //             panelId: "",
+    //             technologyId: "",
+    //             constructiveId: "",
+    //             wattId: "",
+    //             quantity: 1,
+    //             rate: 1,
+    //             totalPrice: 0,
+    //             gstAmount: 0,
+    //             wattPerPrice: 0,
+    //             //add the setup kw here
+    //             setupKw: 0,
+    //             subsidyAmount: 0,
+    //         },
+    //     ]);
+    //     setActiveIndex(selectPanel.length);
+    // };
 
     const handleChange = (index, key, value) => {
         setActiveIndex(index);
@@ -39,7 +40,7 @@ const GaloSalesPanelSelector = ({
         setSelectPanel((prev) => {
             const copy = [...prev];
             const updatedValue =
-                key === "quantity" || key === "rate" || key === "gstAmount"
+                key === "gstAmount"||key==='subsidyAmount'
                     ? Number(value)
                     : value;
 
@@ -48,22 +49,19 @@ const GaloSalesPanelSelector = ({
                 [key]: updatedValue,
             };
 
-            // this this new to add the setup kw to the calculation of total price and gst amount
-            const setupKw = String(copy[index].setupKw || 0);
 
             const selectedWattId = copy[index].wattId || null;
-            const pWatt = panelWatt?.find((i) => i._id === selectedWattId);
-            const quantity = Number(copy[index].quantity || 0);
-            const rate = Number(copy[index].rate || 0);
 
             if (selectedWattId) {
-                const watt = Number(pWatt?.watt);
-                const amount = watt * quantity * rate;
-                // const amount = (watt + setupKw) * quantity * rate;
 
-                const gstAmount = (amount * gst) / 100;
-                copy[index].totalPrice = amount;
-                copy[index].gstAmount = gstAmount;
+                if (key === 'totalPrice') {
+
+                    const amount = value;
+
+                    const gstAmount = (amount * gst) / 100;
+                    copy[index].totalPrice = Number(amount);
+                    copy[index].gstAmount = gstAmount;
+                }
             }
 
             return copy;
@@ -72,6 +70,7 @@ const GaloSalesPanelSelector = ({
 
     useEffect(() => {
         if (!gst) return;
+
         setSelectPanel((prev) =>
             prev.map((item) => {
                 const amount = Number(item.totalPrice || 0);
@@ -81,10 +80,12 @@ const GaloSalesPanelSelector = ({
         );
     }, [gst, setSelectPanel]);
 
-    const handleRemove = (e, index) => {
-        e.preventDefault();
-        setSelectPanel((prev) => prev.filter((_, i) => i !== index));
-    };
+    // const handleRemove = (e, index) => {
+    //     e.preventDefault();
+    //     setSelectPanel((prev) => prev.filter((_, i) => i !== index));
+    // };
+
+    console.log(selectPanel)
 
     return (
         <section className="mb-6">
@@ -95,19 +96,19 @@ const GaloSalesPanelSelector = ({
                         Panel Information
                     </h3>
                 </div>
-
+                {/* 
                 <div
                     onClick={addPanel}
                     className="flex items-center gap-2 border-2 border-yellow-400 text-black hover:bg-yellow-50 px-4 py-2 rounded-xl transition cursor-pointer"
                 >
                     <i className="fa-solid fa-plus text-sm"></i>
                     <span className="text-sm font-medium">Add More Panel</span>
-                </div>
+                </div> */}
             </div>
 
             {selectPanel.map((panel, index) => (
                 <React.Fragment key={index}>
-                    <div className="flex items-center justify-between mb-3">
+                    {/* <div className="flex items-center justify-between mb-3">
                         <h4 className="ml-2 text-base font-semibold text-black">
                             Panel {index + 1}
                         </h4>
@@ -119,10 +120,10 @@ const GaloSalesPanelSelector = ({
                                 ></i>
                             )}
                         </h4>
-                    </div>
+                    </div> */}
 
-                    <section className="border-2 border-yellow-300 rounded-2xl p-4 mb-4 bg-white shadow-sm">
-                        <div>
+                    <section className="border-2  border-yellow-300 rounded-2xl p-4 mb-4 bg-white shadow-sm">
+                        <div className="my-3">
                             <label className="text-sm font-medium text-black mt-4 block">
                                 Add Setup (Kw)
                             </label>
@@ -142,6 +143,25 @@ const GaloSalesPanelSelector = ({
                                 className="w-full px-4 py-3 border border-yellow-300 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none bg-white"
                             />
                         </div>
+
+                        <label className="text-sm font-medium text-black">
+                            Select Inverter
+                        </label>
+                        <select
+                            value={panel?.inverterId}
+                            onChange={(e) =>
+                            handleChange(index, "inverterId", e.target.value)
+                            }
+                            className="w-full px-4 my-4 py-2 border border-yellow-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none bg-white mt-1"
+                        >
+                            <option value="">Select Inverter</option>
+                            {inverters?.map((i) => (
+                                <option key={i._id} value={i._id}>
+                                    {i.inverterCapacity}
+                                </option>
+                            ))}
+                        </select>
+
 
                         <label className="text-sm font-medium text-black">
                             Select Panel
@@ -249,7 +269,7 @@ const GaloSalesPanelSelector = ({
 
                         {panel?.wattId && (
                             <>
-                                <label className="text-sm font-medium text-black mt-4 block">
+                                {/* <label className="text-sm font-medium text-black mt-4 block">
                                     Quantity
                                 </label>
                                 <input
@@ -266,7 +286,7 @@ const GaloSalesPanelSelector = ({
                                         )
                                     }
                                     className="w-full px-4 py-3 border border-yellow-300 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none bg-white"
-                                />
+                                /> */}
                                 {/* adding subcidy  */}
 
                                 <label className="text-sm font-medium text-black mt-4 block">
@@ -274,10 +294,9 @@ const GaloSalesPanelSelector = ({
                                 </label>
                                 <input
                                     key={index}
-                                    type="number"
                                     min={1}
                                     required
-                                    value={panel.subsidyAmount}
+                                    value={panel.subsidyAmount || 0}
                                     onChange={(e) =>
                                         handleChange(
                                             index,
@@ -288,7 +307,7 @@ const GaloSalesPanelSelector = ({
                                     className="w-full px-4 py-3 border border-yellow-300 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none bg-white"
                                 />
 
-                                <div>
+                                {/* <div>
                                     <label className="block text-sm mt-4 font-medium text-black">
                                         Rate/Watt{" "}
                                         <i className="fa-solid fa-rupee-sign text-yellow-600"></i>
@@ -311,7 +330,7 @@ const GaloSalesPanelSelector = ({
                                             placeholder="Enter Panel Price"
                                         />
                                     </div>
-                                </div>
+                                </div> */}
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                                     <div>
@@ -322,9 +341,16 @@ const GaloSalesPanelSelector = ({
                                             key={index}
                                             name="totalPrice"
                                             value={panel?.totalPrice}
-                                            readOnly
-                                            className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 text-gray-700 cursor-not-allowed"
+                                            className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 text-gray-700 "
                                             placeholder="0"
+                                            onChange={(e) => {
+                                                handleChange(
+                                                    index,
+                                                    "totalPrice",
+                                                    e.target.value,
+                                                )
+                                            }
+                                            }
                                         />
                                     </div>
                                     <div>
@@ -335,7 +361,6 @@ const GaloSalesPanelSelector = ({
                                             key={index}
                                             name="gstAmount"
                                             value={panel?.gstAmount}
-                                            readOnly
                                             className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 text-gray-700 cursor-not-allowed"
                                             placeholder="0"
                                         />
@@ -346,6 +371,7 @@ const GaloSalesPanelSelector = ({
                     </section>
                 </React.Fragment>
             ))}
+
         </section>
     );
 };

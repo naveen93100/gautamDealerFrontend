@@ -33,8 +33,10 @@ const CreateGaloSalesPanelProposal = ({
     const [activeIndex, setActiveIndex] = useState(0);
     const [createPanelData, setCreatePanelData] = useState({
         customerName: "",
-        gst: 5,
+        gst: 8.9,
     });
+
+    const [inverters, setInverters] = useState([])
 
     const userData = JSON.parse(localStorage.getItem("userData") || "{}");
     const salesId = userData?._id;
@@ -45,10 +47,12 @@ const CreateGaloSalesPanelProposal = ({
             technologyId: "",
             constructiveId: "",
             wattId: "",
-            quantity: 1,
-            rate: 1,
+            inverterId: "",
+            // quantity: 1,
+            // rate: 1,
             totalPrice: 0,
             gstAmount: 0,
+            setupKw: 0
         },
     ]);
 
@@ -90,46 +94,68 @@ const CreateGaloSalesPanelProposal = ({
 
     const bank = bankDetails[company];
 
-    const [Body, setBody] = useState(`
-<div style="font-family: Arial, sans-serif; font-size: 14px; line-height: 1.7;">
-  <h3 style="margin-bottom:10px;"><u>Terms & Conditions</u></h3>
+   const [Body, setBody] = useState(`
+<div style="
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #111;
+">
 
-  <ol style="padding-left:20px;">
-    <li>
+  <h3 style="
+    margin: 0 0 35px 0;
+    font-size: 22px;
+    font-style: italic;
+    font-weight: 700;
+  ">
+    Terms & Conditions:
+  </h3>
+
+  <ol style="
+    margin: 0;
+    padding-left: 28px;
+  ">
+
+    <li style="padding-left: 2px; margin-bottom: 28px;">
       <strong>Design Changes:</strong>
-      Quote is based on a standard plant design; any deviations may incur additional charges.
+      Quote is based on a standard plant design; deviations may include additional costs.
     </li>
 
-    <li>
+    <li style="padding-left: 2px; margin-bottom: 28px;">
       <strong>Validity & Cancellation:</strong>
-      Quote is valid for 15 days. Order cancellation will result in a 30% deduction from the token amount.
+      Quote valid for 15 days; order cancellation will result in a 30% deduction from the token money.
     </li>
 
-    <li>
+    <li style="padding-left: 2px; margin-bottom: 28px;">
       <strong>Data Monitoring:</strong>
-      Included in the price. Internet connectivity must be provided by the customer.
+      Included in the price; internet connectivity must be provided by the customer.
     </li>
 
-    <li>
+    <li style="padding-left: 2px;">
       <strong>Data Synchronization:</strong>
-      Synchronization with a DG set is chargeable at actual cost.
+      Synchronization with a DG set is chargeable at actual costs.
     </li>
+
   </ol>
+
 </div>
 `);
 
     const handleClose = () => {
-        setCreatePanelData({ gst: 5 });
+        setCreatePanelData({ gst: 8.9 });
         setSelectPanel([
             {
                 panelId: "",
                 technologyId: "",
                 constructiveId: "",
                 wattId: "",
-                quantity: 1,
-                rate: 1,
+                inverterId: "",
+                // quantity: 1,
+                // rate: 1,
+                subsidyAmount: 0,
                 totalPrice: 0,
                 gstAmount: 0,
+                setupKw: 0
             },
         ]);
         onClose(false);
@@ -142,57 +168,23 @@ const CreateGaloSalesPanelProposal = ({
         }
     };
 
-    const changeBodyData = (bank) => {
-        return `
-      <div style="font-family: Arial, sans-serif; font-size: 14px;">
-        <p><strong>Payment Terms:</strong></p>
-        <ul><li>20% at the Time of the purchase order and the remaining 80% before Dispatch.</li></ul>
-        <p><strong>Inco-Terms:</strong></p>
-        <ul><li>This offer is inclusive of Packaging, forwarding, freight, transportation & transit insurance, for PV Modules within our scope of supply on a FOR basis.</li>
-        <li>If, during dispatch, due to a change of government policy, any new taxes are applicable or rates are changed, the same will be applied to your account.</li></ul>
-        <p><strong>Validity of Offer:</strong></p>
-        <ul><li>This offer is valid for 3 days from the date of the offer and thereafter, subject to our reconfirmation.</li></ul>
-        <p><strong>Delivery/Completion Period:</strong></p>
-        <ul><li>Within 10-15 days after the date of purchase, along with the advance payment.</li></ul>
-        <p><strong>Insurance:</strong></p>
-        <p>Transit Insurance is included till the delivery point mentioned in the invoice.</p>
-        <p><strong>Warranty:</strong></p>
-        <p><strong>For N-TYPE TOPCON:</strong> First 12 Years Performance Warranty on 90% Power Output. Next 18 Years Performance Warranty on 80% Power Output.</p>
-        <p><strong>For MONO PERC:</strong> First 10 Years Performance Warranty on 90% Power Output. Next 15 Years Performance Warranty on 80% Power Output.</p>
-        <p>After commissioning of the plant, the “Fire & Allied Perils”, Theft & Burglary, lack of sun radiation insurance policy, and loss of profit shall be arranged by you at your own cost.</p>
-      </div>
-      <div style="font-family: Arial, sans-serif; font-size: 14px;">
-        <h3 style="text-align: center; text-decoration: underline; margin-bottom: 8px;">Bank A/C Details</h3>
-        <table style="width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed;">
-          <tr><td style="border: 1px solid #000; font-weight: bold; width: 30%; padding: 6px;">Bank A/c Detail</td><td style="border: 1px solid #000; width: 5%; padding: 6px;"></td><td style="border: 1px solid #000; padding: 6px;"></td></tr>
-          <tr><td style="border: 1px solid #000; padding: 6px;">Beneficiary Name</td><td style="border: 1px solid #000; text-align: center; padding: 6px;">:</td><td style="border: 1px solid #000; padding: 6px;">${bank.beneficiary}</td></tr>
-          <tr><td style="border: 1px solid #000; padding: 6px;">Bank Name</td><td style="border: 1px solid #000; text-align: center; padding: 6px;">:</td><td style="border: 1px solid #000; padding: 6px;">${bank.bank}</td></tr>
-          <tr><td style="border: 1px solid #000; padding: 6px;">Bank Address</td><td style="border: 1px solid #000; text-align: center; padding: 6px;">:</td><td style="border: 1px solid #000; padding: 6px;">${bank.branch}</td></tr>
-          <tr><td style="border: 1px solid #000; padding: 6px;">Bank Account No.</td><td style="border: 1px solid #000; text-align: center; padding: 6px;">:</td><td style="border: 1px solid #000; padding: 6px;">${bank.account}</td></tr>
-          <tr><td style="border: 1px solid #000; padding: 6px;">IFSC Code</td><td style="border: 1px solid #000; text-align: center; padding: 6px;">:</td><td style="border: 1px solid #000; padding: 6px;">${bank.ifsc}</td></tr>
-        </table>
-      </div>
-    `;
-    };
-
-    useEffect(() => {
-        let newBodyData = changeBodyData(bank);
-        setBody(newBodyData);
-    }, [company]);
-
     useEffect(() => {
         if (!data) return;
         setSelectPanel(
             data?.selectedPanels.map((item) => ({
                 constructiveId: item?.constructiveId?._id,
                 panelId: item?.panelId?._id,
-                quantity: item?.quantity,
-                rate: item?.rate,
+                // quantity: item?.quantity,
+                // rate: item?.rate,
+                inverterId: item?.inverterId,
+                subsidyAmount: item?.subsidyAmount,
                 gstAmount: item?.gstAmount,
                 technologyId: item?.technologyId?._id,
                 totalPrice: item?.totalPrice,
                 wattId: item?.wattId?._id,
-            })),
+                setupKw: data?.setupKw
+            }),
+            ),
         );
         setCreatePanelData((p) => ({ ...p, gst: data?.gst }));
         setPanelData(data?.selectedPanels);
@@ -269,27 +261,34 @@ const CreateGaloSalesPanelProposal = ({
         useUpdateGaloSalesClientProposal(clientId);
 
     const handleSubmit = async (e) => {
-        console.log("client id", clientId);
         toast.dismiss();
         e.preventDefault();
         try {
-            let payload;
+            let payload = {};
+            let flag = true
+            console.log(selectPanel);
 
             if (data) {
+                let { setupKw, inverterId ,...rest } = selectPanel[0];
                 payload = {
-                    selectedPanels: selectPanel,
+                    selectedPanels: [{...rest,inverterId:inverterId?._id}],
                     termsAndConditions: Body,
                     ...createPanelData,
                     propId: data?._id,
+                    setupKw: Number(setupKw)
                 };
             } else {
+                let { setupKw, ...rest } = selectPanel[0];
                 payload = {
-                    selectedPanels: selectPanel,
+                    selectedPanels: [rest],
                     termsAndConditions: Body,
                     gst: createPanelData?.gst,
                     salesId,
                     customerId: clientId,
+                    setupKw: Number(setupKw)
                 };
+                console.log(payload)
+
             }
 
             if (!payload?.gst) {
@@ -301,14 +300,20 @@ const CreateGaloSalesPanelProposal = ({
                     !panel?.panelId ||
                     !panel?.technologyId ||
                     !panel?.constructiveId ||
-                    !panel?.wattId ||
-                    !panel?.rate
+                    !panel?.wattId
+                    // !panel?.rate
                 ) {
+                    flag = false;
                     return alert(
-                        "Please fill in all panel details: Panel Type, Technology, Constructive Type, Panel Watt, and Rate per Panel.",
+                        "Please fill in all panel details: Panel Type, Technology, Constructive Type, Panel Watt",
                     );
                 }
             });
+
+            if (!flag) {
+                return;
+            }
+
 
             let mutationFn = data
                 ? updateGaloSalesClientProposal
@@ -316,6 +321,7 @@ const CreateGaloSalesPanelProposal = ({
 
             mutationFn(payload, {
                 onSuccess: (d) => {
+                    console.log('this is running')
                     toast.success(d?.message);
                     onClose(false);
                 },
@@ -352,6 +358,23 @@ const CreateGaloSalesPanelProposal = ({
             );
         }
     };
+
+    useEffect(() => {
+        const fetchInverter = async () => {
+            try {
+                let res = await apiCall('GET', '/api/galoAdmin/inverter');
+                console.log(res);
+                if (res?.data?.success) {
+                    setInverters(res?.data?.data)
+                }
+            } catch (er) {
+                console.log(er)
+            }
+        }
+        fetchInverter()
+    }, []);
+
+
 
     return (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
@@ -398,6 +421,7 @@ const CreateGaloSalesPanelProposal = ({
                             constructiveData={constructiveData}
                             panelWatt={panelWatt}
                             gst={createPanelData?.gst}
+                            inverters={inverters}
                         />
 
                         {/* GST Section */}
@@ -448,18 +472,17 @@ const CreateGaloSalesPanelProposal = ({
                             </div>
 
                             {/* Company Selection – yellow accent */}
-                            <div className="mb-5 rounded-lg border border-yellow-200 bg-gray-50 p-4">
+                            {/* <div className="mb-5 rounded-lg border border-yellow-200 bg-gray-50 p-4">
                                 <label className="block text-sm font-semibold text-black mb-3">
                                     Select Company for Bank Details
                                 </label>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <label
-                                        className={`flex items-center gap-3 rounded-lg border p-4 cursor-pointer transition-all duration-200 ${
-                                            company === "GSPL"
+                                        className={`flex items-center gap-3 rounded-lg border p-4 cursor-pointer transition-all duration-200 ${company === "GSPL"
                                                 ? "border-yellow-400 bg-yellow-50 ring-1 ring-yellow-400"
                                                 : "border-gray-300 bg-white hover:border-yellow-300"
-                                        }`}
+                                            }`}
                                     >
                                         <input
                                             type="radio"
@@ -482,11 +505,10 @@ const CreateGaloSalesPanelProposal = ({
                                     </label>
 
                                     <label
-                                        className={`flex items-center gap-3 rounded-lg border p-4 cursor-pointer transition-all duration-200 ${
-                                            company === "GSIPL"
+                                        className={`flex items-center gap-3 rounded-lg border p-4 cursor-pointer transition-all duration-200 ${company === "GSIPL"
                                                 ? "border-yellow-400 bg-yellow-50 ring-1 ring-yellow-400"
                                                 : "border-gray-300 bg-white hover:border-yellow-300"
-                                        }`}
+                                            }`}
                                     >
                                         <input
                                             type="radio"
@@ -509,7 +531,7 @@ const CreateGaloSalesPanelProposal = ({
                                         </div>
                                     </label>
                                 </div>
-                            </div>
+                            </div> */}
 
                             {/* Editor */}
                             <JoditEditor

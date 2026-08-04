@@ -64,6 +64,8 @@ const GaloSalesClientPanelHistory = () => {
         });
     };
 
+    console.log("this is proposal:",proposals)
+
     return (
         <div className="min-h-screen bg-gray-50 pb-10">
             <div className="max-w-7xl mx-auto px-6 mt-6">
