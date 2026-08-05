@@ -94,11 +94,10 @@ const GaloSalesProposalView = () => {
             <button
                 onClick={handleDownload}
                 disabled={loading}
-                className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 rounded-full text-white transition ${
-                    loading
-                        ? "bg-gray-400 cursor-not-allowed"
-                        : "bg-black hover:bg-gray-800 border-2 border-yellow-400"
-                }`}
+                className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 rounded-full text-white transition ${loading
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-black hover:bg-gray-800 border-2 border-yellow-400"
+                    }`}
             >
                 {loading ? (
                     <>
@@ -147,6 +146,40 @@ const GaloSalesProposalView = () => {
                         </div>
                     ))}
                 </div>
+                <div className="absolute top-[257mm] left-[1mm] w-100 text-center">
+                    {state?.selectedPanels?.map((panel, idx) => (
+                        <div key={idx}>
+                            <h1 className="text-lg font-bold italic text-white">
+                                Efficiency Greater
+                                <br />
+                                than {panel?.wattId?.watt === 550
+                                    ? '21.29%'
+                                    : panel?.wattId?.watt === 600
+                                        ? '23.23/'
+                                        : ''}
+
+                            </h1>
+                        </div>
+                    ))}
+                </div>
+                <div className="absolute top-[257mm] right-[1mm] w-100 text-center">
+                    {state?.selectedPanels?.map((panel, idx) => (
+                        <div key={idx}>
+                            <h1 className="text-lg font-bold italic text-white">
+
+                                {panel?.wattId?.watt === 550
+                                    ? <p>25 Years Performance <br /> warranty</p>
+                                    : panel?.wattId?.watt === 600
+                                        ? '30 Years Performance warranty'
+                                        : ''}
+
+                            </h1>
+                        </div>
+                    ))}
+                </div>
+
+
+
             </GaloPdfComp>
             <GaloPdfComp bg={pages[3]}></GaloPdfComp>
 
@@ -213,7 +246,7 @@ const GaloSalesProposalView = () => {
                                     }{" "}
                                     {state?.selectedPanels[0]?.inverterId
                                         ? state?.selectedPanels[0]?.inverterId
-                                              ?.inverterCapacity + "KW Inverter"
+                                            ?.inverterCapacity + "KW Inverter"
                                         : ""}
                                 </td>
 
