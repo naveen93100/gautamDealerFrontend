@@ -267,9 +267,6 @@
 
 // export default CreateGaloSalesClient;
 
-
-
-
 import { useForm } from "react-hook-form";
 import { FiX } from "react-icons/fi";
 import { Loader2 } from "lucide-react";
@@ -313,81 +310,84 @@ const CreateGaloSalesClient = ({
         onClose();
     };
 
-const onSubmit = async (data) => {
-    try {
-        setLoading(true);
-        if (!user?._id) {
-            toast.error("User ID not found. Please log in again.");
-            return;
-        }
+    const onSubmit = async (data) => {
+        try {
+            setLoading(true);
+            if (!user?._id) {
+                toast.error("User ID not found. Please log in again.");
+                return;
+            }
 
-        const basePayload = {
-            phone: data.phone?.trim(),
-            companyName: data.companyName?.trim(),
-            gstin: data.gstin?.trim(),
-            salesId: user._id,
-        };
-        if (data.fullName?.trim()) basePayload.fullName = data.fullName.trim();
-        if (data.email?.trim()) basePayload.email = data.email.trim();
-        if (data.address?.trim()) basePayload.address = data.address.trim();
-
-        if (isEditing) {
-            const payload = {
-                ...basePayload,
-                customerId: editData._id,
+            const basePayload = {
+                phone: data.phone?.trim(),
+                companyName: data.companyName?.trim(),
+                gstin: data.gstin?.trim(),
+                salesId: user._id,
             };
-            const res = await axios.patch(
-                `${import.meta.env.VITE_SERVER_ADDRESS}/api/galoSales/update-galoclient`,
-                payload,
-                { withCredentials: true }
-            );
+            if (data.fullName?.trim())
+                basePayload.fullName = data.fullName.trim();
+            if (data.email?.trim()) basePayload.email = data.email.trim();
+            if (data.address?.trim()) basePayload.address = data.address.trim();
 
-            if (res?.data?.success) {
-                toast.success("Client updated successfully!");
-                // Build a complete client object with _id
-                const updatedClient = { ...editData, ...basePayload };
-                onUpdate?.(res.data.data || updatedClient);
-                reset();
-                onClose();
+            if (isEditing) {
+                const payload = {
+                    ...basePayload,
+                    customerId: editData._id,
+                };
+                const res = await axios.patch(
+                    `${import.meta.env.VITE_SERVER_ADDRESS}/api/galoSales/update-galoclient`,
+                    payload,
+                    { withCredentials: true },
+                );
+
+                if (res?.data?.success) {
+                    toast.success("Client updated successfully!");
+                    // Build a complete client object with _id
+                    const updatedClient = { ...editData, ...basePayload };
+                    onUpdate?.(res.data.data || updatedClient);
+                    reset();
+                    onClose();
+                } else {
+                    const errMsg = extractErrorMessage(res?.data?.message);
+                    toast.error(errMsg || "Update failed.");
+                }
             } else {
-                const errMsg = extractErrorMessage(res?.data?.message);
-                toast.error(errMsg || "Update failed.");
-            }
-        } else {
-            const res = await axios.post(
-                `${import.meta.env.VITE_SERVER_ADDRESS}/api/galoSales/create-galoclient`,
-                basePayload,
-                { withCredentials: true }
-            );
+                const res = await axios.post(
+                    `${import.meta.env.VITE_SERVER_ADDRESS}/api/galoSales/create-galoclient`,
+                    basePayload,
+                    { withCredentials: true },
+                );
 
-            if (res?.data?.success) {
-                toast.success("Client created successfully!");
-                // Use server response, or fallback to a temp object if needed
-                const newClient = res.data.data || { ...basePayload, _id: Date.now().toString() };
-                onCreate?.(newClient);
-                reset();
-                onClose();
+                if (res?.data?.success) {
+                    toast.success("Client created successfully!");
+                    // Use server response, or fallback to a temp object if needed
+                    const newClient = res.data.data || {
+                        ...basePayload,
+                        _id: Date.now().toString(),
+                    };
+                    onCreate?.(newClient);
+                    reset();
+                    onClose();
+                } else {
+                    const errMsg = extractErrorMessage(res?.data?.message);
+                    toast.error(errMsg || "Create failed.");
+                }
+            }
+        } catch (er) {
+            console.error("Client operation error:", er);
+            const errorData = er?.response?.data;
+            if (errorData?.message) {
+                const errMsg = extractErrorMessage(errorData.message);
+                toast.error(errMsg);
             } else {
-                const errMsg = extractErrorMessage(res?.data?.message);
-                toast.error(errMsg || "Create failed.");
+                toast.error(
+                    er?.message || "Something went wrong. Please try again.",
+                );
             }
+        } finally {
+            setLoading(false);
         }
-    } catch (er) {
-        console.error("Client operation error:", er);
-        const errorData = er?.response?.data;
-        if (errorData?.message) {
-            const errMsg = extractErrorMessage(errorData.message);
-            toast.error(errMsg);
-        } else {
-            toast.error(er?.message || "Something went wrong. Please try again.");
-        }
-    } finally {
-        setLoading(false);
-    }
-};
-
-
-
+    };
 
     // Helper function to extract error messages from backend (string or array)
     const extractErrorMessage = (message) => {
@@ -505,15 +505,13 @@ const onSubmit = async (data) => {
                         <div className="space-y-1.5">
                             <label className="text-xs font-bold uppercase tracking-wider text-gray-600">
                                 Company Name{" "}
-                                <span className="text-red-600">*</span>
+                                {/* <span className="text-red-600">*</span> */}
                             </label>
                             <input
                                 type="text"
                                 placeholder="Enter company name"
                                 className="w-full bg-[#FFFCF0] px-4 py-2.5 rounded-xl border border-[#E8DDA0] focus:outline-none focus:border-[#FDC700] text-sm"
-                                {...register("companyName", {
-                                    required: "Company name is required",
-                                })}
+                                {...register("companyName")}
                             />
                             {errors.companyName && (
                                 <p className="text-xs text-red-600">
@@ -526,15 +524,13 @@ const onSubmit = async (data) => {
                         <div className="space-y-1.5">
                             <label className="text-xs font-bold uppercase tracking-wider text-gray-600">
                                 GST Number{" "}
-                                <span className="text-red-600">*</span>
+                                {/* <span className="text-red-600">*</span> */}
                             </label>
                             <input
                                 type="text"
                                 placeholder="Enter GST number"
                                 className="w-full bg-[#FFFCF0] px-4 py-2.5 rounded-xl border border-[#E8DDA0] focus:outline-none focus:border-[#FDC700] text-sm"
-                                {...register("gstin", {
-                                    required: "GST number is required",
-                                })}
+                                {...register("gstin")}
                             />
                             {errors.gstin && (
                                 <p className="text-xs text-red-600">

@@ -183,8 +183,9 @@ export const useCreateGaloSalesClientProposal = () => {
     return useMutation({
         mutationFn: createGaloSalesClientProposal,
         onSuccess: (data, variables) => {
-            toast.success(data?.message || "Proposal created successfully!");
+            // toast.success(data?.message || "Proposal created successfully!");
             // Invalidate proposals for the specific customer
+           console.log("Component onSuccess");
             queryClient.invalidateQueries({
                 queryKey: ["galo_proposals", variables.customerId],
             });
@@ -201,7 +202,7 @@ export const useUpdateGaloSalesClientProposal = () => {
     return useMutation({
         mutationFn: updateGaloSalesClientProposal,
         onSuccess: (data, variables) => {
-            toast.success(data?.message || "Proposal updated successfully!");
+            // toast.success(data?.message || "Proposal updated successfully!");
             // variables should contain customerId if you want to invalidate the list
             if (variables?.customerId) {
                 queryClient.invalidateQueries({

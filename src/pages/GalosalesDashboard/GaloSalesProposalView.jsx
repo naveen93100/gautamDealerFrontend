@@ -18,14 +18,16 @@ const GaloSalesProposalView = () => {
     };
 
     const customerData = {
-        name: state?.clientId?.fullName,
-        email: state?.clientId?.email,
-        companyName: state?.clientId?.companyName,
-        gstin: state?.clientId?.gstin,
-        phone: state?.clientId?.phone,
-        address: state?.clientId?.address,
+        name: state?.customerId?.fullName,
+        email: state?.customerId?.email,
+        companyName: state?.customerId?.companyName,
+        gstin: state?.customerId?.gstin,
+        phone: state?.customerId?.phone,
+        address: state?.customerId?.address,
         createdAt: state?.createdAt,
     };
+
+    console.log("Customer Data:", customerData);
 
     const pages = [
         "galo1.jpeg",
@@ -62,7 +64,7 @@ const GaloSalesProposalView = () => {
 
             const clientName = customerData?.companyName?.trim()
                 ? customerData.companyName.replace(/\s+/g, "_")
-                : "client";
+                : customerData?.name?.trim();
 
             pdf.save(`${clientName}_proposal.pdf`);
         } catch (er) {
@@ -92,10 +94,11 @@ const GaloSalesProposalView = () => {
             <button
                 onClick={handleDownload}
                 disabled={loading}
-                className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 rounded-full text-white transition ${loading
+                className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 rounded-full text-white transition ${
+                    loading
                         ? "bg-gray-400 cursor-not-allowed"
                         : "bg-black hover:bg-gray-800 border-2 border-yellow-400"
-                    }`}
+                }`}
             >
                 {loading ? (
                     <>
@@ -111,7 +114,7 @@ const GaloSalesProposalView = () => {
             </button>
 
             <GaloPdfComp bg={pages[0]}>
-                <div className="absolute top-[228mm] left-[90mm] w-100 text-center">
+                <div className="absolute top-[225mm] left-[90mm] w-100 text-center">
                     {state?.selectedPanels?.map((panel, idx) => (
                         <div key={idx}>
                             <h1 className="text-2xl font-bold italic text-black">
@@ -129,7 +132,6 @@ const GaloSalesProposalView = () => {
             <GaloPdfComp bg={pages[1]}></GaloPdfComp>
 
             <GaloPdfComp bg={pages[2]}>
-
                 <div className="absolute top-[83mm] left-[50mm] w-100 text-center">
                     {state?.selectedPanels?.map((panel, idx) => (
                         <div key={idx}>
@@ -137,8 +139,10 @@ const GaloSalesProposalView = () => {
                                 {panel?.wattId?.watt}Wp
                             </h1>
 
-                            <h2 className="text-2xl font-bold italic text-black">
-                                {panel?.technologyId?.technologyPanel} {panel?.panelId?.panelType} with {panel?.constructiveId?.constructiveType}
+                            <h2 className="text-md font-bold italic text-black">
+                                {panel?.technologyId?.technologyPanel}{" "}
+                                {panel?.panelId?.panelType} with{" "}
+                                {panel?.constructiveId?.constructiveType}
                             </h2>
                         </div>
                     ))}
@@ -158,12 +162,13 @@ const GaloSalesProposalView = () => {
                 <div className="absolute top-[94mm] right-[-10mm] w-100 text-center">
                     <div>
                         <h1 className="text-md font-semibold italic text-black">
-                            {state?.setupKw}kW
+                            Galo Solar{" "}
+                            {state?.selectedPanels?.[0]?.wattId?.watt}Wp
                         </h1>
                     </div>
                 </div>
 
-                <div className="w-full mt-6 absolute top-[130mm] left-[1mm] px-5">
+                <div className="w-full mt-4 absolute top-[130mm] left-[1mm] px-5">
                     <table className="w-full border-2  border-black border-collapse text-center">
                         <thead>
                             <tr className="bg-[#1d1d1d] text-white">
@@ -198,8 +203,7 @@ const GaloSalesProposalView = () => {
                                 <td className="border border-black py-4">1</td>
 
                                 <td className="border border-black py-4 px-3 leading-5">
-                                    {state?.setupKw}kW
-                                    Grid-Connected
+                                    {state?.setupKw}kW Grid-Connected
                                     <br />
                                     Solar Power Plant with
                                     <br />
@@ -207,8 +211,10 @@ const GaloSalesProposalView = () => {
                                         state?.selectedPanels?.[0]?.panelId
                                             ?.panelType
                                     }{" "}
-
-                                    {state?.selectedPanels[0]?.inverterId?state?.selectedPanels[0]?.inverterId?.inverterCapacity+'KW Inverter':''} 
+                                    {state?.selectedPanels[0]?.inverterId
+                                        ? state?.selectedPanels[0]?.inverterId
+                                              ?.inverterCapacity + "KW Inverter"
+                                        : ""}
                                 </td>
 
                                 <td className="border border-black py-4">
@@ -216,7 +222,7 @@ const GaloSalesProposalView = () => {
                                 </td>
 
                                 <td className="border border-black py-4 text-2xl font-bold">
-                                   { `₹ ${state?.selectedPanels[0].totalPrice}`}
+                                    {`₹ ${state?.selectedPanels[0].totalPrice}`}
                                 </td>
                             </tr>
 
@@ -242,7 +248,9 @@ const GaloSalesProposalView = () => {
                                 </td>
 
                                 <td className="border border-black py-3 text-xl font-bold">
-                                    ₹ {state?.selectedPanels[0].totalPrice+state?.selectedPanels[0].gstAmount}
+                                    ₹{" "}
+                                    {state?.selectedPanels[0].totalPrice +
+                                        state?.selectedPanels[0].gstAmount}
                                 </td>
                             </tr>
 
@@ -268,7 +276,7 @@ const GaloSalesProposalView = () => {
                                 </td>
 
                                 <td className="border border-black py-4 text-2xl">
-                                   ₹ {state?.finalPrice}
+                                    ₹ {state?.finalPrice}
                                 </td>
                             </tr>
                         </tbody>
@@ -276,7 +284,15 @@ const GaloSalesProposalView = () => {
                 </div>
             </GaloPdfComp>
 
-            <GaloPdfComp bg={pages[5]}></GaloPdfComp>
+            <GaloPdfComp bg={pages[5]}>
+                <div className="absolute top-[190mm] left-[10mm] w-[190mm]">
+                    <div
+                        dangerouslySetInnerHTML={{
+                            __html: state.termsAndConditions,
+                        }}
+                    />
+                </div>
+            </GaloPdfComp>
         </div>
     );
 };

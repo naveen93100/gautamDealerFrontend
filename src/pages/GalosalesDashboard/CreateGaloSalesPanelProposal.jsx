@@ -36,7 +36,7 @@ const CreateGaloSalesPanelProposal = ({
         gst: 8.9,
     });
 
-    const [inverters, setInverters] = useState([])
+    const [inverters, setInverters] = useState([]);
 
     const userData = JSON.parse(localStorage.getItem("userData") || "{}");
     const salesId = userData?._id;
@@ -52,7 +52,7 @@ const CreateGaloSalesPanelProposal = ({
             // rate: 1,
             totalPrice: 0,
             gstAmount: 0,
-            setupKw: 0
+            setupKw: 0,
         },
     ]);
 
@@ -94,7 +94,7 @@ const CreateGaloSalesPanelProposal = ({
 
     const bank = bankDetails[company];
 
-   const [Body, setBody] = useState(`
+const [Body, setBody] = useState(`
 <div style="
   font-family: Arial, sans-serif;
   font-size: 16px;
@@ -102,45 +102,44 @@ const CreateGaloSalesPanelProposal = ({
   color: #111;
 ">
 
-  <h3 style="
-    margin: 0 0 35px 0;
-    font-size: 22px;
-    font-style: italic;
-    font-weight: 700;
-  ">
-    Terms & Conditions:
-  </h3>
+  <div style="margin: 0; padding: 0;">
 
-  <ol style="
-    margin: 0;
-    padding-left: 28px;
-  ">
+    <div style="display: flex; margin-bottom: 28px;">
+      <span style="min-width: 24px; font-weight: bold;">1.</span>
+      <span>
+        <strong>Design Changes:</strong>
+        Quote is based on a standard plant design; deviations may include additional costs.
+      </span>
+    </div>
 
-    <li style="padding-left: 2px; margin-bottom: 28px;">
-      <strong>Design Changes:</strong>
-      Quote is based on a standard plant design; deviations may include additional costs.
-    </li>
+    <div style="display: flex; margin-bottom: 28px;">
+      <span style="min-width: 24px; font-weight: bold;">2.</span>
+      <span>
+        <strong>Validity & Cancellation:</strong>
+        Quote valid for 15 days; order cancellation will result in a 30% deduction from the token money.
+      </span>
+    </div>
 
-    <li style="padding-left: 2px; margin-bottom: 28px;">
-      <strong>Validity & Cancellation:</strong>
-      Quote valid for 15 days; order cancellation will result in a 30% deduction from the token money.
-    </li>
+    <div style="display: flex; margin-bottom: 28px;">
+      <span style="min-width: 24px; font-weight: bold;">3.</span>
+      <span>
+        <strong>Data Monitoring:</strong>
+        Included in the price; internet connectivity must be provided by the customer.
+      </span>
+    </div>
 
-    <li style="padding-left: 2px; margin-bottom: 28px;">
-      <strong>Data Monitoring:</strong>
-      Included in the price; internet connectivity must be provided by the customer.
-    </li>
+    <div style="display: flex;">
+      <span style="min-width: 24px; font-weight: bold;">4.</span>
+      <span>
+        <strong>Data Synchronization:</strong>
+        Synchronization with a DG set is chargeable at actual costs.
+      </span>
+    </div>
 
-    <li style="padding-left: 2px;">
-      <strong>Data Synchronization:</strong>
-      Synchronization with a DG set is chargeable at actual costs.
-    </li>
-
-  </ol>
+  </div>
 
 </div>
 `);
-
     const handleClose = () => {
         setCreatePanelData({ gst: 8.9 });
         setSelectPanel([
@@ -155,7 +154,7 @@ const CreateGaloSalesPanelProposal = ({
                 subsidyAmount: 0,
                 totalPrice: 0,
                 gstAmount: 0,
-                setupKw: 0
+                setupKw: 0,
             },
         ]);
         onClose(false);
@@ -182,9 +181,8 @@ const CreateGaloSalesPanelProposal = ({
                 technologyId: item?.technologyId?._id,
                 totalPrice: item?.totalPrice,
                 wattId: item?.wattId?._id,
-                setupKw: data?.setupKw
-            }),
-            ),
+                setupKw: data?.setupKw,
+            })),
         );
         setCreatePanelData((p) => ({ ...p, gst: data?.gst }));
         setPanelData(data?.selectedPanels);
@@ -265,17 +263,17 @@ const CreateGaloSalesPanelProposal = ({
         e.preventDefault();
         try {
             let payload = {};
-            let flag = true
+            let flag = true;
             console.log(selectPanel);
 
             if (data) {
-                let { setupKw, inverterId ,...rest } = selectPanel[0];
+                let { setupKw, inverterId, ...rest } = selectPanel[0];
                 payload = {
-                    selectedPanels: [{...rest,inverterId:inverterId?._id}],
+                    selectedPanels: [{ ...rest, inverterId: inverterId?._id }],
                     termsAndConditions: Body,
                     ...createPanelData,
                     propId: data?._id,
-                    setupKw: Number(setupKw)
+                    setupKw: Number(setupKw),
                 };
             } else {
                 let { setupKw, ...rest } = selectPanel[0];
@@ -285,10 +283,9 @@ const CreateGaloSalesPanelProposal = ({
                     gst: createPanelData?.gst,
                     salesId,
                     customerId: clientId,
-                    setupKw: Number(setupKw)
+                    setupKw: Number(setupKw),
                 };
-                console.log(payload)
-
+                console.log(payload);
             }
 
             if (!payload?.gst) {
@@ -314,14 +311,13 @@ const CreateGaloSalesPanelProposal = ({
                 return;
             }
 
-
             let mutationFn = data
                 ? updateGaloSalesClientProposal
                 : createGaloSalesClientProposal;
 
             mutationFn(payload, {
                 onSuccess: (d) => {
-                    console.log('this is running')
+                    console.log("this is running");
                     toast.success(d?.message);
                     onClose(false);
                 },
@@ -362,19 +358,17 @@ const CreateGaloSalesPanelProposal = ({
     useEffect(() => {
         const fetchInverter = async () => {
             try {
-                let res = await apiCall('GET', '/api/galoAdmin/inverter');
+                let res = await apiCall("GET", "/api/galoAdmin/inverter");
                 console.log(res);
                 if (res?.data?.success) {
-                    setInverters(res?.data?.data)
+                    setInverters(res?.data?.data);
                 }
             } catch (er) {
-                console.log(er)
+                console.log(er);
             }
-        }
-        fetchInverter()
+        };
+        fetchInverter();
     }, []);
-
-
 
     return (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">

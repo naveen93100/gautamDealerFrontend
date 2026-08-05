@@ -64,7 +64,7 @@ const GaloSalesClientPanelHistory = () => {
         });
     };
 
-    console.log("this is proposal:",proposals)
+    console.log("this is proposal:", proposals);
 
     return (
         <div className="min-h-screen bg-gray-50 pb-10">
@@ -174,7 +174,18 @@ const GaloSalesClientPanelHistory = () => {
                                                         <FileText size={16} />
                                                     </div>
                                                     <span className="font-medium text-gray-800">
-                                                        Panel Proposal
+                                                        {
+                                                            item.customerId
+                                                                .fullName || "Galo Proposal"
+                                                        }{" "}
+                                                        ({item.setupKw}Kw{" "}
+                                                        {item.selectedPanels
+                                                            ?.map(
+                                                                (p) =>
+                                                                    `${p.panelId?.panelType} ${p.wattId?.watt}Wp`,
+                                                            )
+                                                            .join(", ")}
+                                                        )
                                                     </span>
                                                 </div>
                                             </td>
