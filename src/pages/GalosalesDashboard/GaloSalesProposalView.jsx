@@ -9,6 +9,7 @@ const GaloSalesProposalView = () => {
     const { state } = useLocation();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const [currentPage, setCurrentPage] = useState(0);
 
     console.log("Location state:", state);
     const data = {
@@ -27,7 +28,7 @@ const GaloSalesProposalView = () => {
         createdAt: state?.createdAt,
     };
 
-    console.log("Customer Data:", customerData);
+    // console.log("Customer Data:", customerData);
 
     const pages = [
         "galo1.jpeg",
@@ -38,10 +39,52 @@ const GaloSalesProposalView = () => {
         "galo6.jpeg",
     ];
 
+    // const handleDownload = async () => {
+    //     try {
+    //         setLoading(true);
+    //         const elements = document.querySelectorAll(".pdf-page");
+    //         const pdf = new jsPDF({
+    //             orientation: "p",
+    //             unit: "mm",
+    //             format: "a4",
+    //             compress: true,
+    //         });
+
+    //         for (let i = 0; i < elements.length; i++) {
+    //             const el = elements[i];
+    //             await document.fonts.ready;
+    //             await new Promise((resolve) => setTimeout(resolve, 300));
+
+    //             const canvas = await html2canvas(el, {
+    //                 scale: 3,
+    //                 useCORS: true,
+    //                 backgroundColor: "#ffffff",
+    //                 logging: false,
+    //             });
+    //             const imgData = canvas.toDataURL("image/jpeg", 0.9);
+    //             if (i !== 0) pdf.addPage();
+    //             pdf.addImage(imgData, "JPEG", 0, 0, 210, 297);
+    //         }
+
+    //         const clientName = customerData?.companyName?.trim()
+    //             ? customerData.companyName.replace(/\s+/g, "_")
+    //             : customerData?.name?.trim();
+
+    //         pdf.save(`${clientName || "Proposal"}_proposal.pdf`);
+    //     } catch (er) {
+    //         console.log(er);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+
     const handleDownload = async () => {
         try {
             setLoading(true);
+
             const elements = document.querySelectorAll(".pdf-page");
+            setCurrentPage(0);
+
             const pdf = new jsPDF({
                 orientation: "p",
                 unit: "mm",
@@ -50,7 +93,10 @@ const GaloSalesProposalView = () => {
             });
 
             for (let i = 0; i < elements.length; i++) {
+                setCurrentPage(i + 1);
+
                 const el = elements[i];
+
                 await document.fonts.ready;
                 await new Promise((resolve) => setTimeout(resolve, 300));
 
@@ -60,7 +106,9 @@ const GaloSalesProposalView = () => {
                     backgroundColor: "#ffffff",
                     logging: false,
                 });
+
                 const imgData = canvas.toDataURL("image/jpeg", 0.9);
+
                 if (i !== 0) pdf.addPage();
                 pdf.addImage(imgData, "JPEG", 0, 0, 210, 297);
             }
@@ -74,6 +122,7 @@ const GaloSalesProposalView = () => {
             console.log(er);
         } finally {
             setLoading(false);
+            setCurrentPage(0);
         }
     };
 
@@ -94,7 +143,7 @@ const GaloSalesProposalView = () => {
             </button>
 
             {/* --- Download Button --- */}
-            <button
+            {/* <button
                 onClick={handleDownload}
                 disabled={loading}
                 className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 rounded-full text-white transition ${
@@ -107,6 +156,29 @@ const GaloSalesProposalView = () => {
                     <>
                         <span className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></span>
                         Generating...
+                    </>
+                ) : (
+                    <>
+                        <Download className="w-5 h-5" />
+                        Download
+                    </>
+                )}
+            </button> */}
+
+            <button
+                onClick={handleDownload}
+                disabled={loading}
+                className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 rounded-full text-white transition ${
+                    loading
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-black hover:bg-gray-800 border-2 border-yellow-400"
+                }`}
+            >
+                {loading ? (
+                    <>
+                        <span className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></span>
+                        Generating {currentPage} /{" "}
+                        {document.querySelectorAll(".pdf-page").length}
                     </>
                 ) : (
                     <>
@@ -356,7 +428,8 @@ const GaloSalesProposalView = () => {
                                 </td>
 
                                 <td className="border border-black py-4 text-lg">
-                                    ₹ {state?.finalPrice?.toLocaleString("en-IN")}
+                                    ₹{" "}
+                                    {state?.finalPrice?.toLocaleString("en-IN")}
                                 </td>
                             </tr>
                         </tbody>
