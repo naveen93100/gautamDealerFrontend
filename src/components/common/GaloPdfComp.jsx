@@ -13,12 +13,11 @@ const GaloPdfComp = ({ bg, children }) => {
             className="
         pdf-page
         relative
-        w-198.5
-        h-280.75
         bg-white
         mx-auto
         overflow-hidden
       "
+      style={{width:'210mm',height:'297mm'}}
         >
             {/* background image */}
             <img
@@ -35,3 +34,8 @@ const GaloPdfComp = ({ bg, children }) => {
 };
 
 export default GaloPdfComp;
+
+
+
+
+
