@@ -52,14 +52,10 @@
 
 // export default AppRoutes;
 
-
-
-
-
 import { useEffect } from "react";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 
-import Login from "../pages/Login"; // your unified login above
+import Login from "../pages/Login";
 import AdminLayout from "../pages/Dashboard/Layout/AdminLayout";
 
 import ProtectedRoute from "../components/common/ProtectedRoute";
@@ -74,6 +70,7 @@ import GaloAdminRoutes from "./GaloAdminRoutes";
 
 import { setNavigate } from "../utils/Navigate";
 import TestingProposalView from "../components/common/TestingProposalView";
+import AuthRoutes from "./AuthRoutes";
 
 const AppRoutes = () => {
     const navigate = useNavigate();
@@ -85,6 +82,7 @@ const AppRoutes = () => {
     return (
         <Routes>
             <Route element={<PublicRoute />}>
+                {AuthRoutes}
                 <Route path="/" element={<Login />} />
                 <Route path="/login" element={<Login />} />
             </Route>

@@ -9,6 +9,7 @@ const GaloSalesProposalView = () => {
     const { state } = useLocation();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const [currentPage, setCurrentPage] = useState(0);
 
     console.log("Location state:", state);
     const data = {
@@ -27,7 +28,7 @@ const GaloSalesProposalView = () => {
         createdAt: state?.createdAt,
     };
 
-    console.log("Customer Data:", customerData);
+    // console.log("Customer Data:", customerData);
 
     const pages = [
         "galo1.jpeg",
@@ -38,10 +39,52 @@ const GaloSalesProposalView = () => {
         "galo6.jpeg",
     ];
 
+    // const handleDownload = async () => {
+    //     try {
+    //         setLoading(true);
+    //         const elements = document.querySelectorAll(".pdf-page");
+    //         const pdf = new jsPDF({
+    //             orientation: "p",
+    //             unit: "mm",
+    //             format: "a4",
+    //             compress: true,
+    //         });
+
+    //         for (let i = 0; i < elements.length; i++) {
+    //             const el = elements[i];
+    //             await document.fonts.ready;
+    //             await new Promise((resolve) => setTimeout(resolve, 300));
+
+    //             const canvas = await html2canvas(el, {
+    //                 scale: 3,
+    //                 useCORS: true,
+    //                 backgroundColor: "#ffffff",
+    //                 logging: false,
+    //             });
+    //             const imgData = canvas.toDataURL("image/jpeg", 0.9);
+    //             if (i !== 0) pdf.addPage();
+    //             pdf.addImage(imgData, "JPEG", 0, 0, 210, 297);
+    //         }
+
+    //         const clientName = customerData?.companyName?.trim()
+    //             ? customerData.companyName.replace(/\s+/g, "_")
+    //             : customerData?.name?.trim();
+
+    //         pdf.save(`${clientName || "Proposal"}_proposal.pdf`);
+    //     } catch (er) {
+    //         console.log(er);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+
     const handleDownload = async () => {
         try {
             setLoading(true);
+
             const elements = document.querySelectorAll(".pdf-page");
+            setCurrentPage(0);
+
             const pdf = new jsPDF({
                 orientation: "p",
                 unit: "mm",
@@ -50,14 +93,22 @@ const GaloSalesProposalView = () => {
             });
 
             for (let i = 0; i < elements.length; i++) {
+                setCurrentPage(i + 1);
+
                 const el = elements[i];
+
+                await document.fonts.ready;
+                await new Promise((resolve) => setTimeout(resolve, 300));
+
                 const canvas = await html2canvas(el, {
-                    scale: 1.6,
+                    scale: 3,
                     useCORS: true,
                     backgroundColor: "#ffffff",
                     logging: false,
                 });
+
                 const imgData = canvas.toDataURL("image/jpeg", 0.9);
+
                 if (i !== 0) pdf.addPage();
                 pdf.addImage(imgData, "JPEG", 0, 0, 210, 297);
             }
@@ -66,11 +117,12 @@ const GaloSalesProposalView = () => {
                 ? customerData.companyName.replace(/\s+/g, "_")
                 : customerData?.name?.trim();
 
-            pdf.save(`${clientName}_proposal.pdf`);
+            pdf.save(`${clientName || "Proposal"}_proposal.pdf`);
         } catch (er) {
             console.log(er);
         } finally {
             setLoading(false);
+            setCurrentPage(0);
         }
     };
 
@@ -91,18 +143,42 @@ const GaloSalesProposalView = () => {
             </button>
 
             {/* --- Download Button --- */}
-            <button
+            {/* <button
                 onClick={handleDownload}
                 disabled={loading}
-                className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 rounded-full text-white transition ${loading
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-black hover:bg-gray-800 border-2 border-yellow-400"
-                    }`}
+                className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 rounded-full text-white transition ${
+                    loading
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-black hover:bg-gray-800 border-2 border-yellow-400"
+                }`}
             >
                 {loading ? (
                     <>
                         <span className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></span>
                         Generating...
+                    </>
+                ) : (
+                    <>
+                        <Download className="w-5 h-5" />
+                        Download
+                    </>
+                )}
+            </button> */}
+
+            <button
+                onClick={handleDownload}
+                disabled={loading}
+                className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 rounded-full text-white transition ${
+                    loading
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-black hover:bg-gray-800 border-2 border-yellow-400"
+                }`}
+            >
+                {loading ? (
+                    <>
+                        <span className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></span>
+                        Generating {currentPage} /{" "}
+                        {document.querySelectorAll(".pdf-page").length}
                     </>
                 ) : (
                     <>
@@ -146,41 +222,65 @@ const GaloSalesProposalView = () => {
                         </div>
                     ))}
                 </div>
-                <div className="absolute top-[257mm] left-[1mm] w-100 text-center">
-                    {state?.selectedPanels?.map((panel, idx) => (
-                        <div key={idx}>
-                            <h1 className="text-lg font-bold italic text-white">
-                                Efficiency Greater
-                                <br />
-                                than {panel?.wattId?.watt === 550
-                                    ? '21.29%'
-                                    : panel?.wattId?.watt === 600
-                                        ? '23.23/'
-                                        : ''}
 
-                            </h1>
-                        </div>
-                    ))}
+                <div className="absolute left-[1mm] top-[257mm] w-[208mm] flex justify-between items-center px-[4mm]">
+                    {/* Left Ribbon */}
+                    <div className="w-[88mm] text-center flex items-center justify-center">
+                        {state?.selectedPanels?.map((panel, idx) => (
+                            <div key={idx}>
+                                <div
+                                    style={{
+                                        color: "#fff",
+                                        fontWeight: 700,
+                                        fontSize: "16px",
+                                        lineHeight: "18px",
+                                    }}
+                                >
+                                    <div>Efficiency Greater</div>
+                                    <div>
+                                        than{" "}
+                                        {panel?.wattId?.watt === 550
+                                            ? "21.29%"
+                                            : panel?.wattId?.watt === 600
+                                              ? "23.23%"
+                                              : ""}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Right Ribbon */}
+                    <div className="w-[88mm] text-center flex items-center justify-center">
+                        {state?.selectedPanels?.map((panel, idx) => (
+                            <div key={idx}>
+                                <div
+                                    style={{
+                                        color: "#fff",
+                                        fontWeight: 700,
+                                        fontStyle: "italic",
+                                        fontSize: "16px",
+                                        lineHeight: "18px",
+                                    }}
+                                >
+                                    {panel?.wattId?.watt === 550 ? (
+                                        <>
+                                            <div>25 Years Performance</div>
+                                            <div>warranty</div>
+                                        </>
+                                    ) : panel?.wattId?.watt === 600 ? (
+                                        <>
+                                            <div>30 Years Performance</div>
+                                            <div>warranty</div>
+                                        </>
+                                    ) : null}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
-                <div className="absolute top-[257mm] right-[1mm] w-100 text-center">
-                    {state?.selectedPanels?.map((panel, idx) => (
-                        <div key={idx}>
-                            <h1 className="text-lg font-bold italic text-white">
-
-                                {panel?.wattId?.watt === 550
-                                    ? <p>25 Years Performance <br /> warranty</p>
-                                    : panel?.wattId?.watt === 600
-                                        ? '30 Years Performance warranty'
-                                        : ''}
-
-                            </h1>
-                        </div>
-                    ))}
-                </div>
-
-
-
             </GaloPdfComp>
+
             <GaloPdfComp bg={pages[3]}></GaloPdfComp>
 
             <GaloPdfComp bg={pages[4]}>
@@ -246,7 +346,7 @@ const GaloSalesProposalView = () => {
                                     }{" "}
                                     {state?.selectedPanels[0]?.inverterId
                                         ? state?.selectedPanels[0]?.inverterId
-                                            ?.inverterCapacity + "KW Inverter"
+                                              ?.inverterCapacity + "KW Inverter"
                                         : ""}
                                 </td>
 
@@ -254,8 +354,8 @@ const GaloSalesProposalView = () => {
                                     1 Complete Set
                                 </td>
 
-                                <td className="border border-black py-4 text-2xl font-bold">
-                                    {`₹ ${state?.selectedPanels[0].totalPrice}`}
+                                <td className="border border-black py-4 text-lg font-bold">
+                                    {`₹ ${state?.selectedPanels[0].totalPrice.toLocaleString()}`}
                                 </td>
                             </tr>
 
@@ -280,10 +380,23 @@ const GaloSalesProposalView = () => {
                                     Total Amount
                                 </td>
 
-                                <td className="border border-black py-3 text-xl font-bold">
+                                {/* <td className="border border-black py-3 text-lg font-bold">
                                     ₹{" "}
                                     {state?.selectedPanels[0].totalPrice +
                                         state?.selectedPanels[0].gstAmount}
+                                </td> */}
+                                <td className="border border-black py-3 text-lg font-bold">
+                                    ₹{" "}
+                                    {(
+                                        Number(
+                                            state?.selectedPanels?.[0]
+                                                ?.totalPrice || 0,
+                                        ) +
+                                        Number(
+                                            state?.selectedPanels?.[0]
+                                                ?.gstAmount || 0,
+                                        )
+                                    ).toLocaleString("en-IN")}
                                 </td>
                             </tr>
 
@@ -295,21 +408,28 @@ const GaloSalesProposalView = () => {
                                     Subsidy
                                 </td>
 
+                                {/* <td className="border border-black py-3">
+                                    ₹ {num.localString("en-IN")(state?.selectedPanels[0].subsidyAmount)}
+                                </td> */}
                                 <td className="border border-black py-3">
-                                    ₹ {state?.selectedPanels[0].subsidyAmount}
+                                    ₹{" "}
+                                    {state?.selectedPanels?.[0]?.subsidyAmount?.toLocaleString(
+                                        "en-IN",
+                                    )}
                                 </td>
                             </tr>
 
                             <tr>
                                 <td
                                     colSpan={3}
-                                    className="border border-black py-4 text-2xl font-bold"
+                                    className="border border-black py-4 text-lg font-bold"
                                 >
                                     Net Effective Price
                                 </td>
 
-                                <td className="border border-black py-4 text-2xl">
-                                    ₹ {state?.finalPrice}
+                                <td className="border border-black py-4 text-lg">
+                                    ₹{" "}
+                                    {state?.finalPrice?.toLocaleString("en-IN")}
                                 </td>
                             </tr>
                         </tbody>

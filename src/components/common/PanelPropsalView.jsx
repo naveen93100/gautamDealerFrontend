@@ -88,6 +88,7 @@ const PanelPropsalView = () => {
                     useCORS: true,
                     backgroundColor: "#ffffff",
                     logging: false,
+                    
                 });
 
                 const logo = el.querySelector(".logo-img");
