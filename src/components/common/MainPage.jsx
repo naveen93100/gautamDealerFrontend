@@ -42,6 +42,7 @@ const MainPage = () => {
 
     if (!proposalDatas) return <Navigate to='/dashboard' />;
 
+
     const data = {
         firstName: user?.firstName,
         lastName: user?.lastName,
@@ -60,6 +61,8 @@ const MainPage = () => {
         phone: proposalDatas?.phone,
         address: proposalDatas?.address,
     }
+
+   console.log(customerData);
 
     const proposalsData = {
         rate: proposalDatas?.rate,
@@ -104,7 +107,7 @@ const MainPage = () => {
                     <div className="absolute top-[5mm] right-[3mm]  text-end">
                         <div className='text-white'>
 
-                            <span className='capitalize inline-block text-lg'>
+                            <span className='capitalize inline-block text-sm w-62'>
                                 {data.companyName}
                             </span>
 

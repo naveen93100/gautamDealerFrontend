@@ -319,6 +319,7 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData, customerId
                                         className="w-full px-4 py-3 border rounded-xl"
                                         placeholder="Rate ₹"
                                         min={0}
+                                        step="any"
                                     />
                                 </div>
 
