@@ -104,7 +104,7 @@ const MainPage = () => {
                     <div className="absolute top-[5mm] right-[3mm]  text-end">
                         <div className='text-white'>
 
-                            <span className='capitalize inline-block text-lg'>
+                            <span className='capitalize inline-block text-sm w-62'>
                                 {data.companyName}
                             </span>
 
