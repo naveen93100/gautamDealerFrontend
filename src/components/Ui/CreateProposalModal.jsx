@@ -232,6 +232,8 @@ const CreateProposalModal = ({ setClose, proposalData, data, setData, customerId
             data?.termsAndConditions
             || "",
         );
+
+        setBody(data?.termsAndConditions);
         let names = data?.material.map((item) => ({
             name: item?.materialData?.name,
             qty: item?.quantity,
