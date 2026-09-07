@@ -45,6 +45,7 @@ const SalesClientPanelHistory = () => {
             }
         })
     };
+
     return (
         <div className="min-h-screen bg-linear-to-br from-red-50 via-orange-50 to-white pb-10">
             {/* Header */}
@@ -116,8 +117,8 @@ const SalesClientPanelHistory = () => {
 
                     {/* Proposal List */}
                     <div className="space-y-5">
-                        {proposals?.length > 0 &&
-                            proposals?.map((item) => (
+                        {proposals?.proposal?.length > 0 &&
+                            proposals?.proposal?.map((item) => (
                                 <div
                                     key={item?._id}
                                     className="bg-gray-50 border border-gray-200 rounded-3xl p-6 shadow-md hover:shadow-lg transition"

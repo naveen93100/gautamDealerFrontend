@@ -50,8 +50,9 @@ export const updateSalesClientProposal=async(payload)=>{
 
 export const getSalesClientProposal = async (clientId) => {
   try {
-    let res = await apiCall("GET", `/api/sales/get-proposals/${clientId}`);
-    return res?.data?.data;
+    let res = await apiCall("GET", `/api/sales/get-proposals/${clientId}`);    
+    return res?.data;
+    
   } catch (er) {
     throw er?.response?.data?.message;
   }
