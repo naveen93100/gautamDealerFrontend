@@ -1,17 +1,18 @@
 import React, { useCallback, useEffect, useState } from "react";
-import Input from "../../components/common/Input";
 import { useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
 import toast from "react-hot-toast";
 import { apiCall } from "../../services/api";
-import PanelCard from "../../components/common/panelCard";
+import GaloPanelCard from "../../components/common/GaloPanelCard";
+import GaloInput from "./../../components/common/GaloInput";
 
-const PannelProposal = () => {
+const GaloPannelProposal = () => {
     const [open, setOpen] = useState(false);
     const [edit, setEdit] = useState(false);
     const [pannelData, setPannelData] = useState([]);
     const [updatePannelData, setUpdatePannelData] = useState();
     const navigate = useNavigate();
+
     const field = [
         {
             label: "Panel Type",
@@ -24,7 +25,7 @@ const PannelProposal = () => {
     const fetchPannelData = useCallback(async () => {
         toast.dismiss();
         try {
-            const response = await apiCall("get", "/adminPanel/getPanel");
+            const response = await apiCall("get", "/api/galoAdmin/panel");
             setPannelData(response?.data?.data || []);
         } catch (error) {
             toast.error(
@@ -40,7 +41,7 @@ const PannelProposal = () => {
 
     const handleCreatePanel = async (data) => {
         try {
-            const res = await apiCall("post", "/adminPanel/addPanel", data);
+            const res = await apiCall("post", "/api/galoAdmin/panel", data);
             toast.success(res.data.message);
             fetchPannelData();
             setOpen(false);
@@ -51,13 +52,10 @@ const PannelProposal = () => {
 
     const handleUpdatePanel = async (data) => {
         try {
-            const res = await apiCall("put", "/adminPanel/updatePanel", null, {
-                params: {
-                    _id: updatePannelData._id,
-                    ...data,
-                },
+            const res = await apiCall("put", "/api/galoAdmin/panel", {
+                _id: updatePannelData?._id,
+                ...data,
             });
-
             toast.success(res.data.message);
             setTimeout(() => {
                 fetchPannelData();
@@ -73,6 +71,7 @@ const PannelProposal = () => {
         setEdit(true);
         setUpdatePannelData(panel);
     };
+
     const handleToggle = async (e, panel) => {
         e.stopPropagation();
         toast.dismiss();
@@ -82,11 +81,10 @@ const PannelProposal = () => {
         };
         try {
             const response = await apiCall(
-                "PUT",
-                "/adminPanel/togglePanel",
+                "patch",
+                "/api/galoAdmin/panel/toggle",
                 payload,
             );
-
             toast.success(response?.data?.message);
             setTimeout(() => {
                 fetchPannelData();
@@ -99,36 +97,36 @@ const PannelProposal = () => {
 
     const handleNavigate = async (e, panel) => {
         e.stopPropagation();
-        navigate("/admin/panel/technology", {
+        navigate("/galo/admin/tech", {
             state: { id: panel?._id, name: panel?.panelType },
         });
     };
 
     return (
-        // <div className="p-6 space-y-6">
-        <div className="space-y-6 max-w-7xl mx-auto">
-            <div className="space-y-6 border-3 border-red-200 p-8 rounded-2xl shadow-md shadow-red-300 ">
-                <div className="flex items-center justify-between bg-gray-200 p-4 rounded-xl border border-red-400">
-                    <h1 className="text-xl font-semibold text-gray-800 ">
+        <div className="w-full px-4 py-5 sm:px-6 mx-auto">
+            <div className="space-y-6 border-2 border-yellow-400 p-8 rounded-2xl shadow-md shadow-yellow-300/50 bg-white">
+                {/* Header */}
+                <div className="flex items-center justify-between bg-gray-50 p-4 rounded-xl border border-yellow-300">
+                    <h1 className="text-xl font-semibold text-black">
                         Panel Management
                     </h1>
 
                     <button
                         onClick={() => setOpen(true)}
-                        className="px-5 py-2.5 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition"
+                        className="px-5 py-2.5 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition"
                     >
                         + Add Panel
                     </button>
                 </div>
 
-                {/* Panel Cards */}
+                {/* Panel Cards – using GaloPanelCard */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {pannelData.length === 0 ? (
                         <div className="col-span-full flex flex-col items-center justify-center p-10 border border-dashed rounded-xl text-gray-500">
                             <p className="text-sm">No panels found</p>
                             <p className="text-xs mt-1">
                                 Click{" "}
-                                <span className="font-medium text-green-600">
+                                <span className="font-medium text-yellow-600">
                                     Add Panel
                                 </span>{" "}
                                 to create one
@@ -136,11 +134,10 @@ const PannelProposal = () => {
                         </div>
                     ) : (
                         pannelData.map((panel) => (
-                            <PanelCard
-                                title={panel?.panelType}
-                                subtitle=" Panel configuration"
+                            <GaloPanelCard
                                 key={panel._id}
-                                panel={panel}
+                                title={panel?.panelType}
+                                subtitle="Panel configuration"
                                 active={panel?.panelActive}
                                 onNavigate={(e) => handleNavigate(e, panel)}
                                 onEdit={(e) => handleEdit(e, panel)}
@@ -150,21 +147,21 @@ const PannelProposal = () => {
                     )}
                 </div>
             </div>
+
+            {/* Create Modal */}
             {open && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-                    <div className="bg-white w-[90%] max-w-md rounded-xl shadow-lg p-6 relative animate-fadeIn">
+                    <div className="bg-white w-[90%] max-w-md rounded-xl shadow-lg p-6 relative animate-fadeIn border border-yellow-300">
                         <button
                             onClick={() => setOpen(false)}
-                            className="absolute top-3 right-3 p-2 rounded-full text-red-400 hover:bg-red-50 hover:text-red-600 transition"
+                            className="absolute top-3 right-3 p-2 rounded-full text-yellow-600 hover:bg-yellow-50 hover:text-yellow-800 transition"
                         >
                             <X size={20} />
                         </button>
-
-                        <h2 className="text-lg font-semibold text-gray-800 mb-4">
+                        <h2 className="text-lg font-semibold text-black mb-4">
                             Add Panel
                         </h2>
-
-                        <Input
+                        <GaloInput
                             field={field}
                             onSubmit={handleCreatePanel}
                             submitText="Add Panel"
@@ -172,21 +169,21 @@ const PannelProposal = () => {
                     </div>
                 </div>
             )}
+
+            {/* Edit Modal */}
             {edit && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-                    <div className="bg-white w-[90%] max-w-md rounded-xl shadow-lg p-6 relative animate-fadeIn">
+                    <div className="bg-white w-[90%] max-w-md rounded-xl shadow-lg p-6 relative animate-fadeIn border border-yellow-300">
                         <button
                             onClick={() => setEdit(false)}
-                            className="absolute top-3 right-3 p-2 rounded-full text-red-400 hover:bg-red-50 hover:text-red-600 transition"
+                            className="absolute top-3 right-3 p-2 rounded-full text-yellow-600 hover:bg-yellow-50 hover:text-yellow-800 transition"
                         >
                             <X size={20} />
                         </button>
-
-                        <h2 className="text-lg font-semibold text-gray-800 mb-4">
+                        <h2 className="text-lg font-semibold text-black mb-4">
                             Update Panel
                         </h2>
-
-                        <Input
+                        <GaloInput
                             field={field}
                             initialData={updatePannelData}
                             onSubmit={handleUpdatePanel}
@@ -199,4 +196,4 @@ const PannelProposal = () => {
     );
 };
 
-export default PannelProposal;
+export default GaloPannelProposal;

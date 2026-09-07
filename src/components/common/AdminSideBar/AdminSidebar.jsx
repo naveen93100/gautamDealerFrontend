@@ -1,4 +1,4 @@
-import { LayoutDashboard, LogOut, Package, UserRound, UserRoundPlus, Users } from "lucide-react";
+import { LayoutDashboard, LogOut, UserRound, UserRoundPlus, Users, SolarPanel, Unplug } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -15,7 +15,9 @@ const AdminSidebar = ({ sidebarOpen }) => {
     const menuItems = [
         { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, path: "/admin", role: ['super_admin'] },
 
-        { id: "panel", label: "Panel Management", icon: Package, path: "/admin/panel", role: ['super_admin'] },
+        { id: "panel", label: "Panel Management", icon: SolarPanel, path: "/admin/panel", role: ['super_admin'] },
+
+        { id: "inverter", label: "Inverter Management", icon: Unplug, path: "/admin/inverter", role: ['super_admin'] },
 
         { id: "sales", label: "Sales Accounts", icon: Users, path: "/admin/sales", role: ['admin', 'super_admin'] },
 

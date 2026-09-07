@@ -2,12 +2,13 @@
 // import { FiMail, FiLock, FiArrowRight, FiUser } from "react-icons/fi";
 // import { Link, useNavigate } from "react-router-dom";
 // import toast from "react-hot-toast";
-// import { useAuth } from "../Context/AuthContext";
+// import { useAuth } from "../../Context/AuthContext";
 // import { useState } from "react";
 // import { Loader2 } from "lucide-react";
 // import axios from "axios";
-// import gautamimage from "../assets/gautamimage.jpg";
-// const Login = () => {
+// import galoimgae from "../../assets/galoimg.png"
+
+// const GaloLogin = () => {
 //     const {
 //         register,
 //         handleSubmit,
@@ -75,33 +76,31 @@
 //     const titles = {
 //         dealer: {
 //             heading: "Dealer Login",
-//             sub: "Access your solar partnership dashboard",
+//             sub: "Access your partnership dashboard",
 //         },
 //         admin: { heading: "Admin Login", sub: "" },
 //         sales: { heading: "Sales Login", sub: "Access your sales dashboard" },
 //     };
 
 //     return (
-//         <div className="min-h-screen flex items-center justify-center bg-linear-to-r from-red-600 via-red-900 to-white/50 p-4 font-sans">
-//             {/* ── Outer card split into LEFT + RIGHT ── */}
-//             <div className="flex w-full max-w-7xl rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.1)] shadow-gray-400 border border-gray-300">
-//                 {/* ══ LEFT — brand image ══ */}
-//                 <div className="hidden md:block w-1/2 relative">
-//                     <img
-//                         src={gautamimage}
-//                         alt="Gautam Solar"
-//                         className="w-full h-full object-cover"
-//                     />
-//                     {/* subtle dark overlay so image doesn't feel too harsh */}
-//                     <div className="absolute inset-0 bg-black/10" />
-//                 </div>
+//         <div className="min-h-screen flex items-center justify-center bg-[#FFFCF0] p-4 font-sans">
+//             {/* ── Outer card split into LEFT (yellow brand panel) + RIGHT (form) ── */}
+//             <div className="flex w-full max-w-7xl rounded-2xl overflow-hidden border border-[#E8DDA0] bg-white">
 
-//                 {/* ══ RIGHT — your original login form, completely unchanged ══ */}
+//                  <div className="hidden md:block w-1/2 relative">
+//                                     <img
+//                                         src={galoimgae}
+//                                         alt="Galo Solar"
+//                                         className="w-full h-full object-cover"
+//                                     />
+//                                     {/* subtle dark overlay so image doesn't feel too harsh */}
+//                                     <div className="absolute inset-0 bg-black/10" />
+//                                 </div>
 
+//                 {/* ══ RIGHT — login form ══ */}
 //                 <div className="bg-white p-6 w-full md:w-1/2 flex flex-col justify-center">
-//                     {/* Brand Logo Section — same as before */}
 //                     <div className="flex flex-col items-center mb-8">
-//                         <h2 className="text-2xl font-extrabold text-gray-900 tracking-tight">
+//                         <h2 className="text-2xl font-extrabold text-[#1a1a1a] tracking-tight">
 //                             {titles[loginType].heading}
 //                         </h2>
 
@@ -122,7 +121,7 @@
 //                                 <label className="text-xs font-bold uppercase tracking-wider text-gray-600 ml-1">
 //                                     Email Address
 //                                 </label>
-//                                 <div className="group flex items-center gap-3 bg-gray-50 px-4 py-3 rounded-xl border border-gray-200 focus-within:border-[#a20000]">
+//                                 <div className="group flex items-center gap-3 bg-[#FFFCF0] px-4 py-3 rounded-xl border border-[#E8DDA0] focus-within:border-[#FDC700]">
 //                                     <FiMail className="text-gray-400" />
 //                                     <input
 //                                         type="email"
@@ -150,7 +149,7 @@
 //                                 <label className="text-xs font-bold uppercase tracking-wider text-gray-600 ml-1">
 //                                     User ID
 //                                 </label>
-//                                 <div className="group flex items-center gap-3 bg-gray-50 px-4 py-3 rounded-xl border border-gray-200 focus-within:border-[#a20000]">
+//                                 <div className="group flex items-center gap-3 bg-[#FFFCF0] px-4 py-3 rounded-xl border border-[#E8DDA0] focus-within:border-[#FDC700]">
 //                                     <FiUser className="text-gray-400" />
 //                                     <input
 //                                         type="text"
@@ -176,8 +175,8 @@
 //                                     Password
 //                                 </label>
 //                             </div>
-//                             <div className="group relative flex items-center gap-3 bg-gray-50 px-4 py-3 rounded-xl border border-gray-200 focus-within:border-[#a20000] focus-within:bg-white focus-within:ring-4 focus-within:ring-red-50 transition-all duration-200">
-//                                 <FiLock className="text-gray-400 group-focus-within:text-[#a20000] transition-colors" />
+//                             <div className="group relative flex items-center gap-3 bg-[#FFFCF0] px-4 py-3 rounded-xl border border-[#E8DDA0] focus-within:border-[#FDC700] focus-within:bg-white focus-within:ring-4 focus-within:ring-[#FDC700]/20 transition-all duration-200">
+//                                 <FiLock className="text-gray-400 group-focus-within:text-[#B38F00] transition-colors" />
 //                                 <input
 //                                     type={showPassword ? "text" : "password"}
 //                                     className="w-full bg-transparent text-gray-800 placeholder-gray-400 focus:outline-none text-sm font-medium"
@@ -206,7 +205,7 @@
 //                         {/* Submit Button */}
 //                         <button
 //                             type="submit"
-//                             className="group cursor-pointer relative w-40 mx-auto flex items-center justify-center gap-2 overflow-hidden py-4 rounded-xl bg-[#a20000] text-white text-md tracking-widest shadow-xl shadow-red-900/10 hover:bg-[#850000] active:scale-[0.98] transition-all"
+//                             className="group cursor-pointer relative w-40 mx-auto flex items-center justify-center gap-2 overflow-hidden py-4 rounded-xl bg-[#FDC700] text-[#1a1a1a] text-md font-bold tracking-widest border border-[#E8B800] hover:bg-[#f0bd00] active:scale-[0.98] transition-all"
 //                         >
 //                             <span className="relative z-10 uppercase flex">
 //                                 {loading ? (
@@ -218,17 +217,16 @@
 //                                     </span>
 //                                 )}
 //                             </span>
-//                             <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
 //                         </button>
 
 //                         {/* Footer Links */}
 //                         <div className="text-center pt-4 space-y-2">
 //                             {loginType === "dealer" && (
 //                                 <p className="text-gray-500 text-sm font-medium">
-//                                     New to Gautam Solar?{" "}
+//                                     New here?{" "}
 //                                     <Link
 //                                         to="/register"
-//                                         className="text-[#a20000] font-bold hover:underline"
+//                                         className="text-[#B38F00] font-bold hover:underline"
 //                                     >
 //                                         Create Account
 //                                     </Link>
@@ -241,7 +239,7 @@
 //                                         onClick={() =>
 //                                             switchLoginType("dealer")
 //                                         }
-//                                         className="text-red-700 cursor-pointer hover:underline text-sm"
+//                                         className="text-[#B38F00] cursor-pointer hover:underline text-sm"
 //                                     >
 //                                         Dealer Login
 //                                     </span>
@@ -249,7 +247,7 @@
 //                                 {loginType !== "admin" && (
 //                                     <span
 //                                         onClick={() => switchLoginType("admin")}
-//                                         className="text-red-700 cursor-pointer hover:underline text-sm"
+//                                         className="text-[#B38F00] cursor-pointer hover:underline text-sm"
 //                                     >
 //                                         Admin Login
 //                                     </span>
@@ -257,7 +255,7 @@
 //                                 {loginType !== "sales" && (
 //                                     <span
 //                                         onClick={() => switchLoginType("sales")}
-//                                         className="text-red-700 cursor-pointer hover:underline text-sm"
+//                                         className="text-[#B38F00] cursor-pointer hover:underline text-sm"
 //                                     >
 //                                         Sales Login
 //                                     </span>
@@ -270,69 +268,26 @@
 
 //             <div className="fixed bottom-6 text-center w-full">
 //                 <p className="text-gray-400 text-[10px] uppercase tracking-[0.2em]">
-//                     © {new Date().getFullYear()} Gautam Solar Private Limited
+//                     © {new Date().getFullYear()} Galo HR Tech
 //                 </p>
 //             </div>
 //         </div>
 //     );
 // };
 
-// export default Login;
+// export default GaloLogin;
 
 import { useForm } from "react-hook-form";
 import { FiMail, FiLock, FiArrowRight, FiUser } from "react-icons/fi";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useAuth } from "../Context/AuthContext";
-import { useCompany } from "../Context/CompanyContext";
+import { useAuth } from "../../Context/AuthContext";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import axios from "axios";
-import gautamimage from "../assets/gautamimage.jpg";
-import galoimage from "../assets/galoimg.png";
+import galoimgae from "../../assets/galoimg.png";
 
-const COMPANIES = {
-    gautam: {
-        id: "gautam",
-        name: "Gautam Solar",
-        image: gautamimage,
-        loginTypes: ["dealer", "admin", "sales"],
-        defaultLoginType: "dealer",
-        theme: {
-            bg: "bg-linear-to-r from-red-600 via-red-900 to-white/50",
-            cardBorder: "border-gray-300",
-            accent: "#a20000",
-            accentHover: "#850000",
-            inputBg: "bg-gray-50",
-            inputBorder: "border-gray-200",
-            linkColor: "text-red-700",
-            btnClass: "bg-[#a20000] text-white hover:bg-[#850000]",
-            footer: "Gautam Solar Private Limited",
-        },
-    },
-    galo: {
-        id: "galo",
-        name: "Galo Solar",
-        image: galoimage,
-        loginTypes: ["admin", "sales"],
-        defaultLoginType: "admin",
-        theme: {
-            // bg: "bg-[#FFFCF0]",
-            bg: "bg-linear-to-r from-yellow-600 via-red-900 to-white/50",
-            cardBorder: "border-[#E8DDA0]",
-            accent: "#FDC700",
-            accentHover: "#f0bd00",
-            inputBg: "bg-[#FFFCF0]",
-            inputBorder: "border-[#E8DDA0]",
-            linkColor: "text-[#B38F00]",
-            btnClass:
-                "bg-[#FDC700] text-[#1a1a1a] border border-[#E8B800] hover:bg-[#f0bd00]",
-            footer: "Galo HR Tech",
-        },
-    },
-};
-
-const Login = () => {
+const GaloLogin = () => {
     const {
         register,
         handleSubmit,
@@ -340,99 +295,42 @@ const Login = () => {
         reset,
     } = useForm();
     const { login } = useAuth();
-    const { setCompany } = useCompany();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
-    const [companyKey, setCompanyKey] = useState("gautam");
-    const [loginType, setLoginType] = useState(
-        COMPANIES.gautam.defaultLoginType,
-    );
+    const [loginType, setLoginType] = useState("admin");
     const [showPassword, setShowPassword] = useState(false);
-
-    const company = COMPANIES[companyKey];
-    const theme = company.theme;
-
-    const switchCompany = (key) => {
-        setCompanyKey(key);
-        setLoginType(COMPANIES[key].defaultLoginType);
-        reset();
-    };
-
-    const switchLoginType = (type) => {
-        setLoginType(type);
-        reset();
-    };
 
     const onSubmit = async (data) => {
         try {
             toast.dismiss();
             setLoading(true);
 
-            if (companyKey === "gautam") {
-                if (loginType === "dealer") {
-                    let res = await axios.post(
-                        `${import.meta.env.VITE_SERVER_ADDRESS}/api/dealer/login`,
-                        data,
+            if (loginType === "admin") {
+                let res = await axios.post(
+                    `${import.meta.env.VITE_SERVER_ADDRESS}/api/galoAdmin/login`,
+                    data,
+                    { withCredentials: true },
+                );
+                console.log("showing the admin response", res.data, res)
+                if (res?.data?.success) {
+                    login(
+                        res?.data?.data,
+                        res?.data?.token,
+                        res?.data?.data?.role,
                     );
-                    if (res?.data?.success) {
-                        setCompany(company);
-                        login(res?.data?.data, res?.data?.token, "dealer");
-                        navigate("/dashboard");
-                    }
-                } else if (loginType === "admin") {
-                    let res = await axios.post(
-                        `${import.meta.env.VITE_SERVER_ADDRESS}/adminPanel/loginAdmin`,
-                        data,
-                        { withCredentials: true },
-                    );
-                    if (res?.data?.success) {
-                        setCompany(company);
-                        login(
-                            res?.data?.data,
-                            res?.data?.token,
-                            res?.data?.data?.role,
-                        );
-                        navigate("/admin");
-                    }
-                } else if (loginType === "sales") {
-                    let res = await axios.post(
-                        `${import.meta.env.VITE_SERVER_ADDRESS}/api/sales/login`,
-                        data,
-                        { withCredentials: true },
-                    );
-                    if (res?.data?.success) {
-                        setCompany(company);
-                        login(res?.data?.data, res?.data?.token, "sales");
-                        navigate("/salesdashbord");
-                    }
+                    navigate("/galo/admin");
                 }
-            } else if (companyKey === "galo") {
-                if (loginType === "admin") {
-                    let res = await axios.post(
-                        `${import.meta.env.VITE_SERVER_ADDRESS}/api/galoAdmin/login`,
-                        data,
-                        { withCredentials: true },
-                    );
-                    if (res?.data?.success) {
-                        setCompany(company);
-                        login(
-                            res?.data?.data,
-                            res?.data?.token,
-                            res?.data?.data?.role,
-                        );
-                        navigate("/galo/admin");
-                    }
-                } else if (loginType === "sales") {
-                    let res = await axios.post(
-                        `${import.meta.env.VITE_SERVER_ADDRESS}/api/galoSales/login`,
-                        data,
-                        { withCredentials: true },
-                    );
-                    if (res?.data?.success) {
-                        setCompany(company);
-                        login(res?.data?.data, res?.data?.token, "sales");
-                        navigate("/galo/dashboard");
-                    }
+            } else if (loginType === "sales") {
+                let res = await axios.post(
+                    `${import.meta.env.VITE_SERVER_ADDRESS}/api/galoSales/login`,
+                    data,
+                    { withCredentials: true },
+                );
+                console.log("Login response:", res?.data);
+                // console.log("Role received:", res?.data?.data?.role);
+                if (res?.data?.success) {
+                    login(res?.data?.data, res?.data?.token, "sales");
+                    navigate("/galo/dashboard");
                 }
             }
         } catch (er) {
@@ -443,56 +341,39 @@ const Login = () => {
         }
     };
 
+    const switchLoginType = (type) => {
+        setLoginType(type);
+        reset();
+    };
+
     const titles = {
-        dealer: {
-            heading: "Dealer Login",
-            sub: "Access your solar partnership dashboard",
-        },
         admin: { heading: "Admin Login", sub: "" },
-        sales: { heading: "Sales Login", sub: "Access your sales dashboard" },
+        sales: {
+            heading: "Galo Sales Login",
+            sub: "Access your sales dashboard",
+        },
     };
 
     return (
-        <div
-            className={`min-h-screen flex items-center justify-center ${theme.bg} p-4 font-sans`}
-        >
-            <div
-                className={`flex w-full max-w-7xl rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.1)] shadow-gray-400 border ${theme.cardBorder}`}
-            >
-                {/* LEFT — brand image */}
+        <div className="min-h-screen flex items-center justify-center bg-[#FFFCF0] p-4 font-sans">
+            {/* ── Outer card split into LEFT (brand image) + RIGHT (form) ── */}
+            <div className="flex w-full max-w-7xl rounded-2xl overflow-hidden border border-[#E8DDA0] bg-white">
                 <div className="hidden md:block w-1/2 relative">
                     <img
-                        src={company.image}
-                        alt={company.name}
+                        src={galoimgae}
+                        alt="Galo Solar"
                         className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-black/10" />
                 </div>
 
-                {/* RIGHT — form */}
+                {/* ══ RIGHT — login form ══ */}
                 <div className="bg-white p-6 w-full md:w-1/2 flex flex-col justify-center">
-                    {/* Company switcher */}
-                    <div className="flex items-center justify-center gap-2 mb-6">
-                        {Object.values(COMPANIES).map((c) => (
-                            <button
-                                key={c.id}
-                                type="button"
-                                onClick={() => switchCompany(c.id)}
-                                className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider border transition-colors ${
-                                    companyKey === c.id
-                                        ? "bg-gray-900 text-white border-gray-900"
-                                        : "bg-white text-gray-500 border-gray-300 hover:border-gray-400"
-                                }`}
-                            >
-                                {c.name}
-                            </button>
-                        ))}
-                    </div>
-
                     <div className="flex flex-col items-center mb-8">
-                        <h2 className="text-2xl font-extrabold text-gray-900 tracking-tight">
+                        <h2 className="text-2xl font-extrabold text-[#1a1a1a] tracking-tight">
                             {titles[loginType].heading}
                         </h2>
+
                         {titles[loginType].sub && (
                             <p className="text-gray-500 text-sm mt-1">
                                 {titles[loginType].sub}
@@ -505,13 +386,12 @@ const Login = () => {
                         className="space-y-6"
                     >
                         {loginType !== "sales" ? (
+                            // ✅ EMAIL (Admin)
                             <div className="space-y-1.5">
                                 <label className="text-xs font-bold uppercase tracking-wider text-gray-600 ml-1">
                                     Email Address
                                 </label>
-                                <div
-                                    className={`group flex items-center gap-3 ${theme.inputBg} px-4 py-3 rounded-xl border ${theme.inputBorder} focus-within:border-[${theme.accent}]`}
-                                >
+                                <div className="group flex items-center gap-3 bg-[#FFFCF0] px-4 py-3 rounded-xl border border-[#E8DDA0] focus-within:border-[#FDC700]">
                                     <FiMail className="text-gray-400" />
                                     <input
                                         type="email"
@@ -534,13 +414,12 @@ const Login = () => {
                                 )}
                             </div>
                         ) : (
+                            // ✅ USER ID (Galo Sales)
                             <div className="space-y-1.5">
                                 <label className="text-xs font-bold uppercase tracking-wider text-gray-600 ml-1">
                                     User ID
                                 </label>
-                                <div
-                                    className={`group flex items-center gap-3 ${theme.inputBg} px-4 py-3 rounded-xl border ${theme.inputBorder} focus-within:border-[${theme.accent}]`}
-                                >
+                                <div className="group flex items-center gap-3 bg-[#FFFCF0] px-4 py-3 rounded-xl border border-[#E8DDA0] focus-within:border-[#FDC700]">
                                     <FiUser className="text-gray-400" />
                                     <input
                                         type="text"
@@ -559,16 +438,15 @@ const Login = () => {
                             </div>
                         )}
 
+                        {/* Password Field */}
                         <div className="space-y-1.5">
                             <div className="flex justify-between items-center px-1">
                                 <label className="text-xs font-bold uppercase tracking-wider text-gray-600">
                                     Password
                                 </label>
                             </div>
-                            <div
-                                className={`group relative flex items-center gap-3 ${theme.inputBg} px-4 py-3 rounded-xl border ${theme.inputBorder} focus-within:bg-white transition-all duration-200`}
-                            >
-                                <FiLock className="text-gray-400 transition-colors" />
+                            <div className="group relative flex items-center gap-3 bg-[#FFFCF0] px-4 py-3 rounded-xl border border-[#E8DDA0] focus-within:border-[#FDC700] focus-within:bg-white focus-within:ring-4 focus-within:ring-[#FDC700]/20 transition-all duration-200">
+                                <FiLock className="text-gray-400 group-focus-within:text-[#B38F00] transition-colors" />
                                 <input
                                     type={showPassword ? "text" : "password"}
                                     className="w-full bg-transparent text-gray-800 placeholder-gray-400 focus:outline-none text-sm font-medium"
@@ -594,9 +472,10 @@ const Login = () => {
                             )}
                         </div>
 
+                        {/* Submit Button */}
                         <button
                             type="submit"
-                            className={`group cursor-pointer relative w-40 mx-auto flex items-center justify-center gap-2 overflow-hidden py-4 rounded-xl text-md tracking-widest shadow-xl shadow-black/10 active:scale-[0.98] transition-all ${theme.btnClass}`}
+                            className="group cursor-pointer relative w-40 mx-auto flex items-center justify-center gap-2 overflow-hidden py-4 rounded-xl bg-[#FDC700] text-[#1a1a1a] text-md font-bold tracking-widest border border-[#E8B800] hover:bg-[#f0bd00] active:scale-[0.98] transition-all"
                         >
                             <span className="relative z-10 uppercase flex">
                                 {loading ? (
@@ -610,32 +489,25 @@ const Login = () => {
                             </span>
                         </button>
 
-                        <div className="text-center pt-4 space-y-2">
-                            {companyKey === "gautam" &&
-                                loginType === "dealer" && (
-                                    <p className="text-gray-500 text-sm font-medium">
-                                        New to Gautam Solar?{" "}
-                                        <Link
-                                            to="/register"
-                                            className="text-[#a20000] font-bold hover:underline"
-                                        >
-                                            Create Account
-                                        </Link>
-                                    </p>
-                                )}
-
+                        {/* Footer Links — just the type switcher, no dealer/register link */}
+                        <div className="text-center pt-4">
                             <div className="flex items-center justify-center gap-5">
-                                {company.loginTypes
-                                    .filter((t) => t !== loginType)
-                                    .map((t) => (
-                                        <span
-                                            key={t}
-                                            onClick={() => switchLoginType(t)}
-                                            className={`${theme.linkColor} cursor-pointer hover:underline text-sm capitalize`}
-                                        >
-                                            {t} Login
-                                        </span>
-                                    ))}
+                                {loginType !== "admin" && (
+                                    <span
+                                        onClick={() => switchLoginType("admin")}
+                                        className="text-[#B38F00] cursor-pointer hover:underline text-sm"
+                                    >
+                                        Admin Login
+                                    </span>
+                                )}
+                                {loginType !== "sales" && (
+                                    <span
+                                        onClick={() => switchLoginType("sales")}
+                                        className="text-[#B38F00] cursor-pointer hover:underline text-sm"
+                                    >
+                                        Galo Sales Login
+                                    </span>
+                                )}
                             </div>
                         </div>
                     </form>
@@ -644,11 +516,11 @@ const Login = () => {
 
             <div className="fixed bottom-6 text-center w-full">
                 <p className="text-gray-400 text-[10px] uppercase tracking-[0.2em]">
-                    © {new Date().getFullYear()} {theme.footer}
+                    © {new Date().getFullYear()} Galo HR Tech
                 </p>
             </div>
         </div>
     );
 };
 
-export default Login;
+export default GaloLogin;

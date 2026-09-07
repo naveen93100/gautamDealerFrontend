@@ -42,6 +42,7 @@ const MainPage = () => {
 
     if (!proposalDatas) return <Navigate to='/dashboard' />;
 
+
     const data = {
         firstName: user?.firstName,
         lastName: user?.lastName,
@@ -60,6 +61,8 @@ const MainPage = () => {
         phone: proposalDatas?.phone,
         address: proposalDatas?.address,
     }
+
+   console.log(customerData);
 
     const proposalsData = {
         rate: proposalDatas?.rate,
