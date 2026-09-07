@@ -105,7 +105,7 @@ const SalesClientPanelHistory = () => {
                                 Total Created Proposals:
                             </h2>
                             <p className="text-2xl font-bold">
-                                {proposals?.length}
+                                {proposals?.proposal.length}
                             </p>
 
                             <PanelsTopLeft
