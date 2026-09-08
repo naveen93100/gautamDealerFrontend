@@ -311,7 +311,7 @@ const GaloLogin = () => {
                     data,
                     { withCredentials: true },
                 );
-                console.log("showing the admin response", res.data, res)
+                
                 if (res?.data?.success) {
                     login(
                         res?.data?.data,
@@ -326,8 +326,7 @@ const GaloLogin = () => {
                     data,
                     { withCredentials: true },
                 );
-                console.log("Login response:", res?.data);
-                // console.log("Role received:", res?.data?.data?.role);
+              
                 if (res?.data?.success) {
                     login(res?.data?.data, res?.data?.token, "sales");
                     navigate("/galo/dashboard");

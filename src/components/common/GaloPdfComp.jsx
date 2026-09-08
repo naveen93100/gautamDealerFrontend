@@ -2,11 +2,11 @@ import React from "react";
 
 const GaloPdfComp = ({ bg, children }) => {
     // const BASE_URL = "https://gautamsolar.us/proposal_images/watt";
-    const BASE_URL = "http://localhost:3004";
+    // const BASE_URL = "http://localhost:3004";
   
     
 
-    const imageSrc = bg?.startsWith("/") ? bg : `${BASE_URL}/${bg}`;
+    // const imageSrc = bg?.startsWith("/") ? bg : `${BASE_URL}/${bg}`;
 
     return (
         <section
@@ -21,7 +21,7 @@ const GaloPdfComp = ({ bg, children }) => {
         >
             {/* background image */}
             <img
-                src={imageSrc}
+                src={'/'+bg}
                 className="absolute inset-0 w-full h-full object-cover"
                 crossOrigin="anonymous"
                 alt=""

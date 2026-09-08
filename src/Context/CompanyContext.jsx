@@ -33,7 +33,6 @@ export const CompanyProvider = ({ children }) => {
 
 export const useCompany = () => {
     const ctx = useContext(CompanyContext);
-    console.log(ctx)
     if (!ctx) throw new Error("useCompany must be used within CompanyProvider");
     return ctx;
 };
