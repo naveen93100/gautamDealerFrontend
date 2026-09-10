@@ -16,6 +16,7 @@ import {
     useGetGaloSalesClientProposal,
 } from "../../hooks/useGaloSalesMethods";
 
+
 const GaloSalesClientPanelHistory = () => {
     const [createSalesPanelProp, setCreateSalesPanelProp] = useState(false);
     const [selectSalesProposal, setSelectSalesProposal] = useState(null);

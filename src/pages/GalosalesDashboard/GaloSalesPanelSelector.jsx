@@ -1,4 +1,383 @@
-import { IndianRupee } from "lucide-react";
+// import { IndianRupee } from "lucide-react";
+// import React, { useEffect } from "react";
+// import toast from "react-hot-toast";
+
+// const GaloSalesPanelSelector = ({
+//     selectPanel,
+//     setSelectPanel,
+//     panelData,
+//     technologyData,
+//     constructiveData,
+//     panelWatt,
+//     setActiveIndex,
+//     gst,
+//     inverters,
+//     proposalType,
+//     setProposalType,
+// }) => {
+//     // const addPanel = () => {
+//     //     setSelectPanel((prev) => [
+//     //         ...prev,
+//     //         {
+//     //             panelId: "",
+//     //             technologyId: "",
+//     //             constructiveId: "",
+//     //             wattId: "",
+//     //             quantity: 1,
+//     //             rate: 1,
+//     //             totalPrice: 0,
+//     //             gstAmount: 0,
+//     //             wattPerPrice: 0,
+//     //             //add the setup kw here
+//     //             setupKw: 0,
+//     //             subsidyAmount: 0,
+//     //         },
+//     //     ]);
+//     //     setActiveIndex(selectPanel.length);
+//     // };
+
+//     const handleChange = (index, key, value) => {
+//         setActiveIndex(index);
+
+//         setSelectPanel((prev) => {
+//             const copy = [...prev];
+//             const updatedValue =
+//                 key === "gstAmount"||key==='subsidyAmount'
+//                     ? Number(value)
+//                     : value;
+
+//             copy[index] = {
+//                 ...copy[index],
+//                 [key]: updatedValue,
+//             };
+
+//             const selectedWattId = copy[index].wattId || null;
+
+//             if (selectedWattId) {
+
+//                 if (key === 'totalPrice') {
+
+//                     const amount = value;
+
+//                     const gstAmount = (amount * gst) / 100;
+//                     copy[index].totalPrice = Number(amount);
+//                     copy[index].gstAmount = gstAmount;
+//                 }
+//             }
+
+//             return copy;
+//         });
+//     };
+
+//     useEffect(() => {
+//         if (!gst) return;
+
+//         setSelectPanel((prev) =>
+//             prev.map((item) => {
+//                 const amount = Number(item.totalPrice || 0);
+//                 const gstAmount = (amount * gst) / 100;
+//                 return { ...item, gstAmount };
+//             }),
+//         );
+//     }, [gst, setSelectPanel]);
+
+//     // const handleRemove = (e, index) => {
+//     //     e.preventDefault();
+//     //     setSelectPanel((prev) => prev.filter((_, i) => i !== index));
+//     // };
+
+//     console.log(selectPanel)
+
+//     return (
+//         <section className="mb-6">
+//             <div className="flex items-center justify-between mb-6">
+//                 <div className="flex items-center gap-2">
+//                     <i className="fa-solid fa-solar-panel text-black"></i>
+//                     <h3 className="text-lg font-semibold text-black">
+//                         Panel Information
+//                     </h3>
+//                 </div>
+//                 {/*
+//                 <div
+//                     onClick={addPanel}
+//                     className="flex items-center gap-2 border-2 border-yellow-400 text-black hover:bg-yellow-50 px-4 py-2 rounded-xl transition cursor-pointer"
+//                 >
+//                     <i className="fa-solid fa-plus text-sm"></i>
+//                     <span className="text-sm font-medium">Add More Panel</span>
+//                 </div> */}
+//             </div>
+
+//             {selectPanel.map((panel, index) => (
+//                 <React.Fragment key={index}>
+//                     {/* <div className="flex items-center justify-between mb-3">
+//                         <h4 className="ml-2 text-base font-semibold text-black">
+//                             Panel {index + 1}
+//                         </h4>
+//                         <h4 className="mr-5 text-base font-semibold text-black">
+//                             {index >= 1 && (
+//                                 <i
+//                                     onClick={(e) => handleRemove(e, index)}
+//                                     className="fa-solid fa-trash-can text-yellow-600 hover:text-black cursor-pointer transition"
+//                                 ></i>
+//                             )}
+//                         </h4>
+//                     </div> */}
+
+//                     <section className="border-2  border-yellow-300 rounded-2xl p-4 mb-4 bg-white shadow-sm">
+//                         <div className="my-3">
+//                             <label className="text-sm font-medium text-black mt-4 block">
+//                                 Add Setup (Kw)
+//                             </label>
+//                             <input
+//                                 key={index}
+//                                 type="string"
+//                                 min={1}
+//                                 required
+//                                 value={panel.setupKw}
+//                                 onChange={(e) =>
+//                                     handleChange(
+//                                         index,
+//                                         "setupKw",
+//                                         e.target.value,
+//                                     )
+//                                 }
+//                                 className="w-full px-4 py-3 border border-yellow-300 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none bg-white"
+//                             />
+//                         </div>
+
+//                         <label className="text-sm font-medium text-black">
+//                             Select Inverter
+//                         </label>
+//                         <select
+//                             value={panel?.inverterId}
+//                             onChange={(e) =>
+//                             handleChange(index, "inverterId", e.target.value)
+//                             }
+//                             className="w-full px-4 my-4 py-2 border border-yellow-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none bg-white mt-1"
+//                         >
+//                             <option value="">Select Inverter</option>
+//                             {inverters?.map((i) => (
+//                                 <option key={i._id} value={i._id}>
+//                                     {i.inverterCapacity}
+//                                 </option>
+//                             ))}
+//                         </select>
+
+//                         <label className="text-sm font-medium text-black">
+//                             Select Panel
+//                         </label>
+//                         <select
+//                             value={panel.panelId}
+//                             required
+//                             onChange={(e) =>
+//                                 handleChange(index, "panelId", e.target.value)
+//                             }
+//                             className="w-full px-4 py-2 border border-yellow-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none bg-white mt-1"
+//                         >
+//                             <option value="">Select Panel</option>
+//                             {panelData?.map((p) => (
+//                                 <option key={p._id} value={p._id}>
+//                                     {p.panelType}
+//                                 </option>
+//                             ))}
+//                         </select>
+
+//                         {panel?.panelId && (
+//                             <>
+//                                 <label className="text-sm font-medium text-black mt-4 block">
+//                                     Select Technology
+//                                 </label>
+//                                 <select
+//                                     required
+//                                     value={panel.technologyId}
+//                                     onChange={(e) =>
+//                                         handleChange(
+//                                             index,
+//                                             "technologyId",
+//                                             e.target.value,
+//                                         )
+//                                     }
+//                                     className="w-full px-4 py-2 border border-yellow-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none bg-white mt-1"
+//                                 >
+//                                     <option value="">Select Technology</option>
+//                                     {technologyData?.map((tech) => (
+//                                         <option key={tech._id} value={tech._id}>
+//                                             {tech.technologyPanel}
+//                                         </option>
+//                                     ))}
+//                                 </select>
+//                             </>
+//                         )}
+
+//                         {panel?.technologyId && (
+//                             <>
+//                                 <label className="text-sm font-medium text-black mt-4 block">
+//                                     Select Constructive
+//                                 </label>
+//                                 <select
+//                                     key={index}
+//                                     required
+//                                     value={panel.constructiveId}
+//                                     onChange={(e) =>
+//                                         handleChange(
+//                                             index,
+//                                             "constructiveId",
+//                                             e.target.value,
+//                                         )
+//                                     }
+//                                     className="w-full px-4 py-2 border border-yellow-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none bg-white mt-1"
+//                                 >
+//                                     <option value="">
+//                                         Select Constructive
+//                                     </option>
+//                                     {constructiveData?.map((cons) => (
+//                                         <option key={cons._id} value={cons._id}>
+//                                             {cons.constructiveType}
+//                                         </option>
+//                                     ))}
+//                                 </select>
+//                             </>
+//                         )}
+
+//                         {panel?.constructiveId && (
+//                             <>
+//                                 <label className="text-sm font-medium text-black mt-4 block">
+//                                     Select Watt
+//                                 </label>
+//                                 <select
+//                                     key={index}
+//                                     required
+//                                     value={panel.wattId}
+//                                     onChange={(e) =>
+//                                         handleChange(
+//                                             index,
+//                                             "wattId",
+//                                             e.target.value,
+//                                         )
+//                                     }
+//                                     className="w-full px-4 py-2 border border-yellow-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none bg-white mt-1"
+//                                 >
+//                                     <option value="">Select Watt</option>
+//                                     {panelWatt?.map((w) => (
+//                                         <option key={w._id} value={w._id}>
+//                                             {w.watt} Watt
+//                                         </option>
+//                                     ))}
+//                                 </select>
+//                             </>
+//                         )}
+
+//                         {panel?.wattId && (
+//                             <>
+//                                 {/* <label className="text-sm font-medium text-black mt-4 block">
+//                                     Quantity
+//                                 </label>
+//                                 <input
+//                                     key={index}
+//                                     type="number"
+//                                     min={1}
+//                                     required
+//                                     value={panel.quantity}
+//                                     onChange={(e) =>
+//                                         handleChange(
+//                                             index,
+//                                             "quantity",
+//                                             e.target.value,
+//                                         )
+//                                     }
+//                                     className="w-full px-4 py-3 border border-yellow-300 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none bg-white"
+//                                 /> */}
+//                                 {/* adding subcidy  */}
+
+//                                 <label className="text-sm font-medium text-black mt-4 block">
+//                                     Subsidy Amount
+//                                 </label>
+//                                 <input
+//                                     key={index}
+//                                     min={1}
+//                                     required
+//                                     value={panel.subsidyAmount || 0}
+//                                     onChange={(e) =>
+//                                         handleChange(
+//                                             index,
+//                                             "subsidyAmount",
+//                                             e.target.value,
+//                                         )
+//                                     }
+//                                     className="w-full px-4 py-3 border border-yellow-300 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none bg-white"
+//                                 />
+
+//                                 {/* <div>
+//                                     <label className="block text-sm mt-4 font-medium text-black">
+//                                         Rate/Watt{" "}
+//                                         <i className="fa-solid fa-rupee-sign text-yellow-600"></i>
+//                                     </label>
+//                                     <div className="relative">
+//                                         <input
+//                                             key={index}
+//                                             type="number"
+//                                             name="rate"
+//                                             value={panel.rate}
+//                                             min={1}
+//                                             onChange={(e) =>
+//                                                 handleChange(
+//                                                     index,
+//                                                     "rate",
+//                                                     e.target.value,
+//                                                 )
+//                                             }
+//                                             className="w-full px-4 py-3 border border-yellow-300 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none bg-white"
+//                                             placeholder="Enter Panel Price"
+//                                         />
+//                                     </div>
+//                                 </div> */}
+
+//                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+//                                     <div>
+//                                         <label className="block text-sm font-medium text-black mb-2">
+//                                             Price Panel
+//                                         </label>
+//                                         <input
+//                                             key={index}
+//                                             name="totalPrice"
+//                                             value={panel?.totalPrice}
+//                                             className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 text-gray-700 "
+//                                             placeholder="0"
+//                                             onChange={(e) => {
+//                                                 handleChange(
+//                                                     index,
+//                                                     "totalPrice",
+//                                                     e.target.value,
+//                                                 )
+//                                             }
+//                                             }
+//                                         />
+//                                     </div>
+//                                     <div>
+//                                         <label className="block text-sm font-medium text-black mb-2">
+//                                             GST Amount
+//                                         </label>
+//                                         <input
+//                                             key={index}
+//                                             name="gstAmount"
+//                                             value={panel?.gstAmount}
+//                                             className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 text-gray-700 cursor-not-allowed"
+//                                             placeholder="0"
+//                                         />
+//                                     </div>
+//                                 </div>
+//                             </>
+//                         )}
+//                     </section>
+//                 </React.Fragment>
+//             ))}
+
+//         </section>
+//     );
+// };
+
+// export default GaloSalesPanelSelector;
+
 import React, { useEffect } from "react";
 import toast from "react-hot-toast";
 
@@ -11,28 +390,34 @@ const GaloSalesPanelSelector = ({
     panelWatt,
     setActiveIndex,
     gst,
-    inverters
+    inverters,
+    proposalType,
+    setProposalType,
 }) => {
-    // const addPanel = () => {
-    //     setSelectPanel((prev) => [
-    //         ...prev,
-    //         {
-    //             panelId: "",
-    //             technologyId: "",
-    //             constructiveId: "",
-    //             wattId: "",
-    //             quantity: 1,
-    //             rate: 1,
-    //             totalPrice: 0,
-    //             gstAmount: 0,
-    //             wattPerPrice: 0,
-    //             //add the setup kw here
-    //             setupKw: 0,
-    //             subsidyAmount: 0,
-    //         },
-    //     ]);
-    //     setActiveIndex(selectPanel.length);
-    // };
+    const addPanel = () => {
+        setSelectPanel((prev) => [
+            ...prev,
+            {
+                panelId: "",
+                technologyId: "",
+                constructiveId: "",
+                wattId: "",
+                inverterId: "",
+                quantity: 1,
+                rate: 0,
+                totalPrice: 0,
+                gstAmount: 0,
+                setupKw: 0,
+                subsidyAmount: 0,
+            },
+        ]);
+        setActiveIndex(selectPanel.length);
+    };
+
+    const handleRemove = (e, index) => {
+        e.preventDefault();
+        setSelectPanel((prev) => prev.filter((_, i) => i !== index));
+    };
 
     const handleChange = (index, key, value) => {
         setActiveIndex(index);
@@ -40,7 +425,7 @@ const GaloSalesPanelSelector = ({
         setSelectPanel((prev) => {
             const copy = [...prev];
             const updatedValue =
-                key === "gstAmount"||key==='subsidyAmount'
+                key === "gstAmount" || key === "subsidyAmount"
                     ? Number(value)
                     : value;
 
@@ -49,18 +434,30 @@ const GaloSalesPanelSelector = ({
                 [key]: updatedValue,
             };
 
-
             const selectedWattId = copy[index].wattId || null;
 
             if (selectedWattId) {
-
-                if (key === 'totalPrice') {
-
+                if (key === "totalPrice") {
                     const amount = value;
 
                     const gstAmount = (amount * gst) / 100;
                     copy[index].totalPrice = Number(amount);
                     copy[index].gstAmount = gstAmount;
+                }
+
+                // TODO: confirm with backend whether totalPrice should
+                // auto-derive from quantity * rate in Panel mode, or stay
+                // a separately entered field like it is today
+                if (key === "quantity" || key === "rate") {
+                    const qty = Number(
+                        key === "quantity" ? value : copy[index].quantity || 0,
+                    );
+                    const rate = Number(
+                        key === "rate" ? value : copy[index].rate || 0,
+                    );
+                    const amount = qty * rate;
+                    copy[index].totalPrice = amount;
+                    copy[index].gstAmount = (amount * gst) / 100;
                 }
             }
 
@@ -80,12 +477,7 @@ const GaloSalesPanelSelector = ({
         );
     }, [gst, setSelectPanel]);
 
-    // const handleRemove = (e, index) => {
-    //     e.preventDefault();
-    //     setSelectPanel((prev) => prev.filter((_, i) => i !== index));
-    // };
-
-    console.log(selectPanel)
+    const isPanelOnly = proposalType === "Panel";
 
     return (
         <section className="mb-6">
@@ -96,72 +488,85 @@ const GaloSalesPanelSelector = ({
                         Panel Information
                     </h3>
                 </div>
-                {/* 
-                <div
-                    onClick={addPanel}
-                    className="flex items-center gap-2 border-2 border-yellow-400 text-black hover:bg-yellow-50 px-4 py-2 rounded-xl transition cursor-pointer"
-                >
-                    <i className="fa-solid fa-plus text-sm"></i>
-                    <span className="text-sm font-medium">Add More Panel</span>
-                </div> */}
+
+                {isPanelOnly && (
+                    <div
+                        onClick={addPanel}
+                        className="flex items-center gap-2 border-2 border-yellow-400 text-black hover:bg-yellow-50 px-4 py-2 rounded-xl transition cursor-pointer"
+                    >
+                        <i className="fa-solid fa-plus text-sm"></i>
+                        <span className="text-sm font-medium">
+                            Add More Panel
+                        </span>
+                    </div>
+                )}
             </div>
 
             {selectPanel.map((panel, index) => (
                 <React.Fragment key={index}>
-                    {/* <div className="flex items-center justify-between mb-3">
-                        <h4 className="ml-2 text-base font-semibold text-black">
-                            Panel {index + 1}
-                        </h4>
-                        <h4 className="mr-5 text-base font-semibold text-black">
-                            {index >= 1 && (
-                                <i
-                                    onClick={(e) => handleRemove(e, index)}
-                                    className="fa-solid fa-trash-can text-yellow-600 hover:text-black cursor-pointer transition"
-                                ></i>
-                            )}
-                        </h4>
-                    </div> */}
+                    {isPanelOnly && (
+                        <div className="flex items-center justify-between mb-3">
+                            <h4 className="ml-2 text-base font-semibold text-black">
+                                Panel {index + 1}
+                            </h4>
+                            <h4 className="mr-5 text-base font-semibold text-black">
+                                {index >= 1 && (
+                                    <i
+                                        onClick={(e) => handleRemove(e, index)}
+                                        className="fa-solid fa-trash-can text-yellow-600 hover:text-black cursor-pointer transition"
+                                    ></i>
+                                )}
+                            </h4>
+                        </div>
+                    )}
 
                     <section className="border-2  border-yellow-300 rounded-2xl p-4 mb-4 bg-white shadow-sm">
-                        <div className="my-3">
-                            <label className="text-sm font-medium text-black mt-4 block">
-                                Add Setup (Kw)
-                            </label>
-                            <input
-                                key={index}
-                                type="string"
-                                min={1}
-                                required
-                                value={panel.setupKw}
-                                onChange={(e) =>
-                                    handleChange(
-                                        index,
-                                        "setupKw",
-                                        e.target.value,
-                                    )
-                                }
-                                className="w-full px-4 py-3 border border-yellow-300 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none bg-white"
-                            />
-                        </div>
+                        {!isPanelOnly && (
+                            <>
+                                <div className="my-3">
+                                    <label className="text-sm font-medium text-black mt-4 block">
+                                        Add Setup (Kw)
+                                    </label>
+                                    <input
+                                        key={index}
+                                        type="string"
+                                        min={1}
+                                        required
+                                        value={panel.setupKw}
+                                        onChange={(e) =>
+                                            handleChange(
+                                                index,
+                                                "setupKw",
+                                                e.target.value,
+                                            )
+                                        }
+                                        className="w-full px-4 py-3 border border-yellow-300 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none bg-white"
+                                    />
+                                </div>
 
-                        <label className="text-sm font-medium text-black">
-                            Select Inverter
-                        </label>
-                        <select
-                            value={panel?.inverterId}
-                            onChange={(e) =>
-                            handleChange(index, "inverterId", e.target.value)
-                            }
-                            className="w-full px-4 my-4 py-2 border border-yellow-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none bg-white mt-1"
-                        >
-                            <option value="">Select Inverter</option>
-                            {inverters?.map((i) => (
-                                <option key={i._id} value={i._id}>
-                                    {i.inverterCapacity}
-                                </option>
-                            ))}
-                        </select>
-
+                                <label className="text-sm font-medium text-black">
+                                    Select Inverter
+                                </label>
+                                <select
+                                    value={panel?.inverterId}
+                                    onChange={(e) =>
+                                        handleChange(
+                                            index,
+                                            "inverterId",
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="w-full px-4 my-4 py-2 border border-yellow-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none bg-white mt-1"
+                                >
+                                    <option value="">Select Inverter</option>
+                                    {inverters?.map((i) => (
+                                        <option key={i._id} value={i._id}>
+                                            {i.inverterCapacity}
+                                        </option>
+                                    ))}
+                                </select>
+                            </>
+                        )}
 
                         <label className="text-sm font-medium text-black">
                             Select Panel
@@ -269,68 +674,74 @@ const GaloSalesPanelSelector = ({
 
                         {panel?.wattId && (
                             <>
-                                {/* <label className="text-sm font-medium text-black mt-4 block">
-                                    Quantity
-                                </label>
-                                <input
-                                    key={index}
-                                    type="number"
-                                    min={1}
-                                    required
-                                    value={panel.quantity}
-                                    onChange={(e) =>
-                                        handleChange(
-                                            index,
-                                            "quantity",
-                                            e.target.value,
-                                        )
-                                    }
-                                    className="w-full px-4 py-3 border border-yellow-300 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none bg-white"
-                                /> */}
-                                {/* adding subcidy  */}
-
-                                <label className="text-sm font-medium text-black mt-4 block">
-                                    Subsidy Amount
-                                </label>
-                                <input
-                                    key={index}
-                                    min={1}
-                                    required
-                                    value={panel.subsidyAmount || 0}
-                                    onChange={(e) =>
-                                        handleChange(
-                                            index,
-                                            "subsidyAmount",
-                                            e.target.value,
-                                        )
-                                    }
-                                    className="w-full px-4 py-3 border border-yellow-300 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none bg-white"
-                                />
-
-                                {/* <div>
-                                    <label className="block text-sm mt-4 font-medium text-black">
-                                        Rate/Watt{" "}
-                                        <i className="fa-solid fa-rupee-sign text-yellow-600"></i>
-                                    </label>
-                                    <div className="relative">
+                                {isPanelOnly ? (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                        <div>
+                                            <label className="block text-sm font-medium text-black mb-2">
+                                                Quantity
+                                            </label>
+                                            <input
+                                                key={index}
+                                                type="number"
+                                                min={1}
+                                                required
+                                                value={panel.quantity}
+                                                onChange={(e) =>
+                                                    handleChange(
+                                                        index,
+                                                        "quantity",
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                onWheel={(e) => e.target.blur()}
+                                                className="w-full px-4 py-3 border border-yellow-300 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none bg-white"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-black mb-2">
+                                                Rate/Watt{" "}
+                                                <i className="fa-solid fa-rupee-sign text-yellow-600"></i>
+                                            </label>
+                                            <input
+                                                key={index}
+                                                type="number"
+                                                name="rate"
+                                                value={panel.rate}
+                                                min={1}
+                                                onChange={(e) =>
+                                                    handleChange(
+                                                        index,
+                                                        "rate",
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                onWheel={(e) => e.target.blur()}
+                                                className="w-full px-4 py-3 border border-yellow-300 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none bg-white"
+                                                placeholder="Enter Panel Price"
+                                            />
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <label className="text-sm font-medium text-black mt-4 block">
+                                            Subsidy Amount
+                                        </label>
                                         <input
                                             key={index}
-                                            type="number"
-                                            name="rate"
-                                            value={panel.rate}
                                             min={1}
+                                            required
+                                            value={panel.subsidyAmount || 0}
                                             onChange={(e) =>
                                                 handleChange(
                                                     index,
-                                                    "rate",
+                                                    "subsidyAmount",
                                                     e.target.value,
                                                 )
                                             }
                                             className="w-full px-4 py-3 border border-yellow-300 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none bg-white"
-                                            placeholder="Enter Panel Price"
                                         />
-                                    </div>
-                                </div> */}
+                                    </>
+                                )}
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                                     <div>
@@ -341,16 +752,17 @@ const GaloSalesPanelSelector = ({
                                             key={index}
                                             name="totalPrice"
                                             value={panel?.totalPrice}
-                                            className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 text-gray-700 "
+                                            readOnly={isPanelOnly}
+                                            className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 text-gray-700"
                                             placeholder="0"
                                             onChange={(e) => {
+                                                if (isPanelOnly) return;
                                                 handleChange(
                                                     index,
                                                     "totalPrice",
                                                     e.target.value,
-                                                )
-                                            }
-                                            }
+                                                );
+                                            }}
                                         />
                                     </div>
                                     <div>
@@ -371,7 +783,6 @@ const GaloSalesPanelSelector = ({
                     </section>
                 </React.Fragment>
             ))}
-
         </section>
     );
 };
