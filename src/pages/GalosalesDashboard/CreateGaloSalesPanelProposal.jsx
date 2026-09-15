@@ -711,21 +711,42 @@ const CreateGaloSalesPanelProposal = ({
 
     useEffect(() => {
         if (!data) return;
-        setSelectPanel(
-            data?.selectedPanels.map((item) => ({
-                constructiveId: item?.constructiveId?._id,
-                panelId: item?.panelId?._id,
-                inverterId: item?.inverterId,
-                subsidyAmount: item?.subsidyAmount,
-                gstAmount: item?.gstAmount,
-                technologyId: item?.technologyId?._id,
-                totalPrice: item?.totalPrice,
-                wattId: item?.wattId?._id,
-                setupKw: data?.setupKw,
-                quantity: item?.quantity ?? 1,
-                rate: item?.rate ?? 0,
-            })),
-        );
+        setProposalType(data?.proposalType)
+        if (data?.proposalType === 'Both') {
+            setSelectPanel(
+                data?.selectedPanels.map((item) => ({
+                    constructiveId: item?.constructiveId?._id,
+                    panelId: item?.panelId?._id,
+                    inverterId: item?.inverterId,
+                    subsidyAmount: item?.subsidyAmount,
+                    gstAmount: item?.gstAmount,
+                    technologyId: item?.technologyId?._id,
+                    totalPrice: item?.totalPrice,
+                    wattId: item?.wattId?._id,
+                    setupKw: data?.setupKw,
+                    quantity: item?.quantity ?? 1,
+                    rate: item?.rate ?? 0,
+                })),
+            );
+        }
+        else {
+            setSelectPanel(
+                data?.selectedPanels.map((item) => ({
+                    constructiveId: item?.constructiveId?._id,
+                    panelId: item?.panelId?._id,
+                    // inverterId: item?.inverterId,
+                    // subsidyAmount: item?.subsidyAmount,
+                    gstAmount: item?.gstAmount,
+                    technologyId: item?.technologyId?._id,
+                    totalPrice: item?.totalPrice,
+                    wattId: item?.wattId?._id,
+                    // setupKw: data?.setupKw,
+                    quantity: item?.quantity ?? 1,
+                    rate: item?.rate ?? 0,
+                })),
+            );
+
+        }
         setCreatePanelData((p) => ({ ...p, gst: data?.gst }));
         setPanelData(data?.selectedPanels);
         // TODO: if you persist proposalType on the backend, restore it here too
@@ -820,7 +841,7 @@ const CreateGaloSalesPanelProposal = ({
                     proposalType, // TODO: confirm backend accepts this field
                 };
             } else {
-                let { setupKw, ...rest } = selectPanel[0];
+                let { setupKw, inverterId, ...rest } = selectPanel[0];
                 payload = {
                     selectedPanels: [rest],
                     termsAndConditions: Body,
@@ -828,7 +849,7 @@ const CreateGaloSalesPanelProposal = ({
                     salesId,
                     customerId: clientId,
                     setupKw: Number(setupKw),
-                    proposalType, // TODO: confirm backend accepts this field
+                    proposalType,
                 };
             }
 
@@ -852,9 +873,10 @@ const CreateGaloSalesPanelProposal = ({
             if (!flag) {
                 return alert(
                     "Please fill in all panel details: Panel Type, Technology, Constructive Type, Panel Watt" +
-                        (proposalType !== "Panel" ? ", Inverter" : ""),
+                    (proposalType !== "Panel" ? ", Inverter" : ""),
                 );
             }
+
 
             let mutationFn = data
                 ? updateGaloSalesClientProposal
@@ -950,22 +972,20 @@ const CreateGaloSalesPanelProposal = ({
                         <button
                             type="button"
                             onClick={() => handleProposalTypeChange("Both")}
-                            className={`px-5 py-2 rounded-full text-sm font-medium transition ${
-                                proposalType === "Both"
-                                    ? "bg-[#14141A] text-white shadow-sm"
-                                    : "text-[#6B6A63] hover:text-[#14141A]"
-                            }`}
+                            className={`px-5 py-2 rounded-full text-sm font-medium transition ${proposalType === "Both"
+                                ? "bg-[#14141A] text-white shadow-sm"
+                                : "text-[#6B6A63] hover:text-[#14141A]"
+                                }`}
                         >
                             Both
                         </button>
                         <button
                             type="button"
                             onClick={() => handleProposalTypeChange("Panel")}
-                            className={`px-5 py-2 rounded-full text-sm font-medium transition ${
-                                proposalType === "Panel"
-                                    ? "bg-[#14141A] text-white shadow-sm"
-                                    : "text-[#6B6A63] hover:text-[#14141A]"
-                            }`}
+                            className={`px-5 py-2 rounded-full text-sm font-medium transition ${proposalType === "Panel"
+                                ? "bg-[#14141A] text-white shadow-sm"
+                                : "text-[#6B6A63] hover:text-[#14141A]"
+                                }`}
                         >
                             Panel
                         </button>
@@ -1059,11 +1079,10 @@ const CreateGaloSalesPanelProposal = ({
                             type="submit"
                             onClick={handleSubmit}
                             disabled={loading}
-                            className={`px-6 py-2.5 rounded-lg bg-[#14141A] text-white text-sm font-semibold transition ${
-                                loading
-                                    ? "opacity-60 cursor-not-allowed"
-                                    : "hover:bg-[#F5A623] hover:text-[#14141A] cursor-pointer"
-                            }`}
+                            className={`px-6 py-2.5 rounded-lg bg-[#14141A] text-white text-sm font-semibold transition ${loading
+                                ? "opacity-60 cursor-not-allowed"
+                                : "hover:bg-[#F5A623] hover:text-[#14141A] cursor-pointer"
+                                }`}
                         >
                             {!data || data?.panelData?.length === 0
                                 ? "Create"

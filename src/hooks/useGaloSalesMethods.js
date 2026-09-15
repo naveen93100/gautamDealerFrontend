@@ -185,7 +185,6 @@ export const useCreateGaloSalesClientProposal = () => {
         onSuccess: (data, variables) => {
             // toast.success(data?.message || "Proposal created successfully!");
             // Invalidate proposals for the specific customer
-           console.log("Component onSuccess");
             queryClient.invalidateQueries({
                 queryKey: ["galo_proposals", variables.customerId],
             });

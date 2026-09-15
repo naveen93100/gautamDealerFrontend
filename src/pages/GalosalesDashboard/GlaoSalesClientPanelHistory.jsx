@@ -23,8 +23,6 @@ const GaloSalesClientPanelHistory = () => {
     const location = useLocation();
     const clientId = location.state?.clientId;
 
-    console.log("Client ID:", clientId);
-
     const [showdeleteModal, setShowDeleteModal] = useState(false);
     const [selectedDeleteProposalId, setSelectedDeleteProposalId] =
         useState(null);
@@ -65,7 +63,6 @@ const GaloSalesClientPanelHistory = () => {
         });
     };
 
-    console.log("this is proposal:", proposals);
 
     return (
         <div className="min-h-screen bg-gray-50 pb-10">
