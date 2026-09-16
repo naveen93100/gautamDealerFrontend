@@ -711,13 +711,14 @@ const CreateGaloSalesPanelProposal = ({
 
     useEffect(() => {
         if (!data) return;
+        console.log(data);
         setProposalType(data?.proposalType)
         if (data?.proposalType === 'Both') {
             setSelectPanel(
                 data?.selectedPanels.map((item) => ({
                     constructiveId: item?.constructiveId?._id,
                     panelId: item?.panelId?._id,
-                    inverterId: item?.inverterId,
+                    inverterId: item?.inverterId?._id,
                     subsidyAmount: item?.subsidyAmount,
                     gstAmount: item?.gstAmount,
                     technologyId: item?.technologyId?._id,
@@ -740,7 +741,7 @@ const CreateGaloSalesPanelProposal = ({
                     technologyId: item?.technologyId?._id,
                     totalPrice: item?.totalPrice,
                     wattId: item?.wattId?._id,
-                    // setupKw: data?.setupKw,
+                    setupKw: data?.setupKw,
                     quantity: item?.quantity ?? 1,
                     rate: item?.rate ?? 0,
                 })),
@@ -829,28 +830,62 @@ const CreateGaloSalesPanelProposal = ({
             let payload = {};
             let flag = true;
 
-            if (data) {
-                let { setupKw, inverterId, ...rest } = selectPanel[0];
-                payload = {
-                    selectedPanels: [{ ...rest, inverterId: inverterId?._id }],
-                    termsAndConditions: Body,
-                    ...createPanelData,
-                    propId: data?._id,
-                    setupKw: Number(setupKw),
-                    proposalType, // TODO: confirm backend accepts this field
-                };
-            } else {
-                let { setupKw, inverterId, ...rest } = selectPanel[0];
-                payload = {
-                    selectedPanels: [rest],
-                    termsAndConditions: Body,
-                    gst: createPanelData?.gst,
-                    salesId,
-                    customerId: clientId,
-                    setupKw: Number(setupKw),
-                    proposalType,
-                };
+            //  panel
+            if (proposalType === 'Panel') {
+                if (data) {
+                    let { quantity, rate, ...rest } = selectPanel[0];
+                    quantity = Number(quantity);
+                    rate = Number(rate);
+                    payload = {
+                        selectedPanels: [{ quantity, rate, ...rest }],
+                        termsAndConditions: Body,
+                        ...createPanelData,
+                        propId: data?._id,
+                        rate: Number(rate),
+                        proposalType,
+                    };
+                } else {
+                    let { quantity, rate, ...rest } = selectPanel[0];
+                    quantity = Number(quantity);
+                    rate = Number(rate);
+                    payload = {
+                        selectedPanels: [{ quantity, rate, ...rest }],
+                        termsAndConditions: Body,
+                        gst: createPanelData?.gst,
+                        salesId,
+                        customerId: clientId,
+                        proposalType,
+                    };
+                }
             }
+            // both
+            else {
+                if (data) {
+                    let { setupKw, inverterId, rate, ...rest } = selectPanel[0];
+                    payload = {
+                        selectedPanels: [{ ...rest, inverterId }],
+                        termsAndConditions: Body,
+                        ...createPanelData,
+                        //   gst: createPanelData?.gst,
+                        propId: data?._id,
+                        setupKw: Number(setupKw),
+                        proposalType,
+                    };
+                } else {
+                    let { setupKw, ...rest } = selectPanel[0];
+
+                    payload = {
+                        selectedPanels: [rest],
+                        termsAndConditions: Body,
+                        gst: createPanelData?.gst,
+                        salesId,
+                        customerId: clientId,
+                        setupKw: Number(setupKw),
+                        proposalType,
+                    };
+                }
+            }
+
 
             if (!payload?.gst) {
                 return alert("Fields are required: GST.");
@@ -867,6 +902,7 @@ const CreateGaloSalesPanelProposal = ({
                 ) {
                     flag = false;
                 }
+                console.log(panel)
             });
 
             if (!flag) {
