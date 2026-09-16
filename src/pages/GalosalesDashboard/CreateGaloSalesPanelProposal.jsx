@@ -535,7 +535,6 @@
 
 // export default React.memo(CreateGaloSalesPanelProposal);
 
-
 import React, { useState } from "react";
 import {
     ArrowLeft,
@@ -729,8 +728,7 @@ const CreateGaloSalesPanelProposal = ({
                     rate: item?.rate ?? 0,
                 })),
             );
-        }
-        else {
+        } else {
             setSelectPanel(
                 data?.selectedPanels.map((item) => ({
                     constructiveId: item?.constructiveId?._id,
@@ -742,11 +740,11 @@ const CreateGaloSalesPanelProposal = ({
                     totalPrice: item?.totalPrice,
                     wattId: item?.wattId?._id,
                     setupKw: data?.setupKw,
+                    setupKw: data?.setupKw,
                     quantity: item?.quantity ?? 1,
                     rate: item?.rate ?? 0,
                 })),
             );
-
         }
         setCreatePanelData((p) => ({ ...p, gst: data?.gst }));
         setPanelData(data?.selectedPanels);
@@ -890,9 +888,20 @@ const CreateGaloSalesPanelProposal = ({
             if (!payload?.gst) {
                 return alert("Fields are required: GST.");
             }
+            console.log(proposalType);
 
             selectPanel.forEach((panel) => {
                 const requiresInverter = proposalType !== "Panel";
+                if (
+                    !panel?.panelId ||
+                    !panel?.technologyId ||
+                    !panel?.constructiveId ||
+                    !panel?.wattId
+                    // (requiresInverter && !panel?.inverterId)
+                ) {
+                    flag = false;
+                }
+
                 if (
                     !panel?.panelId ||
                     !panel?.technologyId ||
@@ -908,10 +917,9 @@ const CreateGaloSalesPanelProposal = ({
             if (!flag) {
                 return alert(
                     "Please fill in all panel details: Panel Type, Technology, Constructive Type, Panel Watt" +
-                    (proposalType !== "Panel" ? ", Inverter" : ""),
+                        (proposalType !== "Both" ? ", Inverter" : ""),
                 );
             }
-
 
             let mutationFn = data
                 ? updateGaloSalesClientProposal
@@ -1007,20 +1015,22 @@ const CreateGaloSalesPanelProposal = ({
                         <button
                             type="button"
                             onClick={() => handleProposalTypeChange("Both")}
-                            className={`px-5 py-2 rounded-full text-sm font-medium transition ${proposalType === "Both"
-                                ? "bg-[#14141A] text-white shadow-sm"
-                                : "text-[#6B6A63] hover:text-[#14141A]"
-                                }`}
+                            className={`px-5 py-2 rounded-full text-sm font-medium transition ${
+                                proposalType === "Both"
+                                    ? "bg-[#14141A] text-white shadow-sm"
+                                    : "text-[#6B6A63] hover:text-[#14141A]"
+                            }`}
                         >
                             Both
                         </button>
                         <button
                             type="button"
                             onClick={() => handleProposalTypeChange("Panel")}
-                            className={`px-5 py-2 rounded-full text-sm font-medium transition ${proposalType === "Panel"
-                                ? "bg-[#14141A] text-white shadow-sm"
-                                : "text-[#6B6A63] hover:text-[#14141A]"
-                                }`}
+                            className={`px-5 py-2 rounded-full text-sm font-medium transition ${
+                                proposalType === "Panel"
+                                    ? "bg-[#14141A] text-white shadow-sm"
+                                    : "text-[#6B6A63] hover:text-[#14141A]"
+                            }`}
                         >
                             Panel
                         </button>
@@ -1114,10 +1124,11 @@ const CreateGaloSalesPanelProposal = ({
                             type="submit"
                             onClick={handleSubmit}
                             disabled={loading}
-                            className={`px-6 py-2.5 rounded-lg bg-[#14141A] text-white text-sm font-semibold transition ${loading
-                                ? "opacity-60 cursor-not-allowed"
-                                : "hover:bg-[#F5A623] hover:text-[#14141A] cursor-pointer"
-                                }`}
+                            className={`px-6 py-2.5 rounded-lg bg-[#14141A] text-white text-sm font-semibold transition ${
+                                loading
+                                    ? "opacity-60 cursor-not-allowed"
+                                    : "hover:bg-[#F5A623] hover:text-[#14141A] cursor-pointer"
+                            }`}
                         >
                             {!data || data?.panelData?.length === 0
                                 ? "Create"

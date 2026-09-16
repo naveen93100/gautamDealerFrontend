@@ -16,7 +16,6 @@ import {
     useGetGaloSalesClientProposal,
 } from "../../hooks/useGaloSalesMethods";
 
-
 const GaloSalesClientPanelHistory = () => {
     const [createSalesPanelProp, setCreateSalesPanelProp] = useState(false);
     const [selectSalesProposal, setSelectSalesProposal] = useState(null);
@@ -62,7 +61,6 @@ const GaloSalesClientPanelHistory = () => {
             },
         });
     };
-
 
     return (
         <div className="min-h-screen bg-gray-50 pb-10">
@@ -172,17 +170,22 @@ const GaloSalesClientPanelHistory = () => {
                                                         <FileText size={16} />
                                                     </div>
                                                     <span className="font-medium text-gray-800">
-                                                        {
-                                                            item.customerId
-                                                                .fullName || "Galo Proposal"
-                                                        }{" "}
-                                                        ({item.setupKw}Kw{" "}
+                                                        {item?.customerId
+                                                            .fullName ||
+                                                            "Galo Proposal"}{" "}
+                                                        (
+                                                        {/* {item.setupKw}Kw{" "}
+
                                                         {item.selectedPanels
                                                             ?.map(
                                                                 (p) =>
                                                                     `${p.panelId?.panelType} ${p.wattId?.watt}Wp`,
                                                             )
-                                                            .join(", ")}
+                                                            .join(", ")} */}
+                                                        {item.proposalType ===
+                                                        "Both"
+                                                            ? "Panel and Inverter"
+                                                            : item.proposalType}
                                                         )
                                                     </span>
                                                 </div>
