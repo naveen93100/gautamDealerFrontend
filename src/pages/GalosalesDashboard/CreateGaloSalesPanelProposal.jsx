@@ -749,7 +749,6 @@ const CreateGaloSalesPanelProposal = ({
         }
         setCreatePanelData((p) => ({ ...p, gst: data?.gst }));
         setPanelData(data?.selectedPanels);
-        // TODO: if you persist proposalType on the backend, restore it here too
         // setProposalType(data?.proposalType || "Both");
     }, [data]);
 
