@@ -774,26 +774,7 @@ const GaloSalesProposalView = () => {
                   "galoPanel5.jpg",
               ];
 
-    // TODO: confirm which entity (GSPL/GSIPL) this proposal belongs to —
-    // hardcoded to GSPL for now. If that's tracked on the proposal
-    // (e.g. state?.company), swap the key below to use it instead.
-    const bankDetails = {
-        GSPL: {
-            beneficiary: "Gautam Solar Pvt. Ltd.",
-            bank: "Axis Bank Ltd.",
-            account: "925030038328269",
-            ifsc: "UTIB0001609",
-            branch: "Okhla Phase-1, New Delhi - 110020",
-        },
-        GSIPL: {
-            beneficiary: "Gautam Solar Industries Private Limited",
-            bank: "ICICI Bank Limited",
-            account: "071605004868",
-            ifsc: "ICIC0000716",
-            branch: "Okhla Phase-1, New Delhi - 110020",
-        },
-    };
-    const bank = bankDetails[state?.company || "GSPL"];
+ 
 
     // Panel-mode totals: sum across every row in selectedPanels instead of
     // reading only selectedPanels[0], since "Panel" mode allows multiple
@@ -1181,17 +1162,7 @@ const GaloSalesProposalView = () => {
                 )}
             </button>
 
-            <GaloPdfComp bg={pages[0]}>
-                {/* No setupKw in Panel mode — generic title instead of "X KW Grid-Connected" */}
-                <div className="absolute top-[225mm] left-[90mm] w-100 text-center">
-                    <h1 className="text-2xl font-bold italic text-black">
-                        Solar Panel
-                    </h1>
-                    <h2 className="text-2xl font-bold italic text-black">
-                        Proposal
-                    </h2>
-                </div>
-            </GaloPdfComp>
+            <GaloPdfComp bg={pages[0]}></GaloPdfComp>
 
             <GaloPdfComp bg={pages[1]}></GaloPdfComp>
 
@@ -1219,6 +1190,7 @@ const GaloSalesProposalView = () => {
             <GaloPdfComp bg={pages[3]}>
                 <div className="absolute top-[60mm] left-[10mm] w-[190mm]">
                     {/* ===== Panel Spec Table ===== */}
+
                     <table className="w-full border-2 border-black border-collapse text-center mb-6">
                         <thead>
                             <tr className="bg-black text-white">
@@ -1264,8 +1236,8 @@ const GaloSalesProposalView = () => {
                             ))}
                         </tbody>
                     </table>
-
                     {/* ===== Pricing Table ===== */}
+
                     <table className="w-full border-2 border-black border-collapse text-center">
                         <thead>
                             <tr className="bg-black text-white">
@@ -1302,8 +1274,8 @@ const GaloSalesProposalView = () => {
                                             {idx + 1}
                                         </td>
                                         <td className="border border-black py-3 px-3 text-left leading-5">
-                                            {panel?.wattId?.watt}Wp Gautam
-                                            Solar, {panel?.panelId?.panelType},{" "}
+                                            {panel?.wattId?.watt}Wp Galo Solar,{" "}
+                                            {panel?.panelId?.panelType},{" "}
                                             {
                                                 panel?.technologyId
                                                     ?.technologyPanel
@@ -1340,17 +1312,18 @@ const GaloSalesProposalView = () => {
                                     colSpan={6}
                                     className="border border-black py-3 text-right pr-4 font-bold"
                                 >
-                                    Total Amount
+                                    ₹ Total Amount
                                 </td>
                                 <td className="border border-black py-3 text-lg font-bold">
-                                    ₹ {panelGrandTotal.toLocaleString("en-IN")}
+                                    {panelGrandTotal.toLocaleString("en-IN")}
                                 </td>
                             </tr>
                         </tbody>
                     </table>
+                    
                 </div>
-
-                <div className="absolute bottom-[80mm] left-[10mm] w-[190mm]">
+                {/* 
+                <div className="absolute bottom-[30mm] left-[10mm] w-[190mm]">
                     <h4 className="font-bold text-black text-[15px] mb-2">
                         Note
                     </h4>
@@ -1368,6 +1341,39 @@ const GaloSalesProposalView = () => {
                         </li>
                         <li>Google Location, Plant Photo.</li>
                     </ul>
+                </div> */}
+
+                <div className="absolute bottom-[30mm] left-[10mm] w-[190mm]">
+                    <h4 className="font-bold underline text-black text-[18px] mb-2">
+                        Bank A/C Details:
+                    </h4>
+
+                    <div className="text-black text-base leading-relaxed">
+                        <p>
+                            <span className="font-medium">
+                                Beneficiary Name:
+                            </span>{" "}
+                            Galo Energy Private Limited
+                        </p>
+
+                        <p>
+                            <span className="font-medium">
+                                Bank Name & Address:
+                            </span>{" "}
+                            Federal Bank Limited, Greater Kailash II, South
+                            Delhi - 110048
+                        </p>
+
+                        <p>
+                            <span className="font-medium">Account No.:</span>{" "}
+                            13605500002655
+                        </p>
+
+                        <p>
+                            <span className="font-medium">IFS Code:</span>{" "}
+                            FDRL0001360
+                        </p>
+                    </div>
                 </div>
             </GaloPdfComp>
 
