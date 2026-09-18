@@ -151,7 +151,7 @@ export const getGaloSalesClientProposal = async (customerId) => {
         "GET",
         `/api/galoSales/get-proposals/${customerId}`,
     );
-    console.log("Raw API response:", res);
+    
     return res?.data?.data; // controller returns { success, data: [...] }
 };
 

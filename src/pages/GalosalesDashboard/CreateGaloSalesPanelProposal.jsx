@@ -710,7 +710,7 @@ const CreateGaloSalesPanelProposal = ({
 
     useEffect(() => {
         if (!data) return;
-        console.log(data);
+        // console.log(data);
         setProposalType(data?.proposalType)
         if (data?.proposalType === 'Both') {
             setSelectPanel(
@@ -888,7 +888,7 @@ const CreateGaloSalesPanelProposal = ({
             if (!payload?.gst) {
                 return alert("Fields are required: GST."); 
             }
-            console.log(proposalType);
+            // console.log(proposalType);
 
             selectPanel.forEach((panel) => {
                 const requiresInverter = proposalType !== "Panel";
@@ -911,7 +911,7 @@ const CreateGaloSalesPanelProposal = ({
                 ) {
                     flag = false;
                 }
-                console.log(panel)
+                // console.log(panel)
             });
 
             if (!flag) {

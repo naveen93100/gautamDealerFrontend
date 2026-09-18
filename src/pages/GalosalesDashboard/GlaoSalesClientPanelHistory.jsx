@@ -33,7 +33,7 @@ const GaloSalesClientPanelHistory = () => {
         useGetGaloSalesClientProposal(clientId);
     const { mutate: deleteProposal } =
         useDeleteGaloSalesClientProposal(clientId);
-    console.log(proposals);
+    // console.log(proposals);
 
     // Format date nicely
     const formatDate = (dateStr) => {
@@ -211,12 +211,12 @@ const GaloSalesClientPanelHistory = () => {
                                                     </button>
                                                     <button
                                                         onClick={() => {
-                                                            console.log(
-                                                                "Selected Proposal:",
-                                                                item,
-                                                            );
+                                                            // console.log(
+                                                            //     "Selected Proposal:",
+                                                            //     item,
+                                                            // );
                                                             navigate(
-                                                                "/galo-parposal-view",
+                                                                "/galo-proposal-view",
                                                                 { state: item },
                                                             );
                                                         }}
