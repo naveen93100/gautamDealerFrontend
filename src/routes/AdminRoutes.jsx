@@ -9,6 +9,8 @@ import CreateDealerAccount from "../pages/Dashboard/Admin Dashboard/CreateDealer
 import SalesPersonList from "../pages/Dashboard/SalesAdmin/SalesPersonList";
 import CreateAdmin from "../pages/SalesDashboard/CreateAdmin";
 import ShowSalesAllproposalToAdmin from "../pages/SalesDashboard/ShowSalesAllproposalToAdmin";
+//
+import InverterManagement from "../pages/Admin/InverterManagement";
 
 const AdminDashboard = lazy(
     () => import("../pages/Dashboard/Admin Dashboard/adminDashboard"),
@@ -22,11 +24,20 @@ const AdminRoutes = [
         path="panel/technology"
         element={<TechnologyPanel />}
     />,
+    //
+    <Route
+        key="admin-inverter"
+        path="inverter"
+        element={<InverterManagement />}
+    />,
+
+    //
     <Route
         key="admin-panel-tech-constructive"
         path="panel/technology/constructive"
         element={<ConstructivePanel />}
     />,
+
     <Route
         key="admin-panel-watt"
         path="panel/technology/constructive/panelWatt"

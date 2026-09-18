@@ -22,8 +22,6 @@ const GaloSalesClientPanelHistory = () => {
     const location = useLocation();
     const clientId = location.state?.clientId;
 
-    console.log("Client ID:", clientId);
-
     const [showdeleteModal, setShowDeleteModal] = useState(false);
     const [selectedDeleteProposalId, setSelectedDeleteProposalId] =
         useState(null);
@@ -35,7 +33,7 @@ const GaloSalesClientPanelHistory = () => {
         useGetGaloSalesClientProposal(clientId);
     const { mutate: deleteProposal } =
         useDeleteGaloSalesClientProposal(clientId);
-    console.log(proposals);
+    // console.log(proposals);
 
     // Format date nicely
     const formatDate = (dateStr) => {
@@ -63,8 +61,6 @@ const GaloSalesClientPanelHistory = () => {
             },
         });
     };
-
-    console.log("this is proposal:", proposals);
 
     return (
         <div className="min-h-screen bg-gray-50 pb-10">
@@ -174,17 +170,22 @@ const GaloSalesClientPanelHistory = () => {
                                                         <FileText size={16} />
                                                     </div>
                                                     <span className="font-medium text-gray-800">
-                                                        {
-                                                            item.customerId
-                                                                .fullName || "Galo Proposal"
-                                                        }{" "}
-                                                        ({item.setupKw}Kw{" "}
+                                                        {item?.customerId
+                                                            .fullName ||
+                                                            "Galo Proposal"}{" "}
+                                                        (
+                                                        {/* {item.setupKw}Kw{" "}
+
                                                         {item.selectedPanels
                                                             ?.map(
                                                                 (p) =>
                                                                     `${p.panelId?.panelType} ${p.wattId?.watt}Wp`,
                                                             )
-                                                            .join(", ")}
+                                                            .join(", ")} */}
+                                                        {item.proposalType ===
+                                                        "Both"
+                                                            ? "Panel and Inverter"
+                                                            : item.proposalType}
                                                         )
                                                     </span>
                                                 </div>
@@ -210,12 +211,12 @@ const GaloSalesClientPanelHistory = () => {
                                                     </button>
                                                     <button
                                                         onClick={() => {
-                                                            console.log(
-                                                                "Selected Proposal:",
-                                                                item,
-                                                            );
+                                                            // console.log(
+                                                            //     "Selected Proposal:",
+                                                            //     item,
+                                                            // );
                                                             navigate(
-                                                                "/galo-parposal-view",
+                                                                "/galo-proposal-view",
                                                                 { state: item },
                                                             );
                                                         }}

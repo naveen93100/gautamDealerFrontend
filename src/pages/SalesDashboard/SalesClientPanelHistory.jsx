@@ -12,7 +12,10 @@ import { useNavigate, useLocation } from "react-router-dom";
 import CreateSalesPanelProposal from "./CreateSalesPanelProposal";
 import { apiCall } from "../../services/api";
 import toast from "react-hot-toast";
-import { useDeleteSalesClientProposal, useGetSalesClientProposal } from "../../hooks/useSalesMethods";
+import {
+    useDeleteSalesClientProposal,
+    useGetSalesClientProposal,
+} from "../../hooks/useSalesMethods";
 
 const SalesClientPanelHistory = () => {
     const [createSalesPanelProp, setCreateSalesPanelProp] = useState(false);
@@ -23,16 +26,18 @@ const SalesClientPanelHistory = () => {
     const clientName = location.state?.clientName;
 
     const [showdeleteModal, setShowDeleteModal] = useState(false);
-    const [selectedDeleteProposalId, setSelectedDeleteProposalId] = useState(null);
+    const [selectedDeleteProposalId, setSelectedDeleteProposalId] =
+        useState(null);
 
     const navigate = useNavigate();
     const bgColor = "#a20000";
 
-    const { data: proposals, isLoading } = useGetSalesClientProposal(clientId)
-    const { mutate: deleteProposal } = useDeleteSalesClientProposal(clientId)
+    const { data: proposals, isLoading } = useGetSalesClientProposal(clientId);
+    const { mutate: deleteProposal } = useDeleteSalesClientProposal(clientId);
+
+    console.log("proposals", proposals);
 
     const handleDeleteProposal = () => {
-
         let propId = selectedDeleteProposalId;
         deleteProposal(propId, {
             onSuccess: (d) => {
@@ -42,8 +47,8 @@ const SalesClientPanelHistory = () => {
             },
             onError: (e) => {
                 toast.error(e || "Delete failed");
-            }
-        })
+            },
+        });
     };
 
     return (
