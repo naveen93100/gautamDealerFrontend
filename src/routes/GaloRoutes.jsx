@@ -33,8 +33,8 @@ const GaloRoutes = [
         />
     </Route>,
         <Route
-            key="galo-parposal-view"
-            path="galo-parposal-view"
+            key="galo-Proposal-view"
+            path="galo-Proposal-view"
             element={<GaloSalesProposalView />}
         />
 ];

@@ -216,7 +216,7 @@ const GaloSalesClientPanelHistory = () => {
                                                             //     item,
                                                             // );
                                                             navigate(
-                                                                "/galo-parposal-view",
+                                                                "/galo-proposal-view",
                                                                 { state: item },
                                                             );
                                                         }}
