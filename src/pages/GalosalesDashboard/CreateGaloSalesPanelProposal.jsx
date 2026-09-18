@@ -886,7 +886,7 @@ const CreateGaloSalesPanelProposal = ({
 
 
             if (!payload?.gst) {
-                return alert("Fields are required: GST.");
+                return alert("Fields are required: GST."); 
             }
             console.log(proposalType);
 
