@@ -37,6 +37,7 @@ const AdminRoutes = [
         path="panel/technology/constructive"
         element={<ConstructivePanel />}
     />,
+
     <Route
         key="admin-panel-watt"
         path="panel/technology/constructive/panelWatt"
