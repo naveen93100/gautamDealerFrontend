@@ -13,7 +13,7 @@ import ShowSalesAllproposalToAdmin from "../pages/SalesDashboard/ShowSalesAllpro
 import InverterManagement from "../pages/Admin/InverterManagement";
 
 const AdminDashboard = lazy(
-    () => import("../pages/Dashboard/Admin Dashboard/adminDashboard"),
+    () => import("../pages/Dashboard/Admin Dashboard/adminDashboard"), 
 );
 
 const AdminRoutes = [
