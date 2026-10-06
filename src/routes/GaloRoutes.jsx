@@ -32,11 +32,11 @@ const GaloRoutes = [
             element={<GlaoSalesClientPanelHistory />}
         />
     </Route>,
-        <Route
-            key="galo-Proposal-view"
-            path="galo-Proposal-view"
-            element={<GaloSalesProposalView />}
-        />
+    <Route
+        key="galo-Proposal-view"
+        path="galo-Proposal-view"
+        element={<GaloSalesProposalView />}
+    />,
 ];
 
 export default GaloRoutes;

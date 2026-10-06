@@ -8,6 +8,8 @@ import GaloTechnologyPanel from "../pages/GaloAdminDashboard/GaloTechnologyPanel
 import GaloConstructivePanel from "../pages/GaloAdminDashboard/GaloConstructivePanel";
 import GaloPanelWatt from "../pages/GaloAdminDashboard/GaloPanelWatt";
 import AddInverter from "../pages/GaloAdminDashboard/AddInverter";
+import GaloProposalListData from "../pages/GaloAdminDashboard/GaloProposalListData";
+import ShowParposalToAdmin from "../pages/GaloAdminDashboard/ShowParposalToAdmin";
 
 const GaloAdminRoutes = [
     <Route key="galo-admin-guard" element={<GaloAdminRoute />}>
@@ -25,6 +27,12 @@ const GaloAdminRoutes = [
             {/* Sales – nested path (matches /galo/admin/sales) */}
             <Route path="sales" element={<GaloAdminSalesList />} />
             <Route path="inverter" element={<AddInverter />} />
+            <Route
+                path="admin-galo-proposal"
+                element={<GaloProposalListData />}
+            />
+
+            <Route path="show-proposal" element={<ShowParposalToAdmin />} />
         </Route>
     </Route>,
 ];
